@@ -10,6 +10,7 @@ import type {
 interface SimulatorState {
   selectedRoleId: string | null;
   learnerProfile: LearnerProfile | null;
+  selectedScenarioId: string | null;
   activeScenarioId: string | null;
   conversationMessages: ConversationMessage[];
   safetyEvents: SafetyEvent[];
@@ -17,6 +18,7 @@ interface SimulatorState {
   patientStateSnapshots: PatientStateSnapshot[];
   setSelectedRoleId: (id: string) => void;
   setLearnerProfile: (profile: LearnerProfile) => void;
+  setSelectedScenarioId: (id: string) => void;
   startSimulationSession: (
     scenarioId: string,
     openingMessage: ConversationMessage,
@@ -34,6 +36,7 @@ const SimulatorContext = createContext<SimulatorState | null>(null);
 export function SimulatorProvider({ children }: { children: React.ReactNode }) {
   const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);
   const [learnerProfile, setLearnerProfile] = useState<LearnerProfile | null>(null);
+  const [selectedScenarioId, setSelectedScenarioIdInternal] = useState<string | null>(null);
   const [activeScenarioId, setActiveScenarioId] = useState<string | null>(null);
   const [conversationMessages, setConversationMessages] = useState<ConversationMessage[]>([]);
   const [safetyEvents, setSafetyEvents] = useState<SafetyEvent[]>([]);
@@ -65,11 +68,16 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
     setCurrentPatientStateInternal(state);
   }
 
+  function setSelectedScenarioId(id: string): void {
+    setSelectedScenarioIdInternal(id);
+  }
+
   function appendPatientStateSnapshot(snapshot: PatientStateSnapshot): void {
     setPatientStateSnapshots((prev) => [...prev, snapshot]);
   }
 
   function resetSimulationSession(): void {
+    setSelectedScenarioIdInternal(null);
     setActiveScenarioId(null);
     setConversationMessages([]);
     setSafetyEvents([]);
@@ -82,6 +90,7 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
       value={{
         selectedRoleId,
         learnerProfile,
+        selectedScenarioId,
         activeScenarioId,
         conversationMessages,
         safetyEvents,
@@ -89,6 +98,7 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
         patientStateSnapshots,
         setSelectedRoleId,
         setLearnerProfile,
+        setSelectedScenarioId,
         startSimulationSession,
         appendConversationMessages,
         appendSafetyEvent,

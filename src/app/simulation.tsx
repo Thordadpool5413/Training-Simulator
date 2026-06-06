@@ -33,6 +33,7 @@ const MEDICATION_FALLBACK_MESSAGE =
 export default function SimulationScreen() {
   const {
     selectedRoleId,
+    selectedScenarioId,
     conversationMessages,
     currentPatientState,
     startSimulationSession,
@@ -42,8 +43,8 @@ export default function SimulationScreen() {
     appendPatientStateSnapshot,
   } = useSimulator();
 
-  const scenario = selectedRoleId
-    ? (scenarioTemplates.find((s) => s.allowedRoleId === selectedRoleId) ?? null)
+  const scenario = selectedScenarioId
+    ? (scenarioTemplates.find((s) => s.id === selectedScenarioId) ?? null)
     : null;
 
   const role = selectedRoleId
@@ -89,15 +90,30 @@ export default function SimulationScreen() {
     );
   }
 
+  if (!selectedScenarioId) {
+    return (
+      <SafeAreaView style={styles.safe}>
+        <View style={styles.centerContainer}>
+          <Text style={styles.centerText}>
+            Please select a scenario before starting a simulation.
+          </Text>
+          <Pressable style={styles.button} onPress={() => router.push('/scenario' as Href)}>
+            <Text style={styles.buttonText}>Go to Scenario Selection</Text>
+          </Pressable>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   if (!scenario) {
     return (
       <SafeAreaView style={styles.safe}>
         <View style={styles.centerContainer}>
           <Text style={styles.centerText}>
-            No scenario available for the selected role.
+            Scenario not found. Please select a scenario.
           </Text>
-          <Pressable style={styles.button} onPress={() => router.push('/role' as Href)}>
-            <Text style={styles.buttonText}>Go to Role Selection</Text>
+          <Pressable style={styles.button} onPress={() => router.push('/scenario' as Href)}>
+            <Text style={styles.buttonText}>Go to Scenario Selection</Text>
           </Pressable>
         </View>
       </SafeAreaView>

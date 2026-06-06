@@ -17,6 +17,21 @@ export const safeLanguage: SafeLanguageEntry[] = [
     text: 'I am sorry. I said that poorly. What I meant is that the care is not stopping. The focus is changing toward comfort, support, and helping your family know what to do next.',
   },
   {
+    id: 'cl_too_soon_validation',
+    context: 'Clinical Liaison, hospice timing fear validation',
+    text: 'I can hear how much you want to protect your mom and make sure this is not happening too soon. That makes sense. Hospice is not about taking hope away. It is about bringing support in sooner so she and your family are not carrying this alone.',
+  },
+  {
+    id: 'cl_hospice_timeline_education',
+    context: 'Clinical Liaison, hospice timing education',
+    text: 'Hospice is not only for the final few days. It is designed for people who may be in the last months of life, so support can begin while there is still time to help with comfort, planning, and family support.',
+  },
+  {
+    id: 'cl_what_hospice_provides',
+    context: 'Clinical Liaison, hospice support before final days',
+    text: 'The hospice team can support your mom with nursing visits, symptom support, social work, spiritual care if she wants it, equipment, supplies, and guidance for your family. The goal is to help her feel as well supported as possible.',
+  },
+  {
     id: 'rn_air_hunger_acknowledgment',
     context: 'RN — air hunger fear acknowledgment',
     text: 'I can hear how frightened you are and I want you to know that what you are seeing is real. He is working hard to breathe and that is frightening to watch. Let me stay with you through this.',

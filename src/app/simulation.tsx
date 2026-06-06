@@ -63,7 +63,7 @@ export default function SimulationScreen() {
     const openingMessage: ConversationMessage = {
       id: `${Date.now()}-0`,
       sender: 'family',
-      speakerName: 'Daughter',
+      speakerName: scenario.openingSpeakerName,
       text: scenario.openingLine,
       createdAt: new Date().toISOString(),
     };

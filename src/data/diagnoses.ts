@@ -31,6 +31,37 @@ export const diagnoses: DiagnosisModule[] = [
     ],
   },
   {
+    id: 'advanced_pancreatic_cancer',
+    name: 'Advanced pancreatic cancer',
+    everydayLanguage:
+      'Her cancer has progressed to the point where treatment is no longer expected to control it, and the care focus is shifting toward comfort, support, and quality of life.',
+    declinePattern:
+      'Increasing weakness, reduced intake, worsening fatigue, more time resting, and fewer meaningful recovery periods after treatment or hospitalization.',
+    commonSymptoms: [
+      'Weakness.',
+      'Poor appetite.',
+      'Fatigue.',
+      'Pain.',
+      'Weight loss.',
+      'Nausea.',
+      'Increased need for help with daily activities.',
+    ],
+    familyMisconceptions: [
+      'Hospice is only for the last few days.',
+      'Starting hospice means we are giving up too early.',
+      'She cannot keep seeing anyone who knows her care.',
+      'Hospice means no one treats symptoms anymore.',
+    ],
+    trainingObjectives: [
+      'Explain hospice timing in plain language.',
+      'Clarify that hospice is not only for the final days.',
+      'Acknowledge fear about starting too soon.',
+      'Explain comfort-focused support without sounding transactional.',
+      'Avoid making prognosis promises.',
+      'Stay within Clinical Liaison role boundaries.',
+    ],
+  },
+  {
     id: 'end_stage_copd',
     name: 'End stage COPD',
     everydayLanguage:

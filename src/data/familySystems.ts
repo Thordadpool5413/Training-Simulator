@@ -18,6 +18,26 @@ export const familySystems: FamilySystemModule[] = [
       'Hospice provides nurses, aides, equipment, supplies, and medications.',
   },
   {
+    id: 'too_soon_fear',
+    patternName: 'Too soon for hospice fear',
+    coreBelief:
+      'Hospice is only for the very end, so starting now means we are giving up too early.',
+    hiddenFear:
+      'If I agree to hospice now, I may be responsible for taking away time, hope, or treatment from my mother.',
+    commonStatements: [
+      'She is still talking to us.',
+      'She is still eating a little.',
+      'I thought hospice was only for the last few days.',
+      'Are we giving up too soon?',
+      'What if she still has more time?',
+      'Does this mean no one will treat her anymore?',
+    ],
+    bestLearnerResponse:
+      'I can hear how much you want to protect your mom and make sure this is not happening too soon. Hospice is not only for the last few days. When someone may be in the last months of life, hospice can bring support earlier so the patient and family are not carrying this alone.',
+    poorLearnerResponse:
+      'Hospice is what people do when treatment is over, so you should start now.',
+  },
+  {
     id: 'air_hunger_panic',
     patternName: 'Air hunger panic',
     coreBelief: 'He is suffocating and I am watching him die and there is nothing I can do.',

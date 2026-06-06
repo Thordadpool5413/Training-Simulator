@@ -20,6 +20,7 @@ export const scenarioTemplates: ScenarioTemplate[] = [
       'You may explain hospice support and answer general process questions. You should not determine hospice eligibility, give prognosis estimates, or provide medication instructions. Medication questions should be routed to the hospice nurse or provider.',
     hiddenFamilyFear:
       'The daughter believes hospice means giving up and fears agreeing to hospice means she is betraying her father.',
+    openingSpeakerName: 'Daughter',
     openingLine:
       'My dad is dying and you want to take away his care?',
     successCriteria: [
@@ -58,6 +59,7 @@ export const scenarioTemplates: ScenarioTemplate[] = [
       'You may assess symptoms, explain comfort-focused care, describe what the hospice plan of care provides, and educate Margaret on non-pharmacologic comfort tools. You may confirm that hospice comfort medications are part of the plan of care. You should not state specific medication doses, modify orders, or prescribe. Route medication dose questions to the hospice orders and the on-call provider.',
     hiddenFamilyFear:
       'Margaret believes Harold is suffocating and that she will be responsible if she acts or does not act. She does not understand that air hunger and suffocation are different experiences.',
+    openingSpeakerName: 'Margaret',
     openingLine:
       'He keeps saying he cannot breathe. I am scared he is suffocating and I do not know what to do.',
     successCriteria: [
@@ -77,5 +79,44 @@ export const scenarioTemplates: ScenarioTemplate[] = [
       'Leaves Margaret without a concrete next step.',
     ],
     patientStateDefaultId: 'copd_air_hunger_at_home',
+  },
+  {
+    id: 'hospice_too_soon',
+    title: 'Hospice Is Only for the Last Few Days',
+    allowedRoleId: 'clinical_liaison',
+    setting: 'Hospital room',
+    patient: {
+      name: 'Gloria Santos',
+      age: 72,
+    },
+    knownDiagnosisId: 'advanced_pancreatic_cancer',
+    recentClinicalChange:
+      "Gloria's oncologist has recommended a comfort-focused plan because curative treatment is no longer expected to help. She is weaker, eating less, and spending most of the day resting, but she is still alert enough to talk with her family at times.",
+    whoIsPresent: ['Marcus Santos, her son'],
+    learnerObjective:
+      "Acknowledge Marcus's fear that hospice is being introduced too soon, explain hospice timing in plain language, clarify that hospice can support patients before the final days, avoid prognosis promises, and give the family a clear next step.",
+    roleReminder:
+      'You are a Clinical Liaison. You may explain hospice timing, general eligibility concepts, and what the hospice team provides. You should not determine eligibility, make prognosis promises, prescribe, or make medication decisions.',
+    hiddenFamilyFear:
+      'Marcus believes agreeing to hospice now may mean he is giving up on his mother too early.',
+    openingSpeakerName: 'Marcus',
+    openingLine:
+      'The doctor says Mom might qualify for hospice, but she is still talking to us and eating a little. I thought hospice was only for the last few days.',
+    successCriteria: [
+      "Acknowledges Marcus's fear about starting hospice too soon.",
+      'Explains that hospice is not only for the final few days.',
+      'Clarifies hospice support in plain language.',
+      'Avoids prognosis promises.',
+      'Avoids medication guidance outside the Clinical Liaison role.',
+      'Gives Marcus a clear next step.',
+    ],
+    failureCriteria: [
+      'Says hospice is only for when treatment is over.',
+      'Uses pressure language.',
+      'Sounds transactional or sales-focused.',
+      'Makes a prognosis promise.',
+      'Gives medication guidance outside the Clinical Liaison role.',
+    ],
+    patientStateDefaultId: 'hospice_too_soon',
   },
 ];

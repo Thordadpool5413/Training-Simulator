@@ -95,6 +95,21 @@ const REPAIR_TERMS = [
   'rephrase',
 ];
 
+const TIMELINE_TERMS = [
+  'too early',
+  'too soon',
+  'not only for the final days',
+  'not just the final days',
+  'last few days',
+  'final few days',
+  'six month',
+  '6 month',
+  'months of life',
+  'eligible',
+  'qualify',
+  'prognosis',
+];
+
 export function updatePatientState(
   currentState: PatientState,
   learnerMessageText: string,
@@ -173,7 +188,29 @@ export function updatePatientState(
     };
   }
 
-  // Rule 5 — Service list before emotional acknowledgment
+  // Rule 5 — Hospice timeline education with reframe or service language
+  if (
+    containsAny(lower, TIMELINE_TERMS) &&
+    (containsAny(lower, REFRAME_TERMS) || containsAny(lower, SERVICE_TERMS))
+  ) {
+    return {
+      updatedState: applyDelta(currentState, {
+        trust: 10,
+        fear: -8,
+        resistance: -10,
+        hospiceMisconception: -18,
+        understanding: 15,
+        readiness: 8,
+        perceivedCompassion: 8,
+        perceivedHonesty: 10,
+      }),
+      detectedBehaviors: ['hospice_reframe', 'care_continuity_language', 'timeline_addressed'],
+      stateChangeSummary:
+        'The learner addressed the hospice timing misconception and explained that hospice support begins before the final days.',
+    };
+  }
+
+  // Rule 6 — Service list before emotional acknowledgment
   if (containsAny(lower, SERVICE_TERMS) && !hasEmotionalAck && !hasReframe) {
     return {
       updatedState: applyDelta(currentState, {
@@ -187,7 +224,7 @@ export function updatePatientState(
     };
   }
 
-  // Rule 6 — Fallback
+  // Rule 7 — Fallback
   const updatedState: PatientState =
     learnerMessageText.trim().length < 30
       ? applyDelta(currentState, { confusion: 3 })

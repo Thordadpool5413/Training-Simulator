@@ -211,6 +211,7 @@ export interface ScenarioTemplate {
   learnerObjective: string;
   roleReminder: string;
   hiddenFamilyFear: string;
+  openingSpeakerName: string;
   openingLine: string;
   successCriteria: string[];
   failureCriteria: string[];

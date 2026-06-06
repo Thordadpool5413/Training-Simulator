@@ -1,0 +1,74 @@
+import type { LearnerRole } from '@/types/simulator';
+
+export const roles: LearnerRole[] = [
+  {
+    id: 'clinical_liaison',
+    name: 'Clinical Liaison',
+    medicationAccessLevel: 0,
+    allowed: [
+      'Explain hospice support.',
+      'Respond to general family concerns.',
+      'Educate without pressure.',
+      'Route clinical questions to the right clinical team member.',
+    ],
+    blocked: [
+      'Medication instructions.',
+      'Medication administration guidance.',
+      'Prognosis estimates.',
+      'Hospice eligibility determination.',
+      'Treatment recommendations.',
+    ],
+    commonMistakes: [
+      'Sounding sales focused.',
+      'Explaining services before responding to fear.',
+      'Overpromising.',
+      'Saying the patient qualifies for hospice.',
+      'Answering medication questions outside role.',
+    ],
+    scoringCategories: [
+      'Hospice education.',
+      'Objection handling.',
+      'Compliance safe language.',
+      'Clinical escalation judgment.',
+      'Trust building.',
+      'Role boundary safety.',
+    ],
+  },
+  {
+    id: 'rn',
+    name: 'RN',
+    medicationAccessLevel: 2,
+    allowed: [
+      'Assess symptoms and describe what the caregiver is observing in plain language.',
+      'Explain comfort-focused care and what the hospice plan of care provides.',
+      'Confirm that hospice comfort medications are part of the plan of care.',
+      'Describe when to call the hospice nurse or on-call provider.',
+      'Educate the caregiver on non-pharmacologic comfort tools such as positioning, fan use, and calm presence.',
+      'Acknowledge fear and emotional distress.',
+      'Route medication dose questions to the hospice orders and on-call provider.',
+    ],
+    blocked: [
+      'Calculating or recommending specific medication doses.',
+      'Modifying hospice medication orders.',
+      'Prescribing or initiating medications.',
+      'Stating a prognosis.',
+      'Guaranteeing that an intervention will eliminate symptoms.',
+    ],
+    commonMistakes: [
+      'Stating a specific medication dose amount without referencing hospice orders.',
+      'Overpromising that medication will eliminate air hunger completely.',
+      'Using clinical jargon the caregiver cannot understand.',
+      'Jumping to intervention steps before acknowledging caregiver fear.',
+      'Leaving the caregiver without a clear next step.',
+    ],
+    scoringCategories: [
+      'Emotional Attunement.',
+      'Symptom Communication.',
+      'Comfort Education.',
+      'Role Boundary Safety.',
+      'Caregiver Empowerment.',
+      'Clinical Escalation Judgment.',
+      'Trust Building.',
+    ],
+  },
+];

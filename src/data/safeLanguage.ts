@@ -1,0 +1,34 @@
+import type { SafeLanguageEntry } from '@/types/simulator';
+
+export const safeLanguage: SafeLanguageEntry[] = [
+  {
+    id: 'hospice_fear_response',
+    context: 'Hospice fear response',
+    text: 'I can understand why hospice might sound like giving up. A lot of families hear that word and worry everyone is walking away. Hospice does not mean care stops. It means the focus changes toward comfort, support, and making sure your family is not alone.',
+  },
+  {
+    id: 'medication_routing_response',
+    context: 'Medication routing response',
+    text: 'That is an important medication question. I do not want to guess about something that important. The hospice nurse or provider should walk through that with you directly.',
+  },
+  {
+    id: 'repair_language',
+    context: 'Repair language',
+    text: 'I am sorry. I said that poorly. What I meant is that the care is not stopping. The focus is changing toward comfort, support, and helping your family know what to do next.',
+  },
+  {
+    id: 'rn_air_hunger_acknowledgment',
+    context: 'RN — air hunger fear acknowledgment',
+    text: 'I can hear how frightened you are and I want you to know that what you are seeing is real. He is working hard to breathe and that is frightening to watch. Let me stay with you through this.',
+  },
+  {
+    id: 'rn_air_hunger_explanation',
+    context: 'RN — air hunger plain language explanation',
+    text: 'Air hunger is when the body signals that breathing is hard, even when some air is moving in and out. It does not always mean he is suffocating the way it looks from the outside. What helps most is staying calm beside him, keeping the room cool, and having the comfort medications the hospice team prescribed ready if you need them.',
+  },
+  {
+    id: 'rn_medication_routing',
+    context: 'RN — comfort medication routing',
+    text: 'The hospice team has a comfort plan in place for exactly this. I do not want to guess at amounts because that needs to come from the hospice orders and the on-call team. Let me make sure you know exactly when and how to reach them.',
+  },
+];

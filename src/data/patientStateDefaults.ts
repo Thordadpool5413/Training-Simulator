@@ -1,0 +1,36 @@
+import type { PatientState } from '@/types/simulator';
+
+export const patientStateDefaults: Record<string, PatientState> = {
+  hospice_means_giving_up: {
+    trust: 30,
+    fear: 80,
+    understanding: 25,
+    readiness: 20,
+    confusion: 35,
+    resistance: 75,
+    medicationFear: 40,
+    hospiceMisconception: 85,
+    caregiverBurden: 65,
+    familyConflict: 25,
+    griefIntensity: 70,
+    spiritualDistress: 20,
+    perceivedHonesty: 45,
+    perceivedCompassion: 40,
+  },
+  copd_air_hunger_at_home: {
+    trust: 35,
+    fear: 90,
+    understanding: 15,
+    readiness: 25,
+    confusion: 70,
+    resistance: 40,
+    medicationFear: 75,
+    hospiceMisconception: 60,
+    caregiverBurden: 95,
+    familyConflict: 20,
+    griefIntensity: 80,
+    spiritualDistress: 35,
+    perceivedHonesty: 40,
+    perceivedCompassion: 35,
+  },
+};

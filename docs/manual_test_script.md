@@ -264,7 +264,7 @@ The following limitations apply to the current MVP build and are expected behavi
 - No backend yet. All logic runs locally on the device.
 - No database yet. No session history is persisted between runs.
 - No voice mode yet. All input is text only.
-- Two scenarios are active: Hospice Means Giving Up (Clinical Liaison) and COPD Air Hunger at Home (RN). Additional scenarios are not yet implemented.
+- Three scenarios are active: Hospice Means Giving Up (Clinical Liaison), Hospice Is Only for the Last Few Days (Clinical Liaison), and COPD Air Hunger at Home (RN).
 - All logic is local and rule-based. Response rules fire based on keyword matching and conversation history flags, not natural language understanding.
 - Dashboard reflects the current session only. There is no multi-session aggregate score.
 - This manual script validates the current deterministic MVP path, not all possible learner wording. Learners using different phrasing may trigger different rule-based responses.
@@ -481,3 +481,198 @@ Use this checklist when executing the RN COPD learner journey test and the medic
 - [ ] RN medication safety test: unsafe dose phrase fires the Training Pause with exact verbatim message (verified character for character).
 - [ ] RN medication safety test: safe recovery phrase does not fire a Training Pause.
 - [ ] RN medication safety test: dashboard Safety Corrections shows 1 after unsafe dose phrase followed by safe recovery in the same session.
+
+---
+
+## Part III: Clinical Liaison — Hospice Is Only for the Last Few Days
+
+---
+
+## 21. CL Hospice Too Soon: Pre-Test Conditions
+
+- The app runs locally on a device or simulator.
+- The learner starts from the welcome screen.
+- No backend is required. No AI is required. No external APIs are required.
+- The test uses the **Clinical Liaison** role.
+- The test uses the **Hospice Is Only for the Last Few Days** scenario.
+- The scenario selector will show two Clinical Liaison cards. Select the correct one.
+- The tester must send the deterministic test phrases in the documented order with no extra turns between them.
+
+---
+
+## 22. CL Hospice Too Soon: Full Learner Journey Test
+
+1. Open the app.
+2. On the welcome screen, tap **Continue**.
+3. On the role selection screen, select **Clinical Liaison**.
+4. Complete the learner profile form and tap **Continue** to proceed.
+5. On the scenario selector screen, confirm two Clinical Liaison scenario cards are visible: **Hospice Means Giving Up** and **Hospice Is Only for the Last Few Days**. Tap **Select** on Hospice Is Only for the Last Few Days.
+6. Review the scenario briefing. Confirm the following are visible: patient name Gloria Santos, age 72, setting Hospital room, diagnosis Advanced pancreatic cancer, correct learner objective, correct role reminder.
+7. Tap **Start Simulation**.
+8. Confirm Marcus's opening line appears as the first message in the conversation (see Section 24).
+9. Send **Phrase 1** (emotional validation — see Section 23).
+10. Confirm Marcus responds with the too-soon acknowledgment line (see Section 24 for expected text).
+11. Send **Phrase 2** (hospice timing education — see Section 23).
+12. Confirm Marcus responds with the timing question (see Section 24 for expected text).
+13. Send **Phrase 3** (hospice support description — see Section 23).
+14. Confirm Marcus responds with the symptom support question (see Section 24 for expected text).
+15. Send **Phrase 4** (comfort focus — see Section 23).
+16. Confirm Marcus responds with his mother's wishes disclosure (see Section 24 for expected text).
+17. Send **Phrase 5** (unsafe medication response — see Section 23).
+18. Confirm the Clinical Liaison Training Pause system message appears (see Section 24 for expected text).
+19. Send **Phrase 6** (safe medication routing — see Section 23).
+20. Confirm Marcus responds with the fallback question (see Section 24 for expected text).
+21. Tap **Finish** to end the simulation.
+22. On the feedback screen, review all feedback sections (see Section 25).
+23. Scroll to the Skill Scores section and review all seven score rows (see Section 26).
+24. Tap **View Dashboard**.
+25. On the dashboard screen, review all summary fields (see Section 27).
+
+---
+
+## 23. CL Hospice Too Soon: Exact Test Phrases
+
+Send these phrases verbatim in the order listed. Do not add extra turns between them.
+
+**Phrase 1 — Emotional validation**
+> I understand how hard this is. You are trying to protect her, and that care for her is exactly right.
+
+**Phrase 2 — Hospice timing education**
+> Hospice is not only for the final days. It is designed to begin when someone may be in the last months of life, so support can start earlier when it matters most.
+
+**Phrase 3 — Hospice support description**
+> The hospice team would visit regularly. There is also a social worker and a chaplain available if your family would like that kind of support.
+
+**Phrase 4 — Comfort focus**
+> The goal is to help her feel comfortable and maintain her quality of life for as long as possible.
+
+**Phrase 5 — Unsafe medication response**
+> We can increase her morphine.
+
+**Phrase 6 — Safe medication routing**
+> That is an important question about her medications. I do not want to guess about that. The hospice provider should walk through that with you and your family directly.
+
+---
+
+## 24. CL Hospice Too Soon: Expected Simulation Results
+
+Marcus's opening line (first message in simulation):
+> The doctor says Mom might qualify for hospice, but she is still talking to us and eating a little. I thought hospice was only for the last few days.
+
+| After this learner phrase | Expected response | Speaker |
+|---|---|---|
+| Phrase 1 — Emotional validation | I just do not want to give up on her too soon. She is still herself. | Marcus (family) |
+| Phrase 2 — Hospice timing education | So hospice can start before someone is down to the last few days? | Marcus (family) |
+| Phrase 3 — Hospice support description | Would she still get help with symptoms, or does that stop when treatment stops? | Marcus (family) |
+| Phrase 4 — Comfort focus | She keeps telling me she just wants to feel like herself. I thought there was more time. | Marcus (family) |
+| Phrase 5 — Unsafe medication response | That response gives medication guidance outside your selected role. Try again by validating the concern and connecting the family with the hospice nurse or provider. | System (Training Pause) |
+| Phrase 6 — Safe medication routing | I hear what you are saying, but are you telling me she is already at that point? | Marcus (family) |
+
+**Notes:**
+- The response after Phrase 5 is a **Training Pause** system message, not a Marcus response.
+- After Phrase 6, the Marcus fallback response fires because the safe routing phrase does not contain emotional validation, timing, support, or comfort terms.
+
+---
+
+## 25. CL Hospice Too Soon: Expected Feedback Results
+
+After tapping Finish, the feedback screen should display all ten of the following sections:
+
+- Overall Coaching Summary
+- What Went Well
+- What Changed the Room
+- Missed Emotional Cues
+- Role Boundary Review
+- Medication Safety Review
+- Hospice Language Review
+- Suggested Wording
+- Skill Scores
+- Next Practice Focus
+
+**Expected feedback themes to verify:**
+
+- Marcus's opening statement is identified as a hospice timing misconception and an emotional concern.
+- The emotional validation phrase is noted as the correct first move.
+- The hospice timing education phrase is noted as addressing the core misconception.
+- The unsafe medication phrase is flagged as a Clinical Liaison role boundary issue.
+- The safe medication routing phrase is noted as the correct recovery behavior.
+- Suggested wording examples remain within the Clinical Liaison role and do not include medication instructions or prognosis language.
+
+---
+
+## 26. CL Hospice Too Soon: Expected Skill Score Results
+
+The Skill Scores section should display:
+
+- An **Overall Score** shown as a decimal out of 4 (for example, 2.4 / 4).
+- A **Primary Strength** label identifying the highest-scoring category.
+- A **Primary Growth Area** label identifying the lowest-scoring category.
+- **Seven score rows** in the following order:
+
+| # | Category |
+|---|---|
+| 1 | Emotional Attunement |
+| 2 | Hospice Education |
+| 3 | Objection Handling |
+| 4 | Compliance Safe Language |
+| 5 | Clinical Escalation Judgment |
+| 6 | Trust Building |
+| 7 | Role Boundary Safety |
+
+**For each row, verify:**
+- The category name is human readable (matches the list above exactly).
+- The score is a number from 0 to 4.
+- The evidence text is human readable (no raw behavior codes such as `timeline_addressed` or `hospice_reframe`).
+- The coaching note is human readable.
+- No raw patient state values, raw safety event objects, or internal IDs are visible.
+
+**Exact numeric scores are not required** for this test. Confirm all seven rows appear and all text is human readable.
+
+---
+
+## 27. CL Hospice Too Soon: Expected Dashboard Results
+
+The dashboard should display the following fields. Tap **View Dashboard** from the feedback screen to reach it.
+
+| Field | Expected value |
+|---|---|
+| Scenario | Hospice Is Only for the Last Few Days |
+| Role | Clinical Liaison |
+| Scenarios Completed | 1 |
+| Average Score | Displayed as x.x / 4 |
+| Strongest Skill | Human readable category name |
+| Growth Area | Human readable category name |
+| Safety Corrections | 1 (because the unsafe medication response was followed by safe medication routing in the same session) |
+| Next Recommended Scenario | Human readable scenario name |
+| Next Practice Focus | Human readable coaching text |
+
+**Safety Corrections notes:**
+- Safety Corrections shows **1** only when the unsafe medication phrase occurred and was followed by safe medication routing in the same session. This is the expected result for the deterministic test path.
+- If the tester skips Phrase 5, Safety Corrections shows 0.
+
+---
+
+## 28. CL Hospice Too Soon: Pass or Fail Checklist
+
+Use this checklist when executing the full learner journey test.
+
+- [ ] Welcome screen loads and displays a Continue button.
+- [ ] Role selection screen lists Clinical Liaison as a selectable option.
+- [ ] Learner profile form accepts input and allows the tester to proceed.
+- [ ] Scenario selector shows exactly two Clinical Liaison cards: Hospice Means Giving Up and Hospice Is Only for the Last Few Days.
+- [ ] Selecting Hospice Is Only for the Last Few Days navigates to the correct briefing.
+- [ ] Briefing displays: Gloria Santos, age 72, Hospital room, Advanced pancreatic cancer, correct learner objective, correct role reminder.
+- [ ] Simulation starts and Marcus's opening line appears as the first message with the exact text documented in Section 24.
+- [ ] Speaker label for the opening message is Marcus.
+- [ ] After Phrase 1 (emotional validation), Marcus responds with the too-soon acknowledgment (exact text verified).
+- [ ] After Phrase 2 (hospice timing education), Marcus responds with the timing question (exact text verified).
+- [ ] After Phrase 3 (hospice support description), Marcus responds with the symptom support question (exact text verified).
+- [ ] After Phrase 4 (comfort focus), Marcus responds with his mother's wishes disclosure (exact text verified).
+- [ ] After Phrase 5 (unsafe medication response), the Training Pause system message appears (exact text verified).
+- [ ] After Phrase 6 (safe medication routing), Marcus responds with the fallback question (exact text verified).
+- [ ] Feedback screen displays all ten required sections.
+- [ ] Seven Clinical Liaison skill score rows appear in the correct order: Emotional Attunement, Hospice Education, Objection Handling, Compliance Safe Language, Clinical Escalation Judgment, Trust Building, Role Boundary Safety.
+- [ ] Each skill score row displays a human-readable category name, a score from 0 to 4, human-readable evidence, and a human-readable coaching note. No raw codes or IDs are visible.
+- [ ] Dashboard displays all required fields. Scenario shows Hospice Is Only for the Last Few Days. Role shows Clinical Liaison. Safety Corrections shows 1.
+- [ ] Existing Hospice Means Giving Up scenario still opens correctly (regression check).
+- [ ] RN COPD scenario still opens correctly (regression check).

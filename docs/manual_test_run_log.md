@@ -398,3 +398,95 @@ Reset the app before this test. Select the **RN** role. Start the **COPD Air Hun
 | Tester Signoff | Nick Lynch — 2026-06-06 |
 | Reviewer Signoff | |
 | Final Notes | RN COPD path passed after D-RN-001 retest 2026-06-06. Next Recommended Scenario confirmed: Terminal Dyspnea Follow Up Conversation. Safety Corrections confirmed: 0. Zero open defects across both Clinical Liaison and RN COPD paths. |
+
+---
+
+## Part III: Clinical Liaison — Hospice Is Only for the Last Few Days
+
+---
+
+## 22. CL Hospice Too Soon: Test Run Information
+
+| Field | Value |
+|---|---|
+| Tester Name | Nick Lynch |
+| Date | 2026-06-06 |
+| App Version or Commit | 0516031 |
+| Device | iPhone (iOS) |
+| Operating System | iOS |
+| Expo Go or Build Type | Expo Go SDK 54 |
+| Test Environment | Local — no backend, no AI, no external APIs |
+| Test Type | Smoke test — Packet 18 acceptance |
+| Formal Deterministic Path | Pending |
+| Overall Result | Smoke tested — no defects found |
+
+---
+
+## 23. CL Hospice Too Soon: Scope of Test
+
+This log records the Packet 18 acceptance smoke test for the Hospice Is Only for the Last Few Days scenario. A formal deterministic path run following the test script in Part III of manual_test_script.md has not yet been executed.
+
+Reference test script: [docs/manual_test_script.md](manual_test_script.md) — Part III, Sections 21–28.
+
+---
+
+## 24. CL Hospice Too Soon: What Was Verified in the Smoke Test
+
+| Check | Result |
+|---|---|
+| TypeScript passes with zero errors | Pass |
+| CL scenario selector shows exactly two cards: Hospice Means Giving Up and Hospice Is Only for the Last Few Days | Pass |
+| Briefing shows Gloria Santos, age 72, Hospital room, Advanced pancreatic cancer, correct learner objective, correct role reminder | Pass |
+| Simulation opens with Marcus's opening line (exact text verified) | Pass |
+| Speaker label on opening message is Marcus, not Daughter | Pass |
+| Phrase with emotional validation terms produces Rule 1 Marcus response — I just do not want to give up on her too soon. She is still herself. | Pass |
+| Phrase with hospice timing terms produces Rule 2 Marcus response — So hospice can start before someone is down to the last few days? | Pass |
+| Unsafe medication phrase fires Clinical Liaison Training Pause | Pass |
+| Feedback screen renders without crash | Pass |
+| Skill Scores section renders without crash | Pass |
+| Dashboard renders without crash | Pass |
+| Dashboard scenario title shows Hospice Is Only for the Last Few Days | Pass |
+| Hospice Means Giving Up scenario still opens and responds correctly (regression) | Pass |
+| RN COPD scenario still opens and responds correctly (regression) | Pass |
+
+---
+
+## 25. CL Hospice Too Soon: What Was Not Verified in the Smoke Test
+
+The following items were not covered in the Packet 18 acceptance smoke test. They require the full deterministic path test per manual_test_script.md Part III.
+
+- Full six-phrase deterministic path (only Phrases 1 and 2 were tested)
+- Marcus Rule 3 response — Would she still get help with symptoms, or does that stop when treatment stops?
+- Marcus Rule 4 response — She keeps telling me she just wants to feel like herself. I thought there was more time.
+- Marcus Rule 5 (reframe) response
+- Marcus fallback response after safe medication routing (Phrase 6)
+- Exact dashboard Safety Corrections value after the full deterministic path including Phrase 5 and Phrase 6
+- Exact Next Recommended Scenario value on dashboard
+- All ten feedback section themes specific to this scenario
+- Seven skill score rows in correct order with human-readable content
+- Negative tests for this scenario
+
+---
+
+## 26. CL Hospice Too Soon: Defect Log
+
+No defects found during smoke test.
+
+| Defect ID | Step or Area | Description | Expected Behavior | Actual Behavior | Severity | Screenshot or Recording | Status | Owner | Notes |
+|---|---|---|---|---|---|---|---|---|---|
+
+*Add rows as defects are found using format D-P3-001, D-P3-002, etc.*
+
+---
+
+## 27. Part III Signoff
+
+| Field | Value |
+|---|---|
+| Smoke Test Result | Pass |
+| Formal Deterministic Path | Pending |
+| Critical Defects Open | 0 |
+| High Defects Open | 0 |
+| Tester Signoff | Nick Lynch — 2026-06-06 |
+| Reviewer Signoff | |
+| Final Notes | Packet 18 acceptance smoke test passed on 2026-06-06 at commit 0516031. Zero defects found. Full deterministic path per manual_test_script.md Part III not yet executed. |

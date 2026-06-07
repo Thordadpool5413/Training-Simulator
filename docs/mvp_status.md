@@ -1,6 +1,6 @@
 # MVP Status — Hospice Communication Training Simulator
 
-> **Checkpoint date:** 2026-06-06. This document captures the stable two-scenario MVP state before new features are added. It is a point-in-time snapshot, not a living document.
+> **Updated:** 2026-06-06. This document reflects the stable three-scenario MVP state after Packet 18. It is maintained as a living status record updated at each stable checkpoint.
 
 ---
 
@@ -8,7 +8,7 @@
 
 | Field | Value |
 |---|---|
-| Status | Stable MVP — two scenarios passing |
+| Status | Stable MVP — three scenarios active |
 | Last Manual Test | 2026-06-06 |
 | Open Defects | 0 |
 | TypeScript | Passes with zero errors |
@@ -42,6 +42,17 @@ Both learner paths — Clinical Liaison and RN — have been manually tested end
 | Opening line | My dad is dying and you want to take away his care? |
 | Core challenge | Hospice objection handling, emotional acknowledgment, medication routing |
 
+### Hospice Is Only for the Last Few Days
+
+| Field | Value |
+|---|---|
+| Role | Clinical Liaison |
+| Patient | Gloria Santos, age 72 |
+| Family | Son (Marcus Santos) |
+| Setting | Hospital room |
+| Opening line | The doctor says Mom might qualify for hospice, but she is still talking to us and eating a little. I thought hospice was only for the last few days. |
+| Core challenge | Correcting hospice timing misconception, acknowledging fear of acting too soon, explaining what hospice provides, avoiding prognosis promises, and staying within Clinical Liaison role boundaries |
+
 ### COPD Air Hunger at Home
 
 | Field | Value |
@@ -61,6 +72,7 @@ Both learner paths — Clinical Liaison and RN — have been manually tested end
 |---|---|---|---|---|---|---|---|
 | Clinical Liaison clean path | 7 | 7 exact matches | Fires on unsafe medication phrase | 10 sections | 7 CL categories | All 9 fields | Pass |
 | Clinical Liaison medication safety | 2 | Training Pause verbatim + daughter acceptance | Fires and recovers | — | — | Safety Corrections = 1 | Pass |
+| Hospice Is Only for the Last Few Days — smoke test | 4 | Opening line, Marcus Rule 1, Marcus Rule 2, Training Pause responses verified | Fires on unsafe medication phrase | Renders | Renders | Renders | Smoke tested 2026-06-06 — deterministic path test pending |
 | RN COPD clean path | 6 | 6 exact matches | None | 10 sections | 7 RN categories | All 9 fields | Pass |
 | RN medication safety | 2 | Training Pause verbatim + Margaret response | Fires and recovers | — | — | Safety Corrections = 1 | Pass |
 
@@ -152,7 +164,6 @@ The following limitations apply to the current MVP build and are expected behavi
 - No saved progress. Session state is lost when the app is closed or restarted.
 - No authentication. No user accounts or login.
 - No voice mode. All input is text only.
-- No multi-scenario selector beyond the first scenario per role. The learner cannot choose between multiple scenarios for the same role.
 - No production deployment. The app runs in Expo Go only.
 - No persistent learner history. There is no aggregate score, progress record, or history view across sessions.
 - Dashboard reflects the current session only. There is no multi-session aggregate score.
@@ -161,8 +172,7 @@ The following limitations apply to the current MVP build and are expected behavi
 
 ## 9. Not Yet Implemented
 
-- Scenario selector UI allowing learners to choose from multiple scenarios per role
-- Additional hospice and palliative care scenarios beyond the current two
+- Additional hospice and palliative care scenarios beyond the current three
 - Additional learner roles beyond Clinical Liaison and RN
 - Persistent session storage and learner history
 - User accounts and authentication
@@ -180,7 +190,7 @@ The following limitations apply to the current MVP build and are expected behavi
 Listed in suggested priority order. Some lanes can run in parallel once the scenario selector is in place.
 
 1. **UI and UX polish** — Refine visual design, typography, layout, and interaction patterns before expanding content. Establishes the design baseline for all future screens.
-2. **Scenario selector** — Add a screen that lets learners choose from multiple scenarios per role. Required before adding new scenarios.
+2. **Scenario selector** *(complete — Packet 17)* — Learners can now choose from multiple scenarios per role. Clinical Liaison shows two scenarios. RN shows one scenario.
 3. **Persistence and learner history** — Add local or backend session storage so learners can track progress across runs.
 4. **Additional hospice scenarios** — Expand the scenario library for both Clinical Liaison and RN. Each new scenario follows the established dispatcher pattern.
 5. **AI or MCP integration** — Replace or augment rule-based response generation with AI-powered responses for more naturalistic conversations. Requires backend.

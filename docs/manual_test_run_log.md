@@ -416,15 +416,15 @@ Reset the app before this test. Select the **RN** role. Start the **COPD Air Hun
 | Operating System | iOS |
 | Expo Go or Build Type | Expo Go SDK 54 |
 | Test Environment | Local — no backend, no AI, no external APIs |
-| Test Type | Smoke test — Packet 18 acceptance |
-| Formal Deterministic Path | Pending |
-| Overall Result | Smoke tested — no defects found |
+| Test Type | Smoke test (2026-06-06) and formal deterministic path (2026-06-06) |
+| Formal Deterministic Path | Pass |
+| Overall Result | Pass — all paths complete, zero open defects |
 
 ---
 
 ## 23. CL Hospice Too Soon: Scope of Test
 
-This log records the Packet 18 acceptance smoke test for the Hospice Is Only for the Last Few Days scenario. A formal deterministic path run following the test script in Part III of manual_test_script.md has not yet been executed.
+This log records the Packet 18 acceptance smoke test and the subsequent formal deterministic path run for the Hospice Is Only for the Last Few Days scenario. Both the smoke test (2026-06-06) and the formal deterministic path (2026-06-06) are complete. All fifteen steps passed with zero open defects.
 
 Reference test script: [docs/manual_test_script.md](manual_test_script.md) — Part III, Sections 21–28.
 
@@ -451,26 +451,39 @@ Reference test script: [docs/manual_test_script.md](manual_test_script.md) — P
 
 ---
 
-## 25. CL Hospice Too Soon: What Was Not Verified in the Smoke Test
+## 25. CL Hospice Too Soon: Formal Deterministic Path Execution Log
 
-The following items were not covered in the Packet 18 acceptance smoke test. They require the full deterministic path test per manual_test_script.md Part III.
-
-- Full six-phrase deterministic path (only Phrases 1 and 2 were tested)
-- Marcus Rule 3 response — Would she still get help with symptoms, or does that stop when treatment stops?
-- Marcus Rule 4 response — She keeps telling me she just wants to feel like herself. I thought there was more time.
-- Marcus Rule 5 (reframe) response
-- Marcus fallback response after safe medication routing (Phrase 6)
-- Exact dashboard Safety Corrections value after the full deterministic path including Phrase 5 and Phrase 6
-- Exact Next Recommended Scenario value on dashboard
-- All ten feedback section themes specific to this scenario
-- Seven skill score rows in correct order with human-readable content
-- Negative tests for this scenario
+| Step # | Test Area | Expected Result | Actual Result | Pass / Fail | Notes |
+|---|---|---|---|---|---|
+| 1 | Welcome Screen | App loads. Continue button visible. | Continue button visible. | Pass | |
+| 2 | Role Selection | Clinical Liaison and RN both listed. | Both roles listed. | Pass | |
+| 3 | Learner Profile | Form accepts input. Tapping Continue advances to scenario selector. | Form accepted input. Advanced to scenario selector. | Pass | |
+| 4 | Scenario Selector | Two CL cards visible: Hospice Means Giving Up and Hospice Is Only for the Last Few Days. | Both cards visible. | Pass | |
+| 5 | Scenario Briefing | Gloria Santos, age 72, Hospital room, Advanced pancreatic cancer, objective, role reminder, Start Simulation button. | All fields confirmed. | Pass | |
+| 6 | Simulation Opening Line | Speaker label Marcus. Text: The doctor says Mom might qualify for hospice, but she is still talking to us and eating a little. I thought hospice was only for the last few days. | Exact match. Speaker label Marcus. | Pass | |
+| 7 | Phrase 1 — Emotional Validation | Marcus: I just do not want to give up on her too soon. She is still herself. | Exact match. | Pass | |
+| 8 | Phrase 2 — Hospice Timing Education | Marcus: So hospice can start before someone is down to the last few days? | Exact match. | Pass | |
+| 9 | Phrase 3 — Hospice Support Description | Marcus: Would she still get help with symptoms, or does that stop when treatment stops? | Exact match. | Pass | |
+| 10 | Phrase 4 — Comfort Focus | Marcus: She keeps telling me she just wants to feel like herself. I thought there was more time. | Exact match. | Pass | |
+| 11 | Phrase 5 — Unsafe Medication Response | Training Pause fires. Marcus does not respond. Exact text: That response gives medication guidance outside your selected role. Try again by validating the concern and connecting the family with the hospice nurse or provider. | Training Pause fired. Exact match. Marcus did not respond. | Pass | |
+| 12 | Phrase 6 — Safe Medication Routing | Marcus: I hear what you are saying, but are you telling me she is already at that point? | Exact match. | Pass | |
+| 13 | Feedback Sections | All ten sections visible. | All ten sections visible. | Pass | |
+| 14 | Skill Scores | Seven CL rows in order: Emotional Attunement, Hospice Education, Objection Handling, Compliance Safe Language, Clinical Escalation Judgment, Trust Building, Role Boundary Safety. All text human readable. No raw codes or IDs. | All seven rows present in correct order. All text human readable. No raw codes or IDs visible. | Pass | |
+| 15 | Dashboard | Scenario: Hospice Is Only for the Last Few Days. Role: Clinical Liaison. Safety Corrections: 1. No raw codes or IDs. | All fields confirmed. Safety Corrections shows 1. No raw codes or IDs visible. | Pass | |
 
 ---
 
-## 26. CL Hospice Too Soon: Defect Log
+## 26. CL Hospice Too Soon: What Was Not Verified in the Formal Path
 
-No defects found during smoke test.
+- Negative tests for this scenario (empty state, session reset, safe routing before medication question appears)
+- Next Recommended Scenario exact value on dashboard
+- Average Score exact value
+
+---
+
+## 27. CL Hospice Too Soon: Defect Log
+
+No defects found during smoke test or formal deterministic path.
 
 | Defect ID | Step or Area | Description | Expected Behavior | Actual Behavior | Severity | Screenshot or Recording | Status | Owner | Notes |
 |---|---|---|---|---|---|---|---|---|---|
@@ -479,14 +492,15 @@ No defects found during smoke test.
 
 ---
 
-## 27. Part III Signoff
+## 28. Part III Signoff
 
 | Field | Value |
 |---|---|
 | Smoke Test Result | Pass |
-| Formal Deterministic Path | Pending |
+| Formal Deterministic Path | Pass |
 | Critical Defects Open | 0 |
 | High Defects Open | 0 |
+| Ready for Next Packet | Yes |
 | Tester Signoff | Nick Lynch — 2026-06-06 |
 | Reviewer Signoff | |
-| Final Notes | Packet 18 acceptance smoke test passed on 2026-06-06 at commit 0516031. Zero defects found. Full deterministic path per manual_test_script.md Part III not yet executed. |
+| Final Notes | Formal deterministic path executed 2026-06-06. All 15 steps passed. All six phrases produced exact expected responses. Training Pause fired correctly on Phrase 5. Safety Corrections confirmed 1 on dashboard. Seven CL skill score rows confirmed in correct order. No raw codes or IDs visible. Zero open defects. |

@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { Radius, SimulatorColors } from '@/constants/theme';
 import { patientStateDefaults } from '@/data/patientStateDefaults';
 import { roles } from '@/data/roles';
 import { scenarioTemplates } from '@/data/scenarioTemplates';
@@ -291,7 +292,7 @@ function MessageBubble({ message }: { message: ConversationMessage }) {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: SimulatorColors.screenBackground,
   },
   flex: {
     flex: 1,
@@ -304,19 +305,19 @@ const styles = StyleSheet.create({
   },
   centerText: {
     fontSize: 16,
-    color: '#6B7280',
+    color: SimulatorColors.textSecondary,
     textAlign: 'center',
     marginBottom: 24,
     lineHeight: 24,
   },
   button: {
-    backgroundColor: '#2563EB',
-    borderRadius: 8,
+    backgroundColor: SimulatorColors.brand,
+    borderRadius: Radius.md,
     paddingVertical: 12,
     paddingHorizontal: 24,
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: SimulatorColors.textOnBrand,
     fontSize: 15,
     fontWeight: '600',
   },
@@ -325,9 +326,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: SimulatorColors.surface,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: SimulatorColors.border,
   },
   headerLeft: {
     flex: 1,
@@ -336,44 +337,44 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#111827',
+    color: SimulatorColors.textPrimary,
     marginBottom: 2,
   },
   headerMeta: {
     fontSize: 12,
-    color: '#6B7280',
+    color: SimulatorColors.textSecondary,
   },
   finishButton: {
     paddingVertical: 6,
     paddingHorizontal: 14,
-    borderRadius: 6,
+    borderRadius: Radius.sm,
     borderWidth: 1,
-    borderColor: '#6B7280',
-    backgroundColor: '#F9FAFB',
+    borderColor: SimulatorColors.textBody,
+    backgroundColor: SimulatorColors.screenBackground,
   },
   finishButtonText: {
     fontSize: 14,
-    color: '#374151',
+    color: SimulatorColors.textBody,
     fontWeight: '600',
   },
   reminder: {
-    backgroundColor: '#E0E7FF',
+    backgroundColor: SimulatorColors.indigoBackground,
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#C7D2FE',
+    borderBottomColor: SimulatorColors.indigoBorder,
   },
   reminderLabel: {
     fontSize: 11,
     fontWeight: '600',
-    color: '#4338CA',
+    color: SimulatorColors.indigoLabel,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     marginBottom: 3,
   },
   reminderText: {
     fontSize: 13,
-    color: '#3730A3',
+    color: SimulatorColors.indigoText,
     lineHeight: 19,
   },
   chatScroll: {
@@ -388,34 +389,34 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     paddingHorizontal: 12,
     paddingVertical: 10,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: SimulatorColors.surface,
     borderTopWidth: 1,
-    borderTopColor: '#E5E7EB',
+    borderTopColor: SimulatorColors.border,
     gap: 8,
   },
   textInput: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: SimulatorColors.screenBackground,
     borderWidth: 1,
-    borderColor: '#D1D5DB',
-    borderRadius: 8,
+    borderColor: SimulatorColors.borderInput,
+    borderRadius: Radius.md,
     paddingHorizontal: 12,
     paddingVertical: 9,
     fontSize: 15,
-    color: '#111827',
+    color: SimulatorColors.textPrimary,
     maxHeight: 100,
   },
   sendButton: {
-    backgroundColor: '#2563EB',
-    borderRadius: 8,
+    backgroundColor: SimulatorColors.brand,
+    borderRadius: Radius.md,
     paddingHorizontal: 16,
     paddingVertical: 10,
   },
   sendButtonDisabled: {
-    backgroundColor: '#93C5FD',
+    backgroundColor: SimulatorColors.brandDisabled,
   },
   sendButtonText: {
-    color: '#FFFFFF',
+    color: SimulatorColors.textOnBrand,
     fontSize: 15,
     fontWeight: '600',
   },
@@ -424,23 +425,23 @@ const styles = StyleSheet.create({
 const systemStyles = StyleSheet.create({
   container: {
     alignSelf: 'stretch',
-    backgroundColor: '#FEF3C7',
+    backgroundColor: SimulatorColors.warningBackground,
     borderWidth: 1,
-    borderColor: '#F59E0B',
-    borderRadius: 8,
+    borderColor: SimulatorColors.warningBorder,
+    borderRadius: Radius.md,
     padding: 14,
   },
   label: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#92400E',
+    color: SimulatorColors.warningLabelText,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     marginBottom: 4,
   },
   text: {
     fontSize: 14,
-    color: '#78350F',
+    color: SimulatorColors.warningBodyText,
     lineHeight: 20,
   },
 });
@@ -455,31 +456,31 @@ const bubbleStyles = StyleSheet.create({
   speakerName: {
     fontSize: 11,
     fontWeight: '600',
-    color: '#6B7280',
+    color: SimulatorColors.textSecondary,
     marginBottom: 3,
     textTransform: 'uppercase',
     letterSpacing: 0.4,
   },
   bubble: {
-    borderRadius: 12,
+    borderRadius: Radius.lg,
     paddingHorizontal: 14,
     paddingVertical: 10,
     maxWidth: '80%',
   },
   bubbleFamily: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: SimulatorColors.surface,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: SimulatorColors.border,
   },
   bubbleLearner: {
-    backgroundColor: '#2563EB',
+    backgroundColor: SimulatorColors.brand,
   },
   text: {
     fontSize: 15,
-    color: '#111827',
+    color: SimulatorColors.textPrimary,
     lineHeight: 22,
   },
   textLearner: {
-    color: '#FFFFFF',
+    color: SimulatorColors.textOnBrand,
   },
 });

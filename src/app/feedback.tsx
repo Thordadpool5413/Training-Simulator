@@ -5,6 +5,7 @@ import type { ReactNode } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { Radius, SimulatorColors } from '@/constants/theme';
 import { generateFeedbackReport } from '@/services/feedbackService';
 import { generateSkillScoreReport } from '@/services/scoringService';
 import { useSimulator } from '@/state/SimulatorContext';
@@ -158,11 +159,11 @@ function SectionBlock({ title, children }: { title: string; children: ReactNode 
 
 function scoreBadgeColor(score: 0 | 1 | 2 | 3 | 4): string {
   switch (score) {
-    case 0: return '#DC2626';
-    case 1: return '#EA580C';
-    case 2: return '#CA8A04';
-    case 3: return '#2563EB';
-    case 4: return '#16A34A';
+    case 0: return SimulatorColors.scoreRed;
+    case 1: return SimulatorColors.scoreOrange;
+    case 2: return SimulatorColors.scoreYellow;
+    case 3: return SimulatorColors.brand;
+    case 4: return SimulatorColors.scoreGreen;
   }
 }
 
@@ -184,7 +185,7 @@ function ScoreRow({ item }: { item: SkillScore }) {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: SimulatorColors.screenBackground,
   },
   scrollContent: {
     padding: 20,
@@ -194,49 +195,49 @@ const styles = StyleSheet.create({
   screenTitle: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#111827',
+    color: SimulatorColors.textPrimary,
     marginBottom: 4,
   },
   bodyText: {
     fontSize: 15,
-    color: '#374151',
+    color: SimulatorColors.textBody,
     lineHeight: 22,
   },
   bulletItem: {
     fontSize: 15,
-    color: '#374151',
+    color: SimulatorColors.textBody,
     lineHeight: 22,
     marginBottom: 2,
   },
   wordingCard: {
-    backgroundColor: '#EFF6FF',
+    backgroundColor: SimulatorColors.brandTint,
     borderLeftWidth: 3,
-    borderLeftColor: '#2563EB',
-    borderRadius: 6,
+    borderLeftColor: SimulatorColors.brand,
+    borderRadius: Radius.sm,
     padding: 14,
     marginBottom: 8,
   },
   wordingText: {
     fontSize: 14,
-    color: '#1E40AF',
+    color: SimulatorColors.brandDeep,
     lineHeight: 21,
     fontStyle: 'italic',
   },
   focusCallout: {
-    backgroundColor: '#F0FDF4',
+    backgroundColor: SimulatorColors.greenBackground,
     borderWidth: 1,
-    borderColor: '#86EFAC',
-    borderRadius: 8,
+    borderColor: SimulatorColors.greenBorder,
+    borderRadius: Radius.md,
     padding: 14,
   },
   focusText: {
     fontSize: 15,
-    color: '#166534',
+    color: SimulatorColors.greenText,
     lineHeight: 22,
   },
   button: {
-    backgroundColor: '#2563EB',
-    borderRadius: 8,
+    backgroundColor: SimulatorColors.brand,
+    borderRadius: Radius.md,
     paddingVertical: 14,
     alignItems: 'center',
   },
@@ -244,20 +245,20 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   viewDashboardButton: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 8,
+    backgroundColor: SimulatorColors.surface,
+    borderRadius: Radius.md,
     paddingVertical: 14,
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#2563EB',
+    borderColor: SimulatorColors.brand,
   },
   viewDashboardButtonText: {
-    color: '#2563EB',
+    color: SimulatorColors.brand,
     fontSize: 16,
     fontWeight: '600',
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: SimulatorColors.textOnBrand,
     fontSize: 16,
     fontWeight: '600',
   },
@@ -269,7 +270,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    color: '#6B7280',
+    color: SimulatorColors.textSecondary,
     textAlign: 'center',
     marginBottom: 24,
     lineHeight: 24,
@@ -278,17 +279,17 @@ const styles = StyleSheet.create({
 
 const sectionStyles = StyleSheet.create({
   container: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
+    backgroundColor: SimulatorColors.surface,
+    borderRadius: Radius.lg,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: SimulatorColors.border,
     padding: 16,
     gap: 8,
   },
   title: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#6B7280',
+    color: SimulatorColors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     marginBottom: 4,
@@ -302,38 +303,38 @@ const scoreStyles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 6,
     borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
+    borderBottomColor: SimulatorColors.border,
     marginBottom: 4,
   },
   overallLabel: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#374151',
+    color: SimulatorColors.textBody,
   },
   overallValue: {
     fontSize: 22,
     fontWeight: '700',
-    color: '#2563EB',
+    color: SimulatorColors.brand,
   },
   strengthCallout: {
-    backgroundColor: '#F0FDF4',
+    backgroundColor: SimulatorColors.greenBackground,
     borderWidth: 1,
-    borderColor: '#86EFAC',
-    borderRadius: 8,
+    borderColor: SimulatorColors.greenBorder,
+    borderRadius: Radius.md,
     padding: 12,
     marginTop: 4,
   },
   growthCallout: {
-    backgroundColor: '#FFF7ED',
+    backgroundColor: SimulatorColors.amberBackground,
     borderWidth: 1,
-    borderColor: '#FDBA74',
-    borderRadius: 8,
+    borderColor: SimulatorColors.amberBorder,
+    borderRadius: Radius.md,
     padding: 12,
   },
   calloutLabel: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#6B7280',
+    color: SimulatorColors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     marginBottom: 3,
@@ -341,14 +342,14 @@ const scoreStyles = StyleSheet.create({
   calloutText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#111827',
+    color: SimulatorColors.textPrimary,
   },
 });
 
 const scoreRowStyles = StyleSheet.create({
   container: {
     borderTopWidth: 1,
-    borderTopColor: '#F3F4F6',
+    borderTopColor: SimulatorColors.borderDivider,
     paddingTop: 10,
     gap: 4,
   },
@@ -360,28 +361,28 @@ const scoreRowStyles = StyleSheet.create({
   category: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#111827',
+    color: SimulatorColors.textPrimary,
     flex: 1,
     marginRight: 8,
   },
   badge: {
-    borderRadius: 12,
+    borderRadius: Radius.lg,
     paddingHorizontal: 10,
     paddingVertical: 3,
   },
   badgeText: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#FFFFFF',
+    color: SimulatorColors.textOnBrand,
   },
   evidence: {
     fontSize: 13,
-    color: '#374151',
+    color: SimulatorColors.textBody,
     lineHeight: 19,
   },
   coachingNote: {
     fontSize: 13,
-    color: '#6B7280',
+    color: SimulatorColors.textSecondary,
     lineHeight: 19,
     fontStyle: 'italic',
   },

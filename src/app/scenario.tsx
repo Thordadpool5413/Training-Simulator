@@ -3,6 +3,7 @@ import type { Href } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { Radius, SimulatorColors } from '@/constants/theme';
 import { diagnoses } from '@/data/diagnoses';
 import { scenarioTemplates } from '@/data/scenarioTemplates';
 import { useSimulator } from '@/state/SimulatorContext';
@@ -80,7 +81,7 @@ export default function ScenarioScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: SimulatorColors.screenBackground,
   },
   container: {
     padding: 24,
@@ -89,53 +90,53 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#111827',
+    color: SimulatorColors.textPrimary,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 15,
-    color: '#6B7280',
+    color: SimulatorColors.textSecondary,
     marginBottom: 28,
     lineHeight: 22,
   },
   card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
+    backgroundColor: SimulatorColors.surface,
+    borderRadius: Radius.lg,
     padding: 20,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: SimulatorColors.border,
   },
   scenarioTitle: {
     fontSize: 17,
     fontWeight: '700',
-    color: '#111827',
+    color: SimulatorColors.textPrimary,
     marginBottom: 6,
   },
   scenarioMeta: {
     fontSize: 13,
-    color: '#6B7280',
+    color: SimulatorColors.textSecondary,
     lineHeight: 19,
     marginBottom: 4,
   },
   scenarioObjective: {
     fontSize: 14,
-    color: '#374151',
+    color: SimulatorColors.textBody,
     lineHeight: 20,
     marginTop: 8,
     marginBottom: 16,
   },
   selectButton: {
-    backgroundColor: '#2563EB',
-    borderRadius: 8,
+    backgroundColor: SimulatorColors.brand,
+    borderRadius: Radius.md,
     paddingVertical: 12,
     alignItems: 'center',
   },
   selectButtonPressed: {
-    backgroundColor: '#1D4ED8',
+    backgroundColor: SimulatorColors.brandDark,
   },
   selectButtonText: {
-    color: '#FFFFFF',
+    color: SimulatorColors.textOnBrand,
     fontSize: 15,
     fontWeight: '600',
   },
@@ -147,19 +148,19 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 16,
-    color: '#6B7280',
+    color: SimulatorColors.textSecondary,
     textAlign: 'center',
     marginBottom: 24,
     lineHeight: 24,
   },
   errorButton: {
-    backgroundColor: '#2563EB',
-    borderRadius: 8,
+    backgroundColor: SimulatorColors.brand,
+    borderRadius: Radius.md,
     paddingVertical: 12,
     paddingHorizontal: 24,
   },
   errorButtonText: {
-    color: '#FFFFFF',
+    color: SimulatorColors.textOnBrand,
     fontSize: 15,
     fontWeight: '600',
   },

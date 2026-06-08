@@ -2,6 +2,8 @@ import { router } from 'expo-router';
 import type { Href } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { Radius, SimulatorColors } from '@/constants/theme';
+
 export default function IndexScreen() {
   return (
     <View style={styles.container}>
@@ -24,12 +26,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 32,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: SimulatorColors.screenBackground,
   },
   appTitle: {
     fontSize: 22,
     fontWeight: '700',
-    color: '#111827',
+    color: SimulatorColors.textPrimary,
     textAlign: 'center',
     marginBottom: 20,
     lineHeight: 30,
@@ -38,18 +40,18 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 24,
     textAlign: 'center',
-    color: '#6B7280',
+    color: SimulatorColors.textSecondary,
     marginBottom: 40,
   },
   button: {
-    backgroundColor: '#2563EB',
+    backgroundColor: SimulatorColors.brand,
     paddingVertical: 14,
-    borderRadius: 8,
+    borderRadius: Radius.md,
     alignSelf: 'stretch',
     alignItems: 'center',
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: SimulatorColors.textOnBrand,
     fontSize: 16,
     fontWeight: '600',
   },

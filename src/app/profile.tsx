@@ -4,6 +4,7 @@ import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
 
+import { Radius, SimulatorColors } from '@/constants/theme';
 import { useSimulator } from '@/state/SimulatorContext';
 import type {
   ComfortLevel,
@@ -192,7 +193,7 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: SimulatorColors.screenBackground,
   },
   container: {
     padding: 24,
@@ -201,12 +202,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#111827',
+    color: SimulatorColors.textPrimary,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 15,
-    color: '#6B7280',
+    color: SimulatorColors.textSecondary,
     marginBottom: 28,
     lineHeight: 22,
   },
@@ -216,33 +217,33 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 15,
     fontWeight: '700',
-    color: '#374151',
+    color: SimulatorColors.textBody,
     marginBottom: 10,
   },
   scale: {
     fontWeight: '400',
-    color: '#9CA3AF',
+    color: SimulatorColors.textPlaceholder,
     fontSize: 13,
   },
   textInput: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: SimulatorColors.surface,
     borderWidth: 1,
-    borderColor: '#D1D5DB',
-    borderRadius: 8,
+    borderColor: SimulatorColors.borderInput,
+    borderRadius: Radius.md,
     paddingHorizontal: 14,
     paddingVertical: 10,
     fontSize: 15,
-    color: '#111827',
+    color: SimulatorColors.textPrimary,
   },
   button: {
-    backgroundColor: '#2563EB',
-    borderRadius: 8,
+    backgroundColor: SimulatorColors.brand,
+    borderRadius: Radius.md,
     paddingVertical: 14,
     alignItems: 'center',
     marginTop: 8,
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: SimulatorColors.textOnBrand,
     fontSize: 16,
     fontWeight: '600',
   },
@@ -257,21 +258,21 @@ const optionStyles = StyleSheet.create({
   chip: {
     paddingHorizontal: 16,
     paddingVertical: 8,
-    borderRadius: 8,
+    borderRadius: Radius.md,
     borderWidth: 1,
-    borderColor: '#D1D5DB',
-    backgroundColor: '#FFFFFF',
+    borderColor: SimulatorColors.borderInput,
+    backgroundColor: SimulatorColors.surface,
   },
   chipSelected: {
-    backgroundColor: '#2563EB',
-    borderColor: '#2563EB',
+    backgroundColor: SimulatorColors.brand,
+    borderColor: SimulatorColors.brand,
   },
   chipText: {
     fontSize: 14,
-    color: '#374151',
+    color: SimulatorColors.textBody,
     fontWeight: '500',
   },
   chipTextSelected: {
-    color: '#FFFFFF',
+    color: SimulatorColors.textOnBrand,
   },
 });

@@ -3,6 +3,7 @@ import type { Href } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { Radius, SimulatorColors } from '@/constants/theme';
 import { diagnoses } from '@/data/diagnoses';
 import { roles } from '@/data/roles';
 import { scenarioTemplates } from '@/data/scenarioTemplates';
@@ -115,7 +116,7 @@ function BriefingRow({
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: SimulatorColors.screenBackground,
   },
   container: {
     padding: 24,
@@ -124,25 +125,25 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#111827',
+    color: SimulatorColors.textPrimary,
     marginBottom: 20,
   },
   card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
+    backgroundColor: SimulatorColors.surface,
+    borderRadius: Radius.lg,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: SimulatorColors.border,
     marginBottom: 28,
     overflow: 'hidden',
   },
   button: {
-    backgroundColor: '#2563EB',
-    borderRadius: 8,
+    backgroundColor: SimulatorColors.brand,
+    borderRadius: Radius.md,
     paddingVertical: 14,
     alignItems: 'center',
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: SimulatorColors.textOnBrand,
     fontSize: 16,
     fontWeight: '600',
   },
@@ -154,7 +155,7 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: 16,
-    color: '#6B7280',
+    color: SimulatorColors.textSecondary,
     textAlign: 'center',
     marginBottom: 24,
     lineHeight: 24,
@@ -168,26 +169,26 @@ const rowStyles = StyleSheet.create({
   },
   rowBorder: {
     borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
+    borderBottomColor: SimulatorColors.borderDivider,
   },
   label: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#6B7280',
+    color: SimulatorColors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     marginBottom: 4,
   },
   labelEmphasized: {
-    color: '#1D4ED8',
+    color: SimulatorColors.brandDark,
     fontWeight: '700',
   },
   rowEmphasized: {
-    backgroundColor: '#EFF6FF',
+    backgroundColor: SimulatorColors.brandTint,
   },
   value: {
     fontSize: 15,
-    color: '#111827',
+    color: SimulatorColors.textPrimary,
     lineHeight: 22,
   },
 });

@@ -3,6 +3,7 @@ import type { Href } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { Radius, SimulatorColors } from '@/constants/theme';
 import { roles } from '@/data/roles';
 import { useSimulator } from '@/state/SimulatorContext';
 
@@ -53,7 +54,7 @@ export default function RoleScreen() {
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: SimulatorColors.screenBackground,
   },
   container: {
     padding: 24,
@@ -62,31 +63,31 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#111827',
+    color: SimulatorColors.textPrimary,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 15,
-    color: '#6B7280',
+    color: SimulatorColors.textSecondary,
     marginBottom: 28,
     lineHeight: 22,
   },
   card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
+    backgroundColor: SimulatorColors.surface,
+    borderRadius: Radius.lg,
     padding: 20,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: SimulatorColors.border,
   },
   cardPressed: {
-    backgroundColor: '#EFF6FF',
-    borderColor: '#2563EB',
+    backgroundColor: SimulatorColors.brandTint,
+    borderColor: SimulatorColors.brand,
   },
   roleName: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#111827',
+    color: SimulatorColors.textPrimary,
     marginBottom: 10,
   },
   allowedList: {
@@ -94,13 +95,13 @@ const styles = StyleSheet.create({
   },
   boundaryNote: {
     fontSize: 12,
-    color: '#6B7280',
+    color: SimulatorColors.textSecondary,
     marginBottom: 10,
     lineHeight: 18,
   },
   allowedItem: {
     fontSize: 13,
-    color: '#374151',
+    color: SimulatorColors.textBody,
     lineHeight: 20,
   },
 });

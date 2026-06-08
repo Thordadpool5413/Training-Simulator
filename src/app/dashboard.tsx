@@ -5,6 +5,7 @@ import type { ReactNode } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { Radius, SimulatorColors } from '@/constants/theme';
 import { generateDashboardSummary } from '@/services/dashboardService';
 import { useSimulator } from '@/state/SimulatorContext';
 import type { DashboardSummary } from '@/types/simulator';
@@ -118,7 +119,7 @@ function StatRow({ label, value, stacked = false }: { label: string; value: stri
 const styles = StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: SimulatorColors.screenBackground,
   },
   scrollContent: {
     padding: 20,
@@ -128,19 +129,19 @@ const styles = StyleSheet.create({
   screenTitle: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#111827',
+    color: SimulatorColors.textPrimary,
     marginBottom: 4,
   },
   summaryCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
+    backgroundColor: SimulatorColors.surface,
+    borderRadius: Radius.lg,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: SimulatorColors.border,
     padding: 16,
   },
   summaryText: {
     fontSize: 16,
-    color: '#374151',
+    color: SimulatorColors.textBody,
     lineHeight: 23,
   },
   practiceBlock: {
@@ -149,15 +150,15 @@ const styles = StyleSheet.create({
   practiceLabel: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#6B7280',
+    color: SimulatorColors.textSecondary,
   },
   practiceText: {
     fontSize: 14,
-    color: '#374151',
+    color: SimulatorColors.textBody,
     lineHeight: 20,
   },
   amberBadge: {
-    backgroundColor: '#F59E0B',
+    backgroundColor: SimulatorColors.amberBadge,
     borderRadius: 4,
     paddingHorizontal: 8,
     paddingVertical: 3,
@@ -166,11 +167,11 @@ const styles = StyleSheet.create({
   amberBadgeText: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#111827',
+    color: SimulatorColors.textPrimary,
   },
   button: {
-    backgroundColor: '#2563EB',
-    borderRadius: 8,
+    backgroundColor: SimulatorColors.brand,
+    borderRadius: Radius.md,
     paddingVertical: 14,
     alignItems: 'center',
   },
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   buttonText: {
-    color: '#FFFFFF',
+    color: SimulatorColors.textOnBrand,
     fontSize: 16,
     fontWeight: '600',
   },
@@ -190,7 +191,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    color: '#6B7280',
+    color: SimulatorColors.textSecondary,
     textAlign: 'center',
     marginBottom: 24,
     lineHeight: 24,
@@ -199,17 +200,17 @@ const styles = StyleSheet.create({
 
 const sectionStyles = StyleSheet.create({
   container: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
+    backgroundColor: SimulatorColors.surface,
+    borderRadius: Radius.lg,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: SimulatorColors.border,
     padding: 16,
     gap: 10,
   },
   title: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#6B7280',
+    color: SimulatorColors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     marginBottom: 2,
@@ -229,7 +230,7 @@ const statStyles = StyleSheet.create({
   },
   label: {
     fontSize: 14,
-    color: '#6B7280',
+    color: SimulatorColors.textSecondary,
     flex: 1,
   },
   labelStacked: {
@@ -238,7 +239,7 @@ const statStyles = StyleSheet.create({
   value: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#111827',
+    color: SimulatorColors.textPrimary,
     flex: 1,
     textAlign: 'right',
   },

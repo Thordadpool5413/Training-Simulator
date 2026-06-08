@@ -63,3 +63,53 @@ export const Spacing = {
 
 export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
 export const MaxContentWidth = 800;
+
+export const SimulatorColors = {
+  screenBackground: '#F9FAFB',
+  surface: '#FFFFFF',
+  textOnBrand: '#FFFFFF',
+
+  textPrimary: '#111827',
+  textSecondary: '#6B7280',
+  textBody: '#374151',
+  textPlaceholder: '#9CA3AF',
+
+  border: '#E5E7EB',
+  borderInput: '#D1D5DB',
+  borderDivider: '#F3F4F6',
+
+  brand: '#2563EB',
+  brandDark: '#1D4ED8',
+  brandDisabled: '#93C5FD',
+  brandTint: '#EFF6FF',
+  brandDeep: '#1E40AF',
+
+  warningBackground: '#FEF3C7',
+  warningBorder: '#F59E0B',
+  warningLabelText: '#92400E',
+  warningBodyText: '#78350F',
+
+  indigoBackground: '#E0E7FF',
+  indigoBorder: '#C7D2FE',
+  indigoLabel: '#4338CA',
+  indigoText: '#3730A3',
+
+  greenBackground: '#F0FDF4',
+  greenBorder: '#86EFAC',
+  greenText: '#166534',
+
+  amberBackground: '#FFF7ED',
+  amberBorder: '#FDBA74',
+  amberBadge: '#F59E0B',
+
+  scoreRed: '#DC2626',
+  scoreOrange: '#EA580C',
+  scoreYellow: '#CA8A04',
+  scoreGreen: '#16A34A',
+} as const;
+
+export const Radius = {
+  sm: 6,
+  md: 8,
+  lg: 12,
+} as const;

@@ -7,11 +7,29 @@ import type {
   SafetyEvent,
 } from '@/types/simulator';
 
-const APPROVED_WORDING_IDS = [
-  'hospice_fear_response',
-  'medication_routing_response',
-  'repair_language',
-] as const;
+function getApprovedWordingIds(scenarioId: string): string[] {
+  if (scenarioId === 'can_change_minds') {
+    return [
+      'cl_revocation_plain_language',
+      'cl_hospice_as_choice',
+      'cl_revocation_repair',
+      'medication_routing_response',
+    ];
+  }
+  if (scenarioId === 'hospice_too_soon') {
+    return [
+      'cl_too_soon_validation',
+      'cl_hospice_timeline_education',
+      'cl_what_hospice_provides',
+      'medication_routing_response',
+    ];
+  }
+  return [
+    'hospice_fear_response',
+    'medication_routing_response',
+    'repair_language',
+  ];
+}
 
 function hasBehavior(snapshots: PatientStateSnapshot[], behavior: string): boolean {
   return snapshots.some((s) => s.detectedBehaviors.includes(behavior));
@@ -192,8 +210,8 @@ export function generateFeedbackReport(
       'Hospice was not clearly reframed as continued support in this conversation. A strong move is to explain that care does not stop, that the focus changes toward comfort, support, and safety, and that the family will not be alone.';
   }
 
-  // --- suggestedWording (only the three approved IDs) ---
-  const suggestedWording = APPROVED_WORDING_IDS
+  // --- suggestedWording (scenario-aware) ---
+  const suggestedWording = getApprovedWordingIds(scenarioId)
     .map((id) => safeLanguage.find((e) => e.id === id)?.text)
     .filter((text): text is string => text !== undefined);
 

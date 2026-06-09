@@ -655,3 +655,56 @@ No defects found during the post-commit smoke test.
 - No raw safe language IDs (such as `hospice_fear_response`, `cl_revocation_plain_language`, `cl_too_soon_validation`) were visible on any Feedback screen.
 - RN COPD feedback rendered normally and contained no Clinical Liaison hospice objection language, revocation language, or timeline language.
 - Each Clinical Liaison scenario showed only its own scenario-specific wording set — no cross-scenario bleed detected.
+
+---
+
+## Packet 28 — UI Polish Baseline Smoke Test
+
+| Field | Value |
+|---|---|
+| Commit | 596cf63 |
+| Date | 2026-06-09 |
+| Tester | Manual, Expo Go |
+| TypeScript | Zero errors (npx tsc --noEmit confirmed) |
+| Test Type | Manual UI smoke test |
+| Passed | 36 of 36 |
+| Failed | 0 |
+| Blocked | 0 |
+| Defects | None |
+| Acceptance | Packet 28 passes |
+
+**What was verified:**
+
+| Check | Result |
+|---|---|
+| Welcome screen content stays within safe area — no clipping on notched device | Pass |
+| Welcome screen layout correct — title, disclaimer, Continue button positioned correctly | Pass |
+| Continue button navigates to role selection | Pass |
+| Role selection renders Clinical Liaison and RN | Pass |
+| Profile screen renders all fields, labels, and chip controls | Pass |
+| Scenario selector renders exactly three CL scenarios and one RN scenario | Pass |
+| Scenario briefing opens correctly | Pass |
+| Simulation input placeholder text visible using SimulatorColors.textPlaceholder | Pass |
+| Send button disabled state works when input is empty | Pass |
+| Training Pause fires with yellow background and TRAINING PAUSE label | Pass |
+| Feedback screen renders all ten sections without crash | Pass |
+| Feedback SectionCard extraction caused no regression — headers uppercase and consistent | Pass |
+| Suggested Wording renders correctly | Pass |
+| Skill Scores render seven rows | Pass |
+| Dashboard renders all nine expected fields without crash | Pass |
+| Dashboard SectionCard extraction caused no regression — section cards consistently styled | Pass |
+| Safety Corrections amber badge visible with value 1 | Pass |
+| No raw IDs, behavior codes, patient state objects, or safety event objects visible | Pass |
+| Hospice Means Giving Up — speaker Daughter, opening line exact match | Pass |
+| Hospice Is Only for the Last Few Days — speaker Marcus, opening line exact match | Pass |
+| Can We Change Our Minds? — speaker Frank, opening line exact match | Pass |
+| COPD Air Hunger at Home — speaker Margaret, opening line exact match | Pass |
+
+**Files changed in Packet 28 (confirmed not modified during test):**
+- `src/components/SectionCard.tsx` — new shared component
+- `src/app/index.tsx` — SafeAreaView added
+- `src/app/simulation.tsx` — placeholder color token fixed
+- `src/app/feedback.tsx` — SectionCard extraction, title margin standardized
+- `src/app/dashboard.tsx` — SectionCard extraction, badge radius token fixed, title margin standardized
+
+No service, data, state, type, docs, or package files were modified in Packet 28.

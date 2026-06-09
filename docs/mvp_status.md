@@ -1,6 +1,6 @@
 # MVP Status — Hospice Communication Training Simulator
 
-> **Updated:** 2026-06-09. This document reflects the stable four-scenario MVP state after Packet 25. It is maintained as a living status record updated at each stable checkpoint.
+> **Updated:** 2026-06-09. This document reflects the stable four-scenario MVP state after Packet 28. It is maintained as a living status record updated at each stable checkpoint.
 
 ---
 
@@ -9,7 +9,7 @@
 | Field | Value |
 |---|---|
 | Status | Stable MVP — four scenarios active |
-| Last Manual Test | 2026-06-08 |
+| Last Manual Test | 2026-06-09 |
 | Open Defects | 0 |
 | TypeScript | Passes with zero errors |
 | Backend Required | No |
@@ -87,6 +87,7 @@ Both learner paths — Clinical Liaison and RN — have been manually tested end
 | Hospice Is Only for the Last Few Days — formal path | 6 | Opening line, Marcus Rules 1–4, Training Pause, safe routing recovery verified | Fires on unsafe medication phrase | 10 sections | 7 CL categories | Safety Corrections = 1 | Smoke tested and formal deterministic path complete 2026-06-06 — 15 of 15 steps passed |
 | Can We Change Our Minds? — smoke test | 7 | Opening line, Frank Rules 1–5, Training Pause, safe routing recovery, fallback verified | Fires on unsafe medication phrase | Renders | Renders | Safety Corrections = 1 | Smoke tested 2026-06-08 — 27 of 27 items passed |
 | Scenario aware Suggested Wording — manual UI smoke test | — | Feedback Suggested Wording verified on all four scenarios | — | Scenario-specific wording confirmed, no raw IDs visible | — | — | Manually tested 2026-06-09 — 22 of 22 items passed, zero defects |
+| Packet 28 UI polish baseline smoke test | — | SafeAreaView, SectionCard extraction, token fixes, margin standardization verified across all screens | — | Feedback and Dashboard section cards consistent, welcome screen safe area correct, training pause and all four opening lines confirmed | — | — | Manually tested 2026-06-09 — 36 of 36 items passed, zero defects |
 | RN COPD clean path | 6 | 6 exact matches | None | 10 sections | 7 RN categories | All 9 fields | Pass |
 | RN medication safety | 2 | Training Pause verbatim + Margaret response | Fires and recovers | — | — | Safety Corrections = 1 | Pass |
 
@@ -136,6 +137,22 @@ Clinical Liaison Suggested Wording entries are selected by scenario ID. RN COPD 
 | Hospice Is Only for the Last Few Days | Too-soon validation, hospice timeline education, what hospice provides, medication routing response |
 | Can We Change Our Minds? | Revocation plain language, hospice as choice framing, revocation repair language, medication routing response |
 | COPD Air Hunger at Home | Unchanged — handled entirely by `rnFeedbackService` |
+
+### UI Polish Baseline (Packet 28, verified 2026-06-09)
+
+UI polish baseline completed. No behavior, logic, or content was changed.
+
+| Change | Detail |
+|---|---|
+| Shared `SectionCard` component | Created `src/components/SectionCard.tsx`. Feedback and Dashboard section cards now use the shared component — card styling standardized, local `SectionBlock` duplication removed |
+| Welcome screen safe area | `src/app/index.tsx` now uses `SafeAreaView` — content respects the safe area on notched devices |
+| Placeholder color token | `src/app/simulation.tsx` placeholder color references `SimulatorColors.textPlaceholder` instead of a hardcoded hex |
+| Badge radius token | `src/app/dashboard.tsx` Safety Corrections amber badge uses `Radius.sm` instead of a hardcoded value |
+| Screen title margin | `src/app/feedback.tsx` and `src/app/dashboard.tsx` screen title `marginBottom` standardized to 8 |
+
+Manual UI smoke test passed 36 of 36 items. Zero defects found.
+
+---
 
 ### Skill Score Categories
 

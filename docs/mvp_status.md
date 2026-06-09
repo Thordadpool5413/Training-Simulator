@@ -1,6 +1,6 @@
 # MVP Status — Hospice Communication Training Simulator
 
-> **Updated:** 2026-06-09. This document reflects the stable four-scenario MVP state after Packet 28. It is maintained as a living status record updated at each stable checkpoint.
+> **Updated:** 2026-06-09. This document reflects the stable four-scenario MVP state after Packet 30. It is maintained as a living status record updated at each stable checkpoint.
 
 ---
 
@@ -12,6 +12,7 @@
 | Last Manual Test | 2026-06-09 |
 | Open Defects | 0 |
 | TypeScript | Passes with zero errors |
+| Automated Tests | 22 of 22 passing (Jest 29, npm test) |
 | Backend Required | No |
 | AI Required | No |
 | External APIs Required | No |
@@ -151,6 +152,19 @@ UI polish baseline completed. No behavior, logic, or content was changed.
 | Screen title margin | `src/app/feedback.tsx` and `src/app/dashboard.tsx` screen title `marginBottom` standardized to 8 |
 
 Manual UI smoke test passed 36 of 36 items. Zero defects found.
+
+### Automated Service Tests (Packet 30, verified 2026-06-09)
+
+Automated service smoke test suite added in Packet 30. Jest service tests cover medication safety, scenario response routing, patient state behavior detection, feedback Suggested Wording, scoring reports, and dashboard summary behavior. Tests run in a Node.js environment and do not require Expo Go, a simulator, or a device.
+
+| Field | Detail |
+|---|---|
+| Commit | a965ef8 |
+| Test runner | Jest 29 + ts-jest |
+| npm test | Passed 22 of 22 |
+| TypeScript | Zero errors |
+| Production dependencies added | None — jest, ts-jest, @types/jest are devDependencies only |
+| UI coverage | Not claimed — automated tests cover service logic only |
 
 ---
 

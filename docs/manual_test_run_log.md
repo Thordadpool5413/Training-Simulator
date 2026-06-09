@@ -708,3 +708,50 @@ No defects found during the post-commit smoke test.
 - `src/app/dashboard.tsx` — SectionCard extraction, badge radius token fixed, title margin standardized
 
 No service, data, state, type, docs, or package files were modified in Packet 28.
+
+---
+
+## Packet 30 — Automated Service Smoke Tests
+
+| Field | Value |
+|---|---|
+| Commit | a965ef8 |
+| Date | 2026-06-09 |
+| Test Type | Automated — npm test (Jest 29 + ts-jest, Node.js environment) |
+| TypeScript | Zero errors (npx tsc --noEmit confirmed) |
+| npm test | Pass |
+| Test suites | 6 of 6 passed |
+| Tests | 22 of 22 passed |
+| Defects | None |
+
+Packet 30 introduced an automated service smoke test suite covering deterministic service logic only. Tests run in a Node.js environment using Jest 29 and ts-jest. No Expo Go, simulator, or physical device is required to run these tests.
+
+Packet 30 does not replace manual UI testing. It adds service-layer regression coverage so that errors in deterministic service logic can be caught without a full manual UI run. Manual Expo Go testing remains the method of record for UI behavior, navigation, and screen rendering.
+
+**Coverage by test file:**
+
+| Test File | Service Under Test | Cases |
+|---|---|---|
+| `medicationSafety.test.ts` | `medicationSafetyService` — CL unsafe phrase, CL safe routing, RN unsafe dose, RN safe comfort | 4 |
+| `scenarioResponse.test.ts` | `scenarioResponseService` — dispatcher routes to Daughter, Marcus, Frank, and Margaret services | 4 |
+| `patientState.test.ts` | `patientStateService` — revocation education, timeline education, safe medication routing behavior detection | 3 |
+| `feedback.test.ts` | `feedbackService` — scenario-aware Suggested Wording length and content for all three CL scenarios | 4 |
+| `scoring.test.ts` | `scoringService` — CL and RN score report structure, category names, and 0–4 score range | 4 |
+| `dashboard.test.ts` | `dashboardService` — scenario title resolution, safetyFlagsResolved=0 with no events, safetyFlagsResolved=1 with event and later recovery | 3 |
+
+**Files added in Packet 30:**
+
+- `jest.config.js`
+- `src/__tests__/medicationSafety.test.ts`
+- `src/__tests__/scenarioResponse.test.ts`
+- `src/__tests__/patientState.test.ts`
+- `src/__tests__/feedback.test.ts`
+- `src/__tests__/scoring.test.ts`
+- `src/__tests__/dashboard.test.ts`
+
+**Files modified in Packet 30:**
+
+- `package.json` — `jest`, `ts-jest`, and `@types/jest` added as devDependencies; `"test": "jest"` added to scripts
+- `package-lock.json` — updated to reflect new devDependencies
+
+No production source files, service files, data files, state files, type files, route files, component files, or docs files were modified in Packet 30. No production dependencies were added.

@@ -1,6 +1,6 @@
 # MVP Status — Hospice Communication Training Simulator
 
-> **Updated:** 2026-06-08. This document reflects the stable four-scenario MVP state after Packet 21. It is maintained as a living status record updated at each stable checkpoint.
+> **Updated:** 2026-06-09. This document reflects the stable four-scenario MVP state after Packet 23. It is maintained as a living status record updated at each stable checkpoint.
 
 ---
 
@@ -124,6 +124,17 @@ Both rules use sequence-aware recovery detection. The dashboard `safetyFlagsReso
 8. Suggested Wording
 9. Skill Scores
 10. Next Practice Focus
+
+### Suggested Wording — Scenario Aware (Packet 23)
+
+Clinical Liaison Suggested Wording entries are selected by scenario ID. RN COPD Suggested Wording is handled by `rnFeedbackService` and is not affected by this map.
+
+| Scenario | Suggested Wording Entries |
+|---|---|
+| Hospice Means Giving Up | Hospice fear response, medication routing response, repair language |
+| Hospice Is Only for the Last Few Days | Too-soon validation, hospice timeline education, what hospice provides, medication routing response |
+| Can We Change Our Minds? | Revocation plain language, hospice as choice framing, revocation repair language, medication routing response |
+| COPD Air Hunger at Home | Unchanged — handled entirely by `rnFeedbackService` |
 
 ### Skill Score Categories
 

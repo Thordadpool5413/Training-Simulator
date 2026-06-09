@@ -125,7 +125,11 @@ After tapping Finish, the feedback screen should display all ten of the followin
 - The repair and reframe response is acknowledged as improving the conversation.
 - The unsafe medication response is flagged as a Clinical Liaison role boundary issue.
 - Safe medication routing is noted as the correct recovery behavior.
-- Suggested wording examples remain within the Clinical Liaison role and do not include medication instructions.
+- Suggested Wording section shows exactly three entries:
+  - Language explaining that hospice does not mean giving up or that everyone is walking away (hospice fear response)
+  - Language routing medication questions to the hospice nurse or provider (medication routing response)
+  - Language acknowledging a prior wording issue and clarifying that care is not stopping (repair language)
+- No raw wording IDs (such as `hospice_fear_response` or `repair_language`) are visible — only the full wording text is shown.
 
 ---
 
@@ -378,7 +382,9 @@ After tapping Finish, the feedback screen should display all ten of the followin
 - Air hunger explanation in plain language is noted as a key moment.
 - Comfort tools and caregiver empowerment are noted as concrete next steps.
 - Safe medication routing is noted as correct role boundary behavior.
-- Suggested wording examples reference RN COPD language (not Clinical Liaison hospice objection language).
+- Suggested Wording section shows RN COPD specific language — air hunger, comfort plan, caregiver guidance.
+- Suggested Wording does not show Clinical Liaison hospice objection language, revocation language, or timeline language. The RN feedback path is handled entirely by `rnFeedbackService` and is not affected by the Clinical Liaison scenario-aware wording map (Packet 23).
+- No raw wording IDs are visible — only the full wording text is shown.
 - Hospice Language Review is repurposed as an air hunger and comfort language review for this scenario.
 
 ---
@@ -596,7 +602,12 @@ After tapping Finish, the feedback screen should display all ten of the followin
 - The hospice timing education phrase is noted as addressing the core misconception.
 - The unsafe medication phrase is flagged as a Clinical Liaison role boundary issue.
 - The safe medication routing phrase is noted as the correct recovery behavior.
-- Suggested wording examples remain within the Clinical Liaison role and do not include medication instructions or prognosis language.
+- Suggested Wording section shows exactly four entries:
+  - Language validating the family's concern about starting hospice too soon (too-soon validation)
+  - Language explaining that hospice is not only for the final few days (hospice timeline education)
+  - Language describing what the hospice team provides — nursing visits, symptom support, social work, equipment, supplies (what hospice provides)
+  - Language routing medication questions to the hospice nurse or provider (medication routing response)
+- No raw wording IDs (such as `cl_too_soon_validation` or `cl_hospice_timeline_education`) are visible — only the full wording text is shown.
 
 ---
 
@@ -797,7 +808,12 @@ After tapping Finish, the feedback screen should display all ten of the followin
 - Revocation education is noted as addressing the core fear.
 - The unsafe medication phrase is flagged as a Clinical Liaison role boundary issue.
 - Safe medication routing is noted as the correct recovery behavior.
-- Suggested wording examples remain within the Clinical Liaison role and do not include medication instructions or prognosis language.
+- Suggested Wording section shows exactly four entries:
+  - Language explaining that choosing hospice is not a permanent decision and can be revoked at any time (revocation plain language)
+  - Language framing hospice as a choice that does not sign away future options (hospice as choice)
+  - Language clarifying that hospice is not a one-way door and the family can decide to stop at any time (revocation repair language)
+  - Language routing medication questions to the hospice nurse or provider (medication routing response)
+- No raw wording IDs (such as `cl_revocation_plain_language` or `cl_hospice_as_choice`) are visible — only the full wording text is shown.
 - No raw behavior codes, internal IDs, patient state objects, or safety event objects are visible anywhere on screen.
 
 ---

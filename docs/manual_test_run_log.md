@@ -597,3 +597,28 @@ No defects found during the post-commit smoke test.
 | Tester Signoff | Nick Lynch — 2026-06-08 |
 | Reviewer Signoff | |
 | Final Notes | Post-commit manual smoke test executed 2026-06-08 against commit acd5ac6. All 27 items passed. Frank response rules 1–5 confirmed with exact text. Training Pause fires correctly on unsafe medication phrase. Safe medication routing recovery confirmed. Dashboard Safety Corrections shows 1. All three existing scenarios verified in regression checks. Zero open defects. |
+
+---
+
+## Packet 23 — Scenario Aware Suggested Wording
+
+| Field | Value |
+|---|---|
+| Commit | f406e30 |
+| Date | 2026-06-09 |
+| File Changed | src/services/feedbackService.ts only |
+| TypeScript | Zero errors (npx tsc --noEmit confirmed) |
+| Acceptance | All 15 Packet 23 acceptance items passed (programmatic verification) |
+| Defects | None |
+| Manual Expo Go Test | Not run — programmatic acceptance sufficient for a single-function logic change |
+
+**What changed:** The module-level `APPROVED_WORDING_IDS` constant was replaced with a `getApprovedWordingIds(scenarioId)` function. Clinical Liaison Suggested Wording entries are now selected by scenario ID. RN COPD feedback is unaffected — it branches to `rnFeedbackService` before the wording lookup runs.
+
+**Verified scenario wording maps:**
+
+| Scenario | Entries | Result |
+|---|---|---|
+| `hospice_means_giving_up` | hospice_fear_response, medication_routing_response, repair_language | Pass — unchanged from prior behavior |
+| `hospice_too_soon` | cl_too_soon_validation, cl_hospice_timeline_education, cl_what_hospice_provides, medication_routing_response | Pass — previously unreachable entries now surfaced |
+| `can_change_minds` | cl_revocation_plain_language, cl_hospice_as_choice, cl_revocation_repair, medication_routing_response | Pass — previously unreachable entries now surfaced |
+| `copd_air_hunger_at_home` | Unaffected — handled by rnFeedbackService | Pass |

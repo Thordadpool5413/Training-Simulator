@@ -622,3 +622,36 @@ No defects found during the post-commit smoke test.
 | `hospice_too_soon` | cl_too_soon_validation, cl_hospice_timeline_education, cl_what_hospice_provides, medication_routing_response | Pass — previously unreachable entries now surfaced |
 | `can_change_minds` | cl_revocation_plain_language, cl_hospice_as_choice, cl_revocation_repair, medication_routing_response | Pass — previously unreachable entries now surfaced |
 | `copd_air_hunger_at_home` | Unaffected — handled by rnFeedbackService | Pass |
+
+---
+
+## Packet 25 — Scenario Aware Suggested Wording Manual UI Smoke Test
+
+| Field | Value |
+|---|---|
+| Date | 2026-06-09 |
+| Tester | Manual, Expo Go |
+| Commits under test | f406e30 (Packet 23), c15e4c5 (Packet 24) |
+| TypeScript | Zero errors |
+| Passed | 22 of 22 |
+| Failed | 0 |
+| Blocked | 0 |
+| Defects | None |
+| Acceptance | Packet 25 passes |
+| Code changes | None — test only |
+
+**Test goal:** Verify the Feedback screen displays scenario-specific Suggested Wording text for each Clinical Liaison scenario and confirm RN COPD feedback remains unchanged.
+
+**Verified on Feedback screen:**
+
+| Scenario | Role | Suggested Wording Verified | Raw IDs Visible | Result |
+|---|---|---|---|---|
+| Hospice Means Giving Up | Clinical Liaison | Hospice fear response, medication routing response, repair language (3 entries) | No | Pass — 5 of 5 checks |
+| Hospice Is Only for the Last Few Days | Clinical Liaison | Too-soon validation, hospice timeline education, what hospice provides, medication routing response (4 entries) | No | Pass — 6 of 6 checks |
+| Can We Change Our Minds? | Clinical Liaison | Revocation plain language, hospice as choice framing, revocation repair language, medication routing response (4 entries) | No | Pass — 6 of 6 checks |
+| COPD Air Hunger at Home | RN | RN COPD specific language — did not use Clinical Liaison scenario wording map | No | Pass — 5 of 5 checks |
+
+**Additional confirmations:**
+- No raw safe language IDs (such as `hospice_fear_response`, `cl_revocation_plain_language`, `cl_too_soon_validation`) were visible on any Feedback screen.
+- RN COPD feedback rendered normally and contained no Clinical Liaison hospice objection language, revocation language, or timeline language.
+- Each Clinical Liaison scenario showed only its own scenario-specific wording set — no cross-scenario bleed detected.

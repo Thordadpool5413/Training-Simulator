@@ -38,6 +38,26 @@ export const familySystems: FamilySystemModule[] = [
       'Hospice is what people do when treatment is over, so you should start now.',
   },
   {
+    id: 'revocation_fear',
+    patternName: 'Revocation and irreversibility fear',
+    coreBelief:
+      'Hospice is a permanent, one-way decision. Once we sign, we cannot take it back or change course, no matter what.',
+    hiddenFear:
+      'If I choose hospice and then change my mind, it will be too late and no one will help us go back. I will have closed a door I cannot reopen.',
+    commonStatements: [
+      'Can we undo this if we change our mind?',
+      'Are we signing something we cannot take back?',
+      'What if she gets better?',
+      'I do not want to be locked into something.',
+      'What if we want to try something else later?',
+      'Is this permanent?',
+    ],
+    bestLearnerResponse:
+      'I hear how much this weighs on you. Hospice is not a permanent decision and you are not signing something you cannot undo. You or your family can revoke the hospice election at any time if your goals change. This is a choice, not a trap.',
+    poorLearnerResponse:
+      'Hospice is the best option at this stage and once the team is in place, it really takes care of everything.',
+  },
+  {
     id: 'air_hunger_panic',
     patternName: 'Air hunger panic',
     coreBelief: 'He is suffocating and I am watching him die and there is nothing I can do.',

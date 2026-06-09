@@ -62,6 +62,35 @@ export const diagnoses: DiagnosisModule[] = [
     ],
   },
   {
+    id: 'advanced_dementia',
+    name: 'Advanced dementia',
+    everydayLanguage:
+      'Her memory and awareness have declined to the point where she no longer recognizes most of her family and needs help with every part of daily life.',
+    declinePattern:
+      'Gradual loss of recognition, communication, and the ability to eat and swallow safely, with periods that may appear more or less difficult, making the overall decline hard to track.',
+    commonSymptoms: [
+      'Loss of recognition of family members.',
+      'Very limited communication.',
+      'Difficulty eating and swallowing.',
+      'Increased time in bed.',
+      'Fragile skin and infection risk.',
+      'Unpredictable periods of agitation or withdrawal.',
+    ],
+    familyMisconceptions: [
+      'Hospice is a permanent decision with no way back.',
+      'She might still get better if she has good days.',
+      'Choosing hospice means the hospital will not take her anymore.',
+      'We are taking away her chance if we stop fighting.',
+    ],
+    trainingObjectives: [
+      'Explain that dementia can qualify for hospice care.',
+      'Clarify that hospice election can be revoked at any time.',
+      'Acknowledge the grief of losing someone slowly over years.',
+      'Explain hospice as added support, not abandonment of care.',
+      'Avoid overpromising or making prognosis statements.',
+    ],
+  },
+  {
     id: 'end_stage_copd',
     name: 'End stage COPD',
     everydayLanguage:

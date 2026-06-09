@@ -110,6 +110,20 @@ const TIMELINE_TERMS = [
   'prognosis',
 ];
 
+const REVOCATION_TERMS = [
+  'revoke',
+  'can change',
+  'change your mind',
+  'change course',
+  'not permanent',
+  'not locked',
+  'your choice',
+  'can stop',
+  'withdraw',
+  'undo',
+  'take back',
+];
+
 export function updatePatientState(
   currentState: PatientState,
   learnerMessageText: string,
@@ -210,7 +224,26 @@ export function updatePatientState(
     };
   }
 
-  // Rule 6 — Service list before emotional acknowledgment
+  // Rule 6 — Revocation and hospice choice education
+  if (containsAny(lower, REVOCATION_TERMS)) {
+    return {
+      updatedState: applyDelta(currentState, {
+        trust: 10,
+        fear: -10,
+        resistance: -12,
+        hospiceMisconception: -20,
+        understanding: 15,
+        readiness: 10,
+        perceivedHonesty: 10,
+        perceivedCompassion: 5,
+      }),
+      detectedBehaviors: ['revocation_education', 'hospice_reframe', 'care_continuity_language'],
+      stateChangeSummary:
+        'The learner explained that hospice is a choice and can be revoked, addressing the core fear about irreversibility.',
+    };
+  }
+
+  // Rule 7 — Service list before emotional acknowledgment
   if (containsAny(lower, SERVICE_TERMS) && !hasEmotionalAck && !hasReframe) {
     return {
       updatedState: applyDelta(currentState, {
@@ -224,7 +257,7 @@ export function updatePatientState(
     };
   }
 
-  // Rule 7 — Fallback
+  // Rule 8 — Fallback
   const updatedState: PatientState =
     learnerMessageText.trim().length < 30
       ? applyDelta(currentState, { confusion: 3 })

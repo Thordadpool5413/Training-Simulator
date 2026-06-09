@@ -119,4 +119,44 @@ export const scenarioTemplates: ScenarioTemplate[] = [
     ],
     patientStateDefaultId: 'hospice_too_soon',
   },
+  {
+    id: 'can_change_minds',
+    title: 'Can We Change Our Minds?',
+    allowedRoleId: 'clinical_liaison',
+    setting: 'Hospital room',
+    patient: {
+      name: 'Ruth Calloway',
+      age: 78,
+    },
+    knownDiagnosisId: 'advanced_dementia',
+    recentClinicalChange:
+      'Ruth has declined significantly over the past three months. She no longer recognizes most family members and has stopped eating reliably. Her physician has recommended a goals of care conversation and indicated she may meet hospice criteria.',
+    whoIsPresent: ['Ruth', 'her husband Frank'],
+    learnerObjective:
+      "Acknowledge Frank's fear that choosing hospice is permanent and irreversible. Explain hospice election and revocation in plain language. Clarify that hospice is a choice, not a trap. Avoid making prognosis promises. Stay within Clinical Liaison role boundaries. Give Frank a clear next step.",
+    roleReminder:
+      'You are a Clinical Liaison. You may explain the hospice process, including that hospice can be elected and revoked. You should not determine eligibility, make prognosis statements, prescribe, or provide medication guidance.',
+    hiddenFamilyFear:
+      'Frank believes choosing hospice is a permanent, one-way decision. He fears that once they sign, Ruth cannot return to the hospital or resume treatment if goals change or if he changes his mind.',
+    openingSpeakerName: 'Frank',
+    openingLine:
+      'The doctor says she might qualify for hospice, but I need to know, if we start this and I change my mind, or she gets better, can we undo it? Are we signing something we cannot take back?',
+    successCriteria: [
+      "Acknowledge Frank's fear of making an irreversible decision.",
+      'Explain in plain language that hospice can be revoked.',
+      'Clarify that hospice is a choice, not a permanent commitment.',
+      'Avoid prognosis promises.',
+      'Avoid medication guidance outside the Clinical Liaison role.',
+      'Avoid sounding transactional or pressuring.',
+      'Give Frank a clear next step.',
+    ],
+    failureCriteria: [
+      'Imply or state that choosing hospice is permanent.',
+      'Sound like a sales pitch rather than a supportive conversation.',
+      'Make a prognosis promise.',
+      'Provide medication guidance outside the Clinical Liaison role.',
+      'Fail to address the core question about reversibility.',
+    ],
+    patientStateDefaultId: 'can_change_minds',
+  },
 ];

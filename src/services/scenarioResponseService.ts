@@ -1,6 +1,7 @@
 import type { ConversationMessage, GeneratedResponse } from '@/types/simulator';
 import { generateCopdResponse } from '@/services/copdResponseService';
 import { generateDaughterResponse } from '@/services/daughterResponseService';
+import { generateHusbandResponse } from '@/services/husbandResponseService';
 import { generateSonResponse } from '@/services/sonResponseService';
 
 export function generateScenarioResponse(
@@ -13,6 +14,9 @@ export function generateScenarioResponse(
   }
   if (scenarioId === 'hospice_too_soon') {
     return generateSonResponse(learnerMessageText, conversationMessages);
+  }
+  if (scenarioId === 'can_change_minds') {
+    return generateHusbandResponse(learnerMessageText, conversationMessages);
   }
   return generateDaughterResponse(learnerMessageText, conversationMessages);
 }

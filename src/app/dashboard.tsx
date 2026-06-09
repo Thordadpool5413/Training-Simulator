@@ -1,7 +1,6 @@
 import { router } from 'expo-router';
 import type { Href } from 'expo-router';
 import { useMemo } from 'react';
-import type { ReactNode } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -9,6 +8,7 @@ import { Radius, SimulatorColors } from '@/constants/theme';
 import { generateDashboardSummary } from '@/services/dashboardService';
 import { useSimulator } from '@/state/SimulatorContext';
 import type { DashboardSummary } from '@/types/simulator';
+import { SectionCard } from '@/components/SectionCard';
 
 export default function DashboardScreen() {
   const {
@@ -55,19 +55,19 @@ export default function DashboardScreen() {
           <Text style={styles.summaryText}>{summary.summaryMessage}</Text>
         </View>
 
-        <SectionBlock title="Session">
+        <SectionCard title="Session">
           <StatRow label="Scenario" value={summary.scenarioTitle} />
           <StatRow label="Role" value={summary.learnerRole} />
           <StatRow label="Scenarios Completed" value={String(summary.completedScenarios)} />
-        </SectionBlock>
+        </SectionCard>
 
-        <SectionBlock title="Skill Summary">
+        <SectionCard title="Skill Summary">
           <StatRow label="Average Score" value={`${summary.averageScore.toFixed(1)} / 4`} />
           <StatRow label="Strongest Skill" value={summary.strongestSkill} stacked />
           <StatRow label="Growth Area" value={summary.mainGrowthArea} stacked />
-        </SectionBlock>
+        </SectionCard>
 
-        <SectionBlock title="Safety">
+        <SectionCard title="Safety">
           <View style={statStyles.row}>
             <Text style={statStyles.label}>Safety Corrections</Text>
             {summary.safetyFlagsResolved > 0 ? (
@@ -78,15 +78,15 @@ export default function DashboardScreen() {
               <Text style={statStyles.value}>{String(summary.safetyFlagsResolved)}</Text>
             )}
           </View>
-        </SectionBlock>
+        </SectionCard>
 
-        <SectionBlock title="Next Steps">
+        <SectionCard title="Next Steps">
           <StatRow label="Next Recommended Scenario" value={summary.nextRecommendedScenario} stacked />
           <View style={styles.practiceBlock}>
             <Text style={styles.practiceLabel}>Next Practice Focus</Text>
             <Text style={styles.practiceText}>{summary.nextPracticeFocus}</Text>
           </View>
-        </SectionBlock>
+        </SectionCard>
 
         <Pressable
           style={[styles.button, styles.returnButton]}
@@ -95,15 +95,6 @@ export default function DashboardScreen() {
         </Pressable>
       </ScrollView>
     </SafeAreaView>
-  );
-}
-
-function SectionBlock({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <View style={sectionStyles.container}>
-      <Text style={sectionStyles.title}>{title}</Text>
-      {children}
-    </View>
   );
 }
 
@@ -130,7 +121,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '700',
     color: SimulatorColors.textPrimary,
-    marginBottom: 4,
+    marginBottom: 8,
   },
   summaryCard: {
     backgroundColor: SimulatorColors.surface,
@@ -159,7 +150,7 @@ const styles = StyleSheet.create({
   },
   amberBadge: {
     backgroundColor: SimulatorColors.amberBadge,
-    borderRadius: 4,
+    borderRadius: Radius.sm,
     paddingHorizontal: 8,
     paddingVertical: 3,
     alignSelf: 'flex-start',
@@ -195,25 +186,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 24,
     lineHeight: 24,
-  },
-});
-
-const sectionStyles = StyleSheet.create({
-  container: {
-    backgroundColor: SimulatorColors.surface,
-    borderRadius: Radius.lg,
-    borderWidth: 1,
-    borderColor: SimulatorColors.border,
-    padding: 16,
-    gap: 10,
-  },
-  title: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: SimulatorColors.textSecondary,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-    marginBottom: 2,
   },
 });
 

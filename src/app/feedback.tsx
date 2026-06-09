@@ -1,7 +1,6 @@
 import { router } from 'expo-router';
 import type { Href } from 'expo-router';
 import { useMemo } from 'react';
-import type { ReactNode } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -10,6 +9,7 @@ import { generateFeedbackReport } from '@/services/feedbackService';
 import { generateSkillScoreReport } from '@/services/scoringService';
 import { useSimulator } from '@/state/SimulatorContext';
 import type { FeedbackReport, SkillScore, SkillScoreReport } from '@/types/simulator';
+import { SectionCard } from '@/components/SectionCard';
 
 export default function FeedbackScreen() {
   const {
@@ -57,11 +57,11 @@ export default function FeedbackScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.screenTitle}>Simulation Feedback</Text>
 
-        <SectionBlock title="Overall Coaching Summary">
+        <SectionCard title="Overall Coaching Summary">
           <Text style={styles.bodyText}>{report.overallCoachingSummary}</Text>
-        </SectionBlock>
+        </SectionCard>
 
-        <SectionBlock title="What Went Well">
+        <SectionCard title="What Went Well">
           {report.whatWentWell.length > 0 ? (
             report.whatWentWell.map((item, i) => (
               <Text key={i} style={styles.bulletItem}>{'• '}{item}</Text>
@@ -69,15 +69,15 @@ export default function FeedbackScreen() {
           ) : (
             <Text style={styles.bodyText}>Nothing specific detected yet — keep practicing.</Text>
           )}
-        </SectionBlock>
+        </SectionCard>
 
-        <SectionBlock title="What Changed the Room">
+        <SectionCard title="What Changed the Room">
           {report.whatChangedTheRoom.map((item, i) => (
             <Text key={i} style={styles.bodyText}>{item}</Text>
           ))}
-        </SectionBlock>
+        </SectionCard>
 
-        <SectionBlock title="Missed Emotional Cues">
+        <SectionCard title="Missed Emotional Cues">
           {report.missedEmotionalCues.length > 0 ? (
             report.missedEmotionalCues.map((item, i) => (
               <Text key={i} style={styles.bodyText}>{item}</Text>
@@ -85,30 +85,30 @@ export default function FeedbackScreen() {
           ) : (
             <Text style={styles.bodyText}>No missed cues detected.</Text>
           )}
-        </SectionBlock>
+        </SectionCard>
 
-        <SectionBlock title="Role Boundary Review">
+        <SectionCard title="Role Boundary Review">
           <Text style={styles.bodyText}>{report.roleBoundaryReview}</Text>
-        </SectionBlock>
+        </SectionCard>
 
-        <SectionBlock title="Medication Safety Review">
+        <SectionCard title="Medication Safety Review">
           <Text style={styles.bodyText}>{report.medicationSafetyReview}</Text>
-        </SectionBlock>
+        </SectionCard>
 
-        <SectionBlock title="Hospice Language Review">
+        <SectionCard title="Hospice Language Review">
           <Text style={styles.bodyText}>{report.hospiceLanguageReview}</Text>
-        </SectionBlock>
+        </SectionCard>
 
-        <SectionBlock title="Suggested Wording">
+        <SectionCard title="Suggested Wording">
           {report.suggestedWording.map((text, i) => (
             <View key={i} style={styles.wordingCard}>
               <Text style={styles.wordingText}>{text}</Text>
             </View>
           ))}
-        </SectionBlock>
+        </SectionCard>
 
         {scoreReport !== null && (
-          <SectionBlock title="Skill Scores">
+          <SectionCard title="Skill Scores">
             <View style={scoreStyles.overallRow}>
               <Text style={scoreStyles.overallLabel}>Overall</Text>
               <Text style={scoreStyles.overallValue}>{scoreReport.overallScore.toFixed(1)} / 4</Text>
@@ -124,14 +124,14 @@ export default function FeedbackScreen() {
               <Text style={scoreStyles.calloutLabel}>Growth Area</Text>
               <Text style={scoreStyles.calloutText}>{scoreReport.primaryGrowthArea}</Text>
             </View>
-          </SectionBlock>
+          </SectionCard>
         )}
 
-        <SectionBlock title="Next Practice Focus">
+        <SectionCard title="Next Practice Focus">
           <View style={styles.focusCallout}>
             <Text style={styles.focusText}>{report.nextPracticeFocus}</Text>
           </View>
-        </SectionBlock>
+        </SectionCard>
 
         <Pressable
           style={styles.viewDashboardButton}
@@ -145,15 +145,6 @@ export default function FeedbackScreen() {
         </Pressable>
       </ScrollView>
     </SafeAreaView>
-  );
-}
-
-function SectionBlock({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <View style={sectionStyles.container}>
-      <Text style={sectionStyles.title}>{title}</Text>
-      {children}
-    </View>
   );
 }
 
@@ -196,7 +187,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '700',
     color: SimulatorColors.textPrimary,
-    marginBottom: 4,
+    marginBottom: 8,
   },
   bodyText: {
     fontSize: 15,
@@ -274,25 +265,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 24,
     lineHeight: 24,
-  },
-});
-
-const sectionStyles = StyleSheet.create({
-  container: {
-    backgroundColor: SimulatorColors.surface,
-    borderRadius: Radius.lg,
-    borderWidth: 1,
-    borderColor: SimulatorColors.border,
-    padding: 16,
-    gap: 8,
-  },
-  title: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: SimulatorColors.textSecondary,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-    marginBottom: 4,
   },
 });
 

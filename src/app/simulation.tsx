@@ -243,7 +243,7 @@ export default function SimulationScreen() {
             value={inputText}
             onChangeText={setInputText}
             placeholder="Type your response..."
-            placeholderTextColor="#9CA3AF"
+            placeholderTextColor={SimulatorColors.textPlaceholder}
             multiline
             maxLength={500}
           />

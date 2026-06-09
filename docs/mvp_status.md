@@ -1,6 +1,6 @@
 # MVP Status — Hospice Communication Training Simulator
 
-> **Updated:** 2026-06-06. This document reflects the stable three-scenario MVP state after Packet 18. It is maintained as a living status record updated at each stable checkpoint.
+> **Updated:** 2026-06-08. This document reflects the stable four-scenario MVP state after Packet 21. It is maintained as a living status record updated at each stable checkpoint.
 
 ---
 
@@ -8,8 +8,8 @@
 
 | Field | Value |
 |---|---|
-| Status | Stable MVP — three scenarios active |
-| Last Manual Test | 2026-06-06 |
+| Status | Stable MVP — four scenarios active |
+| Last Manual Test | 2026-06-08 |
 | Open Defects | 0 |
 | TypeScript | Passes with zero errors |
 | Backend Required | No |
@@ -64,6 +64,18 @@ Both learner paths — Clinical Liaison and RN — have been manually tested end
 | Opening line | He keeps saying he cannot breathe. I am scared he is suffocating and I do not know what to do. |
 | Core challenge | Air hunger explanation, caregiver fear acknowledgment, comfort education, RN dose boundary |
 
+### Can We Change Our Minds?
+
+| Field | Value |
+|---|---|
+| Role | Clinical Liaison |
+| Patient | Ruth Calloway, age 78 |
+| Family speaker | Frank |
+| Setting | Hospital room |
+| Diagnosis | Advanced dementia |
+| Opening line | The doctor says she might qualify for hospice, but I need to know, if we start this and I change my mind, or she gets better, can we undo it? Are we signing something we cannot take back? |
+| Core challenge | Frank fears hospice is permanent and irreversible. He wants to know whether the family can change course if goals change. |
+
 ---
 
 ## 4. Passing Manual Test Paths
@@ -72,7 +84,8 @@ Both learner paths — Clinical Liaison and RN — have been manually tested end
 |---|---|---|---|---|---|---|---|
 | Clinical Liaison clean path | 7 | 7 exact matches | Fires on unsafe medication phrase | 10 sections | 7 CL categories | All 9 fields | Pass |
 | Clinical Liaison medication safety | 2 | Training Pause verbatim + daughter acceptance | Fires and recovers | — | — | Safety Corrections = 1 | Pass |
-| Hospice Is Only for the Last Few Days — smoke test | 4 | Opening line, Marcus Rule 1, Marcus Rule 2, Training Pause responses verified | Fires on unsafe medication phrase | Renders | Renders | Renders | Smoke tested 2026-06-06 — deterministic path test pending |
+| Hospice Is Only for the Last Few Days — formal path | 6 | Opening line, Marcus Rules 1–4, Training Pause, safe routing recovery verified | Fires on unsafe medication phrase | 10 sections | 7 CL categories | Safety Corrections = 1 | Smoke tested and formal deterministic path complete 2026-06-06 — 15 of 15 steps passed |
+| Can We Change Our Minds? — smoke test | 7 | Opening line, Frank Rules 1–5, Training Pause, safe routing recovery, fallback verified | Fires on unsafe medication phrase | Renders | Renders | Safety Corrections = 1 | Smoke tested 2026-06-08 — 27 of 27 items passed |
 | RN COPD clean path | 6 | 6 exact matches | None | 10 sections | 7 RN categories | All 9 fields | Pass |
 | RN medication safety | 2 | Training Pause verbatim + Margaret response | Fires and recovers | — | — | Safety Corrections = 1 | Pass |
 
@@ -172,7 +185,7 @@ The following limitations apply to the current MVP build and are expected behavi
 
 ## 9. Not Yet Implemented
 
-- Additional hospice and palliative care scenarios beyond the current three
+- Additional hospice and palliative care scenarios beyond the current four
 - Additional learner roles beyond Clinical Liaison and RN
 - Persistent session storage and learner history
 - User accounts and authentication
@@ -190,7 +203,7 @@ The following limitations apply to the current MVP build and are expected behavi
 Listed in suggested priority order. Some lanes can run in parallel once the scenario selector is in place.
 
 1. **UI and UX polish** — Refine visual design, typography, layout, and interaction patterns before expanding content. Establishes the design baseline for all future screens.
-2. **Scenario selector** *(complete — Packet 17)* — Learners can now choose from multiple scenarios per role. Clinical Liaison shows two scenarios. RN shows one scenario.
+2. **Scenario selector** *(complete — Packet 17)* — Learners can now choose from multiple scenarios per role. Clinical Liaison shows three scenarios. RN shows one scenario.
 3. **Persistence and learner history** — Add local or backend session storage so learners can track progress across runs.
 4. **Additional hospice scenarios** — Expand the scenario library for both Clinical Liaison and RN. Each new scenario follows the established dispatcher pattern.
 5. **AI or MCP integration** — Replace or augment rule-based response generation with AI-powered responses for more naturalistic conversations. Requires backend.

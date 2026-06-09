@@ -504,3 +504,96 @@ No defects found during smoke test or formal deterministic path.
 | Tester Signoff | Nick Lynch — 2026-06-06 |
 | Reviewer Signoff | |
 | Final Notes | Formal deterministic path executed 2026-06-06. All 15 steps passed. All six phrases produced exact expected responses. Training Pause fired correctly on Phrase 5. Safety Corrections confirmed 1 on dashboard. Seven CL skill score rows confirmed in correct order. No raw codes or IDs visible. Zero open defects. |
+
+---
+
+## Part IV: Clinical Liaison — Can We Change Our Minds?
+
+---
+
+## 29. Can Change Minds: Test Run Information
+
+| Field | Value |
+|---|---|
+| Tester Name | Nick Lynch |
+| Date | 2026-06-08 |
+| App Version or Commit | acd5ac6 |
+| Device | iPhone (iOS) |
+| Operating System | iOS |
+| Expo Go or Build Type | Expo Go SDK 54 |
+| Test Environment | Local — no backend, no AI, no external APIs |
+| Test Type | Post-commit manual smoke test |
+| TypeScript | Zero errors (npx tsc --noEmit confirmed before commit) |
+| Overall Result | Pass |
+
+---
+
+## 30. Can Change Minds: Scope of Test
+
+This log records the Packet 21 post-commit manual smoke test for the Can We Change Our Minds? scenario. The test was executed in Expo Go on 2026-06-08 after commit acd5ac6 was pushed to origin master.
+
+Reference test script: [docs/manual_test_script.md](manual_test_script.md) — Part IV, Sections 29–36.
+
+The smoke test covered 27 items including role selector counts, briefing screen, opening speaker and line, Frank response rules 1–5, Training Pause, safe routing recovery, fallback, feedback, skill scores, dashboard, and regression checks for all three existing scenarios.
+
+---
+
+## 31. Can Change Minds: Grouped Verification Table
+
+The 27-item smoke test is summarized below as a grouped verification table. Some rows combine related checks (for example, all five briefing-screen fields in one row, or all three feedback content checks in one row). The signoff totals reflect the full 27-item count.
+
+| Check | Items covered | Result |
+|---|---|---|
+| TypeScript passes with zero errors | 1 | Pass |
+| CL scenario selector shows exactly three cards: Hospice Means Giving Up, Hospice Is Only for the Last Few Days, and Can We Change Our Minds? | 1 | Pass |
+| RN scenario selector shows exactly one card: COPD Air Hunger at Home | 1 | Pass |
+| Can We Change Our Minds? navigates to briefing screen | 1 | Pass |
+| Briefing shows Ruth Calloway age 78, Hospital room, Advanced dementia, learner objective, role reminder, Start Simulation button | 5 | Pass |
+| Simulation opens with Frank's opening line (exact text verified) | 1 | Pass |
+| Speaker label on opening message is Frank | 1 | Pass |
+| Phrase 1 (emotional validation) produces Frank response — I have been her husband for forty-three years. I just need to know we are doing right by her. | 1 | Pass |
+| Phrase 2 (revocation education) produces Frank response — So this is not permanent? We could actually stop and ask for different care if something changed? | 1 | Pass |
+| Phrase 3 (support and services) produces Frank response — She would still have people coming to see her? She would not just be left alone? | 1 | Pass |
+| Phrase 4 (hospice reframe) produces Frank response — I did not know that. I thought once we signed, everyone would just step back. | 1 | Pass |
+| Phrase 5 (repair language) produces Frank response — I appreciate you being straight with me. I just need to be sure before I can say yes. | 1 | Pass |
+| Phrase 6 (unsafe medication) fires Clinical Liaison Training Pause. Frank does not respond. | 1 | Pass |
+| Phrase 7 (safe medication routing) produces Frank response — That makes sense. I do not want anyone guessing with her medications either. I just need to know the right person will walk us through it. | 1 | Pass |
+| Feedback screen renders without crash | 1 | Pass |
+| All ten feedback sections visible | 1 | Pass |
+| Seven CL skill score rows visible in order: Emotional Attunement, Hospice Education, Objection Handling, Compliance Safe Language, Clinical Escalation Judgment, Trust Building, Role Boundary Safety | 1 | Pass |
+| Scores on 0 to 4 scale. Evidence and coaching notes human readable. No raw codes or IDs visible. | 3 | Pass |
+| Dashboard renders without crash | 1 | Pass |
+| Dashboard Scenario shows Can We Change Our Minds? Role shows Clinical Liaison. Safety Corrections shows 1. | 1 | Pass |
+| Hospice Means Giving Up — Daughter opening line confirmed (regression) | 1 | Pass |
+| Hospice Is Only for the Last Few Days — Marcus opening line confirmed (regression) | 1 | Pass |
+| COPD Air Hunger at Home — Margaret opening line confirmed (regression) | 1 | Pass |
+
+**27 of 27 items passed. 0 failed. 0 blocked.**
+
+---
+
+## 32. Can Change Minds: Defect Log
+
+No defects found during the post-commit smoke test.
+
+| Defect ID | Step or Area | Description | Expected Behavior | Actual Behavior | Severity | Screenshot or Recording | Status | Owner | Notes |
+|---|---|---|---|---|---|---|---|---|---|
+
+*Add rows as defects are found using format D-P4-001, D-P4-002, etc.*
+
+---
+
+## 33. Part IV Signoff
+
+| Field | Value |
+|---|---|
+| Smoke Test Result | Pass |
+| Passed | 27 of 27 |
+| Failed | 0 |
+| Blocked | 0 |
+| Critical Defects Open | 0 |
+| High Defects Open | 0 |
+| Ready for Next Packet | Yes |
+| Tester Signoff | Nick Lynch — 2026-06-08 |
+| Reviewer Signoff | |
+| Final Notes | Post-commit manual smoke test executed 2026-06-08 against commit acd5ac6. All 27 items passed. Frank response rules 1–5 confirmed with exact text. Training Pause fires correctly on unsafe medication phrase. Safe medication routing recovery confirmed. Dashboard Safety Corrections shows 1. All three existing scenarios verified in regression checks. Zero open defects. |

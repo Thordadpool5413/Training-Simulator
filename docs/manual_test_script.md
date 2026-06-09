@@ -264,7 +264,7 @@ The following limitations apply to the current MVP build and are expected behavi
 - No backend yet. All logic runs locally on the device.
 - No database yet. No session history is persisted between runs.
 - No voice mode yet. All input is text only.
-- Three scenarios are active: Hospice Means Giving Up (Clinical Liaison), Hospice Is Only for the Last Few Days (Clinical Liaison), and COPD Air Hunger at Home (RN).
+- Four scenarios are active: Hospice Means Giving Up (Clinical Liaison), Hospice Is Only for the Last Few Days (Clinical Liaison), Can We Change Our Minds? (Clinical Liaison), and COPD Air Hunger at Home (RN).
 - All logic is local and rule-based. Response rules fire based on keyword matching and conversation history flags, not natural language understanding.
 - Dashboard reflects the current session only. There is no multi-session aggregate score.
 - This manual script validates the current deterministic MVP path, not all possible learner wording. Learners using different phrasing may trigger different rule-based responses.
@@ -506,7 +506,7 @@ Use this checklist when executing the RN COPD learner journey test and the medic
 2. On the welcome screen, tap **Continue**.
 3. On the role selection screen, select **Clinical Liaison**.
 4. Complete the learner profile form and tap **Continue** to proceed.
-5. On the scenario selector screen, confirm two Clinical Liaison scenario cards are visible: **Hospice Means Giving Up** and **Hospice Is Only for the Last Few Days**. Tap **Select** on Hospice Is Only for the Last Few Days.
+5. On the scenario selector screen, confirm three Clinical Liaison scenario cards are visible: **Hospice Means Giving Up**, **Hospice Is Only for the Last Few Days**, and **Can We Change Our Minds?** Tap **Select** on Hospice Is Only for the Last Few Days.
 6. Review the scenario briefing. Confirm the following are visible: patient name Gloria Santos, age 72, setting Hospital room, diagnosis Advanced pancreatic cancer, correct learner objective, correct role reminder.
 7. Tap **Start Simulation**.
 8. Confirm Marcus's opening line appears as the first message in the conversation (see Section 24).
@@ -659,7 +659,7 @@ Use this checklist when executing the full learner journey test.
 - [ ] Welcome screen loads and displays a Continue button.
 - [ ] Role selection screen lists Clinical Liaison as a selectable option.
 - [ ] Learner profile form accepts input and allows the tester to proceed.
-- [ ] Scenario selector shows exactly two Clinical Liaison cards: Hospice Means Giving Up and Hospice Is Only for the Last Few Days.
+- [ ] Scenario selector shows exactly three Clinical Liaison cards: Hospice Means Giving Up, Hospice Is Only for the Last Few Days, and Can We Change Our Minds?
 - [ ] Selecting Hospice Is Only for the Last Few Days navigates to the correct briefing.
 - [ ] Briefing displays: Gloria Santos, age 72, Hospital room, Advanced pancreatic cancer, correct learner objective, correct role reminder.
 - [ ] Simulation starts and Marcus's opening line appears as the first message with the exact text documented in Section 24.
@@ -675,4 +675,208 @@ Use this checklist when executing the full learner journey test.
 - [ ] Each skill score row displays a human-readable category name, a score from 0 to 4, human-readable evidence, and a human-readable coaching note. No raw codes or IDs are visible.
 - [ ] Dashboard displays all required fields. Scenario shows Hospice Is Only for the Last Few Days. Role shows Clinical Liaison. Safety Corrections shows 1.
 - [ ] Existing Hospice Means Giving Up scenario still opens correctly (regression check).
+- [ ] RN COPD scenario still opens correctly (regression check).
+
+---
+
+## Part IV: Clinical Liaison — Can We Change Our Minds?
+
+---
+
+## 29. CL Can Change Minds: Pre-Test Conditions
+
+- The app runs locally on a device or simulator.
+- The learner starts from the welcome screen.
+- No backend is required. No AI is required. No external APIs are required.
+- The test uses the **Clinical Liaison** role.
+- The test uses the **Can We Change Our Minds?** scenario.
+- The scenario selector will show three Clinical Liaison cards. Select the correct one.
+- The tester must send the test phrases in the documented order with no extra turns between them.
+
+---
+
+## 30. CL Can Change Minds: Full Smoke Test
+
+1. Open the app.
+2. On the welcome screen, tap **Continue**.
+3. On the role selection screen, select **Clinical Liaison**.
+4. Complete the learner profile form and tap **Continue** to proceed.
+5. On the scenario selector screen, confirm three Clinical Liaison scenario cards are visible: **Hospice Means Giving Up**, **Hospice Is Only for the Last Few Days**, and **Can We Change Our Minds?** Tap **Select** on Can We Change Our Minds?
+6. Review the scenario briefing. Confirm the following are visible: patient name Ruth Calloway, age 78, setting Hospital room, diagnosis Advanced dementia, correct learner objective, correct role reminder, and Start Simulation button.
+7. Tap **Start Simulation**.
+8. Confirm Frank's opening line appears as the first message in the conversation (see Section 32).
+9. Send **Phrase 1** (emotional validation — see Section 31).
+10. Confirm Frank responds with the 43-year husband line (see Section 32 for expected text).
+11. Send **Phrase 2** (revocation education — see Section 31).
+12. Confirm Frank responds with the not-permanent question (see Section 32 for expected text).
+13. Send **Phrase 3** (support and services — see Section 31).
+14. Confirm Frank responds with the people-coming-to-see-her question (see Section 32 for expected text).
+15. Send **Phrase 4** (hospice reframe — see Section 31).
+16. Confirm Frank responds with the did-not-know-that line (see Section 32 for expected text).
+17. Send **Phrase 5** (repair language — see Section 31).
+18. Confirm Frank responds with the being-straight line (see Section 32 for expected text).
+19. Send **Phrase 6** (unsafe medication response — see Section 31).
+20. Confirm the Clinical Liaison Training Pause system message appears (see Section 32 for expected text). Frank does not respond.
+21. Send **Phrase 7** (safe medication routing — see Section 31).
+22. Confirm Frank responds with the right-person line (see Section 32 for expected text).
+23. Tap **Finish** to end the simulation.
+24. On the feedback screen, confirm all ten sections are visible (see Section 33).
+25. Scroll to the Skill Scores section and confirm seven Clinical Liaison score rows appear in order (see Section 34).
+26. Tap **View Dashboard**.
+27. On the dashboard screen, confirm all required fields are present with expected values (see Section 35).
+
+---
+
+## 31. CL Can Change Minds: Exact Test Phrases
+
+Send these phrases verbatim in the order listed. Do not add extra turns between them.
+
+**Phrase 1 — Emotional validation**
+> I understand this is hard
+
+**Phrase 2 — Revocation education**
+> You can revoke hospice at any time
+
+**Phrase 3 — Support and services**
+> The hospice team will visit her
+
+**Phrase 4 — Hospice reframe**
+> Hospice does not mean care stops, comfort continues
+
+**Phrase 5 — Repair language**
+> I am sorry, let me clarify
+
+**Phrase 6 — Unsafe medication response**
+> We can increase her morphine.
+
+**Phrase 7 — Safe medication routing**
+> I cannot speak to medication doses, the provider should walk through that.
+
+---
+
+## 32. CL Can Change Minds: Expected Simulation Results
+
+Frank's opening line (first message in simulation):
+> The doctor says she might qualify for hospice, but I need to know, if we start this and I change my mind, or she gets better, can we undo it? Are we signing something we cannot take back?
+
+| After this learner phrase | Expected response | Speaker |
+|---|---|---|
+| Phrase 1 — Emotional validation | I have been her husband for forty-three years. I just need to know we are doing right by her. | Frank (family) |
+| Phrase 2 — Revocation education | So this is not permanent? We could actually stop and ask for different care if something changed? | Frank (family) |
+| Phrase 3 — Support and services | She would still have people coming to see her? She would not just be left alone? | Frank (family) |
+| Phrase 4 — Hospice reframe | I did not know that. I thought once we signed, everyone would just step back. | Frank (family) |
+| Phrase 5 — Repair language | I appreciate you being straight with me. I just need to be sure before I can say yes. | Frank (family) |
+| Phrase 6 — Unsafe medication response | That response gives medication guidance outside your selected role. Try again by validating the concern and connecting the family with the hospice nurse or provider. | System (Training Pause) |
+| Phrase 7 — Safe medication routing | That makes sense. I do not want anyone guessing with her medications either. I just need to know the right person will walk us through it. | Frank (family) |
+
+**Notes:**
+- The response after Phrase 6 is a **Training Pause** system message, not a Frank response.
+- After Phrase 7, Frank responds with the safe medication routing recovery line.
+
+---
+
+## 33. CL Can Change Minds: Expected Feedback Results
+
+After tapping Finish, the feedback screen should display all ten of the following sections:
+
+- Overall Coaching Summary
+- What Went Well
+- What Changed the Room
+- Missed Emotional Cues
+- Role Boundary Review
+- Medication Safety Review
+- Hospice Language Review
+- Suggested Wording
+- Skill Scores
+- Next Practice Focus
+
+**Expected feedback themes to verify:**
+
+- Frank's opening question is identified as an emotional concern about irreversibility, not a simple information request.
+- Emotional validation before education is noted as the correct first move.
+- Revocation education is noted as addressing the core fear.
+- The unsafe medication phrase is flagged as a Clinical Liaison role boundary issue.
+- Safe medication routing is noted as the correct recovery behavior.
+- Suggested wording examples remain within the Clinical Liaison role and do not include medication instructions or prognosis language.
+- No raw behavior codes, internal IDs, patient state objects, or safety event objects are visible anywhere on screen.
+
+---
+
+## 34. CL Can Change Minds: Expected Skill Score Results
+
+The Skill Scores section should display:
+
+- An **Overall Score** shown as a decimal out of 4 (for example, 2.4 / 4).
+- A **Primary Strength** label identifying the highest-scoring category.
+- A **Primary Growth Area** label identifying the lowest-scoring category.
+- **Seven score rows** in the following order:
+
+| # | Category |
+|---|---|
+| 1 | Emotional Attunement |
+| 2 | Hospice Education |
+| 3 | Objection Handling |
+| 4 | Compliance Safe Language |
+| 5 | Clinical Escalation Judgment |
+| 6 | Trust Building |
+| 7 | Role Boundary Safety |
+
+**For each row, verify:**
+- The category name is human readable (matches the list above exactly).
+- The score is a number from 0 to 4.
+- The evidence text is human readable (no raw behavior codes such as `revocation_education` or `hospice_reframe`).
+- The coaching note is human readable.
+- No raw patient state values, raw safety event objects, or internal IDs are visible.
+
+**Exact numeric scores are not required** for this test. Confirm all seven rows appear and all text is human readable.
+
+---
+
+## 35. CL Can Change Minds: Expected Dashboard Results
+
+The dashboard should display the following fields. Tap **View Dashboard** from the feedback screen to reach it.
+
+| Field | Expected value |
+|---|---|
+| Scenario | Can We Change Our Minds? |
+| Role | Clinical Liaison |
+| Scenarios Completed | 1 |
+| Average Score | Displayed as x.x / 4 |
+| Strongest Skill | Human readable category name |
+| Growth Area | Human readable category name |
+| Safety Corrections | 1 (because the unsafe medication response was followed by safe medication routing in the same session) |
+| Next Recommended Scenario | Human readable scenario name |
+| Next Practice Focus | Human readable coaching text |
+
+**Safety Corrections notes:**
+- Safety Corrections shows **1** only when the unsafe medication phrase occurred and was followed by safe medication routing in the same session. This is the expected result for the smoke test path.
+- If the tester skips Phrase 6, Safety Corrections shows 0.
+
+---
+
+## 36. CL Can Change Minds: Pass or Fail Checklist
+
+Use this checklist when executing the Can We Change Our Minds? smoke test.
+
+- [ ] Welcome screen loads and displays a Continue button.
+- [ ] Role selection screen lists Clinical Liaison as a selectable option.
+- [ ] Learner profile form accepts input and allows the tester to proceed.
+- [ ] Scenario selector shows exactly three Clinical Liaison cards: Hospice Means Giving Up, Hospice Is Only for the Last Few Days, and Can We Change Our Minds?
+- [ ] Selecting Can We Change Our Minds? navigates to the correct briefing.
+- [ ] Briefing displays: Ruth Calloway, age 78, Hospital room, Advanced dementia, correct learner objective, correct role reminder, Start Simulation button.
+- [ ] Simulation starts and Frank's opening line appears as the first message with the exact text documented in Section 32.
+- [ ] Speaker label for the opening message is Frank.
+- [ ] After Phrase 1 (emotional validation), Frank responds with the 43-year husband line (exact text verified).
+- [ ] After Phrase 2 (revocation education), Frank responds with the not-permanent question (exact text verified).
+- [ ] After Phrase 3 (support and services), Frank responds with the people-coming-to-see-her question (exact text verified).
+- [ ] After Phrase 4 (hospice reframe), Frank responds with the did-not-know-that line (exact text verified).
+- [ ] After Phrase 5 (repair language), Frank responds with the being-straight line (exact text verified).
+- [ ] After Phrase 6 (unsafe medication response), the Training Pause system message appears (exact text verified). Frank does not respond.
+- [ ] After Phrase 7 (safe medication routing), Frank responds with the right-person line (exact text verified).
+- [ ] Feedback screen displays all ten required sections.
+- [ ] Seven Clinical Liaison skill score rows appear in the correct order: Emotional Attunement, Hospice Education, Objection Handling, Compliance Safe Language, Clinical Escalation Judgment, Trust Building, Role Boundary Safety.
+- [ ] Each skill score row displays a human-readable category name, a score from 0 to 4, human-readable evidence, and a human-readable coaching note. No raw codes or IDs are visible.
+- [ ] Dashboard displays all required fields. Scenario shows Can We Change Our Minds? Role shows Clinical Liaison. Safety Corrections shows 1.
+- [ ] Existing Hospice Means Giving Up scenario still opens correctly (regression check).
+- [ ] Existing Hospice Is Only for the Last Few Days scenario still opens correctly (regression check).
 - [ ] RN COPD scenario still opens correctly (regression check).

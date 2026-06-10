@@ -1,0 +1,41 @@
+src/data/patientStateDefaults.ts
+  s_0a4e9cd2da829d::t_1e2ab344f3762a 36-51
+src/data/diagnoses.ts
+  s_0a4e9cd2da829d::t_3f4a01d785ff8b 34-63
+src/services/patientStateService.ts
+  s_0a4e9cd2da829d::t_0386a44df253c3 227
+  s_0a4e9cd2da829d::t_974964c4f253a8 98-112
+  s_0a4e9cd2da829d::t_8b50dd71142759 191-213
+src/services/sonResponseService.ts
+  s_0a4e9cd2da829d::t_3f41c0438f7cf0 1-114
+src/types/simulator.ts
+  s_0a4e9cd2da829d::t_ef58f3bfaf154e 214
+src/data/scenarioTemplates.ts
+  s_0a4e9cd2da829d::t_c40f0a184acb35 62
+  s_0a4e9cd2da829d::t_18e1ab65d98890 83-121
+  s_0a4e9cd2da829d::t_ec83d7df737d24 23
+src/data/familySystems.ts
+  s_0a4e9cd2da829d::t_3d474784169cbd 21-39
+src/services/scenarioResponseService.ts
+  s_0a4e9cd2da829d::t_3ca8f42ef0fde1 4,14-15
+src/data/safeLanguage.ts
+  s_0a4e9cd2da829d::t_7b4ff8f027f872 20-33
+src/app/simulation.tsx
+  s_0a4e9cd2da829d::t_ca5e03f2491622 66
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "05160319e4f0fb1d924809be4afd60acc997bfbe",
+  "prompts": {},
+  "sessions": {
+    "s_0a4e9cd2da829d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8dd5e7a9-6c4d-495c-bd4c-4e97502bca9f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

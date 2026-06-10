@@ -1,0 +1,24 @@
+docs/manual_test_run_log.md
+  s_0a4e9cd2da829d::t_c6918c73cc1c21 658-710
+docs/mvp_status.md
+  s_0a4e9cd2da829d::t_3a50b706927232 141-156
+  s_0a4e9cd2da829d::t_d5cb7e19634f02 3
+  s_0a4e9cd2da829d::t_1b121d85df2533 12
+  s_0a4e9cd2da829d::t_6ab49dbcd4bd1e 90
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "0cc350e7e35bc4ffccbedd341aecad6f924367a2",
+  "prompts": {},
+  "sessions": {
+    "s_0a4e9cd2da829d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8dd5e7a9-6c4d-495c-bd4c-4e97502bca9f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

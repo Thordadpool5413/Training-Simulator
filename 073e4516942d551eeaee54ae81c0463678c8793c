@@ -1,0 +1,50 @@
+src/app/profile.tsx
+  s_0a4e9cd2da829d::t_76b84491897452 7
+  s_0a4e9cd2da829d::t_4bf96e03de6d37 196,205,210,220,225,229,231-232,236,239-240,246,261,263-264,267-268,272,276
+src/constants/theme.ts
+  s_0a4e9cd2da829d::t_74ab4eed62f96c 66-115
+src/app/dashboard.tsx
+  s_0a4e9cd2da829d::t_6b1411ce0ce2dd 8
+  s_0a4e9cd2da829d::t_50a9c1d5c90be0 233,242
+  s_0a4e9cd2da829d::t_95291627822d0d 122,132,136-137,139,144,153,157,161,170,173-174,182,194
+  s_0a4e9cd2da829d::t_0b406cd9b043e0 203-204,206,213
+src/app/scenario-briefing.tsx
+  s_0a4e9cd2da829d::t_23618ca94bdc49 119,128,132-133,135,140-141,146,158,172,177,183,187,191
+  s_0a4e9cd2da829d::t_819cf85e7e0c10 6
+src/app/feedback.tsx
+  s_0a4e9cd2da829d::t_7c605e0256885f 282-283,285,292
+  s_0a4e9cd2da829d::t_2ee45d9482b8a0 352,364,369,376,380,385
+  s_0a4e9cd2da829d::t_709fd0baca3115 162-166
+  s_0a4e9cd2da829d::t_327458fe60a793 8
+  s_0a4e9cd2da829d::t_ebd928690c1d98 188,198,203,208,213,215-216,222,227,229-230,235,239-240,248-249,253,256,261,273
+  s_0a4e9cd2da829d::t_c950e1206242cc 306,312,317,320,322-323,328,330-331,337,345
+src/app/index.tsx
+  s_0a4e9cd2da829d::t_fe5abb472a355f 5-6
+  s_0a4e9cd2da829d::t_78371e0297ce7c 29,34,43,47,49,54
+src/app/role.tsx
+  s_0a4e9cd2da829d::t_3f7d432de91c7d 57,66,71,76-77,81,84-85,90,98,104
+  s_0a4e9cd2da829d::t_5c192627198b8d 6
+src/app/scenario.tsx
+  s_0a4e9cd2da829d::t_cf3b733d6b1e4a 84,93,98,103-104,108,113,118,124,130-131,136,139,151,157-158,163
+  s_0a4e9cd2da829d::t_a16a8ce4f27239 6
+src/app/simulation.tsx
+  s_0a4e9cd2da829d::t_c9f0d106d38322 428,430-431,437,444
+  s_0a4e9cd2da829d::t_1bf7cca76c0239 16
+  s_0a4e9cd2da829d::t_4f4ca5ba150aa5 459,465,471,473,476,480,484
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "073e4516942d551eeaee54ae81c0463678c8793c",
+  "prompts": {},
+  "sessions": {
+    "s_0a4e9cd2da829d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8dd5e7a9-6c4d-495c-bd4c-4e97502bca9f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

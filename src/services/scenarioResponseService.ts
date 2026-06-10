@@ -3,6 +3,7 @@ import { generateCopdResponse } from '@/services/copdResponseService';
 import { generateDaughterResponse } from '@/services/daughterResponseService';
 import { generateHusbandResponse } from '@/services/husbandResponseService';
 import { generateSonResponse } from '@/services/sonResponseService';
+import { generateTerminalDyspneaResponse } from '@/services/terminalDyspneaResponseService';
 
 export function generateScenarioResponse(
   scenarioId: string,
@@ -11,6 +12,9 @@ export function generateScenarioResponse(
 ): GeneratedResponse {
   if (scenarioId === 'copd_air_hunger_at_home') {
     return generateCopdResponse(learnerMessageText, conversationMessages);
+  }
+  if (scenarioId === 'terminal_dyspnea_follow_up') {
+    return generateTerminalDyspneaResponse(learnerMessageText, conversationMessages);
   }
   if (scenarioId === 'hospice_too_soon') {
     return generateSonResponse(learnerMessageText, conversationMessages);

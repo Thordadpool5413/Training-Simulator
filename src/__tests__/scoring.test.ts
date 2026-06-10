@@ -57,6 +57,17 @@ describe('generateSkillScoreReport', () => {
     expect(result.scores.map((s) => s.category)).toEqual(RN_CATEGORIES);
   });
 
+  it('terminal_dyspnea_follow_up returns 7 RN score rows', () => {
+    const result = generateSkillScoreReport(
+      'terminal_dyspnea_follow_up',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scores).toHaveLength(7);
+    expect(result.scores.map((s) => s.category)).toEqual(RN_CATEGORIES);
+  });
+
   it('all scores from both role paths are within the 0–4 range', () => {
     const clResult = generateSkillScoreReport(
       'hospice_means_giving_up',

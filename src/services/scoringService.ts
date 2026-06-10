@@ -412,7 +412,7 @@ export function generateSkillScoreReport(
   safetyEvents: SafetyEvent[],
   patientStateSnapshots: PatientStateSnapshot[]
 ): SkillScoreReport {
-  if (scenarioId === 'copd_air_hunger_at_home') {
+  if (scenarioId === 'copd_air_hunger_at_home' || scenarioId === 'terminal_dyspnea_follow_up') {
     return generateRnSkillScoreReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
   }
 

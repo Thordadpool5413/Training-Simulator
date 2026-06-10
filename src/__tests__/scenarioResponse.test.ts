@@ -27,4 +27,10 @@ describe('generateScenarioResponse — routing', () => {
     expect(result.speakerName).toBe('Frank');
     expect(result.sender).toBe('family');
   });
+
+  it('terminal_dyspnea_follow_up returns speakerName Carol and sender family for neutral input', () => {
+    const result = generateScenarioResponse('terminal_dyspnea_follow_up', neutral, [...empty]);
+    expect(result.speakerName).toBe('Carol');
+    expect(result.sender).toBe('family');
+  });
 });

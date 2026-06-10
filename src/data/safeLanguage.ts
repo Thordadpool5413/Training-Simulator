@@ -61,4 +61,14 @@ export const safeLanguage: SafeLanguageEntry[] = [
     context: 'RN — comfort medication routing',
     text: 'The hospice team has a comfort plan in place for exactly this. I do not want to guess at amounts because that needs to come from the hospice orders and the on-call team. Let me make sure you know exactly when and how to reach them.',
   },
+  {
+    id: 'rn_followup_comfort_reassurance',
+    context: 'RN, follow-up visit when caregiver fears medication is not working',
+    text: 'I can hear how frightening it is to watch her still struggling even after giving the medication. What you are seeing does not mean the medication is failing or that you did anything wrong. Air hunger can still look intense even when the medication is easing the sensation on the inside. Let me show you what to watch for and when that means it is time to call.',
+  },
+  {
+    id: 'rn_when_to_call',
+    context: 'RN, explaining when and how to call the hospice on-call team',
+    text: 'You should call the hospice on-call team if the medication does not seem to be helping after the time your care plan says to wait, if the breathing is getting more distressed, or if you are not sure what to do next. You do not have to figure this out alone. That is exactly what the on-call team is there for.',
+  },
 ];

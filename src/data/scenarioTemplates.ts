@@ -120,6 +120,45 @@ export const scenarioTemplates: ScenarioTemplate[] = [
     patientStateDefaultId: 'hospice_too_soon',
   },
   {
+    id: 'terminal_dyspnea_follow_up',
+    title: 'Terminal Dyspnea Follow Up Conversation',
+    allowedRoleId: 'rn',
+    setting: 'Patient home, follow-up visit',
+    patient: {
+      name: 'Eleanor Marsh',
+      age: 84,
+    },
+    knownDiagnosisId: 'end_stage_copd',
+    recentClinicalChange:
+      'Eleanor Marsh has end-stage COPD and received her first comfort medication dose one hour ago following an air hunger episode. Carol administered the medication as instructed during the previous hospice visit. Eleanor still appears uncomfortable and Carol called the hospice line. The visiting RN is now present for a follow-up coaching visit.',
+    whoIsPresent: ['Eleanor', 'her daughter Carol'],
+    learnerObjective:
+      "Acknowledge Carol's fear that Eleanor is still suffering despite medication, explain that air hunger can persist visually even when comfort medication is working, reinforce what the hospice comfort plan provides, stay within RN scope on medication dose specifics, and give Carol clear guidance on what to watch for and when to call the hospice on-call team.",
+    roleReminder:
+      'You may assess symptoms, explain comfort-focused care, describe what the hospice plan of care provides, and educate Carol on non-pharmacologic comfort tools and when to call the team. You may confirm that hospice comfort medications are part of the plan of care. You should not state specific medication doses, modify orders, or prescribe. Route medication dose questions to the hospice orders and the on-call provider.',
+    hiddenFamilyFear:
+      'Carol believes that if Eleanor is still visibly uncomfortable after receiving the medication, either she administered it incorrectly or the dose is not enough. She fears she will have to ask for a dose change and be told she cannot, or that she will fail Eleanor by not acting.',
+    openingSpeakerName: 'Carol',
+    openingLine:
+      'She still looks so uncomfortable. I gave her the medicine an hour ago like you showed me. She is still struggling to breathe. Are we giving the right amount, or does she need more?',
+    successCriteria: [
+      "Acknowledges Carol's fear before explaining anything.",
+      'Explains that air hunger can still look intense even when the medication is easing the sensation.',
+      'Describes comfort tools Carol can use right now.',
+      'Confirms the hospice comfort plan is in place without stating specific doses.',
+      'Routes medication dose questions to the hospice orders and on-call provider.',
+      'Gives Carol a clear next step including when and how to call the hospice team.',
+    ],
+    failureCriteria: [
+      'States or recommends a specific medication dose.',
+      "Jumps to intervention steps without acknowledging Carol's fear.",
+      'Overpromises that medication will eliminate all visible breathing discomfort.',
+      'Leaves Carol without a clear next step or call contact.',
+      'Uses clinical jargon Carol cannot understand.',
+    ],
+    patientStateDefaultId: 'terminal_dyspnea_follow_up',
+  },
+  {
     id: 'can_change_minds',
     title: 'Can We Change Our Minds?',
     allowedRoleId: 'clinical_liaison',

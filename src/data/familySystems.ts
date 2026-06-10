@@ -58,6 +58,24 @@ export const familySystems: FamilySystemModule[] = [
       'Hospice is the best option at this stage and once the team is in place, it really takes care of everything.',
   },
   {
+    id: 'comfort_medication_doubt',
+    patternName: 'Comfort medication doubt',
+    coreBelief: 'The medication is not working and either I gave it wrong or it is not enough.',
+    hiddenFear:
+      'If I ask for more and it is not allowed, I have failed her. If I do not ask and she is suffering, I have also failed her.',
+    commonStatements: [
+      'She still looks so uncomfortable.',
+      'I gave it like you said but nothing changed.',
+      'Is this normal? Should she still look like this?',
+      'Do we need to call someone? Can we give more?',
+      'I do not know if I am doing this right.',
+      'Is she suffering?',
+    ],
+    bestLearnerResponse:
+      'I can see how frightening it is to watch her struggle even after giving the medication. What you are seeing does not mean the medication is failing or that you did anything wrong. Air hunger can still look intense even when the medication is helping the sensation. Let me show you what to watch for and when to call the team.',
+    poorLearnerResponse: 'Just give another dose if she is still struggling.',
+  },
+  {
     id: 'air_hunger_panic',
     patternName: 'Air hunger panic',
     coreBelief: 'He is suffocating and I am watching him die and there is nothing I can do.',

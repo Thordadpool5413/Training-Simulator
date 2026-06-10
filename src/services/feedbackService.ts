@@ -1,5 +1,6 @@
 import { safeLanguage } from '@/data/safeLanguage';
 import { generateRnFeedbackReport } from '@/services/rnFeedbackService';
+import { generateTerminalDyspneaFeedbackReport } from '@/services/terminalDyspneaFeedbackService';
 import type {
   ConversationMessage,
   FeedbackReport,
@@ -47,6 +48,9 @@ export function generateFeedbackReport(
 ): FeedbackReport {
   if (scenarioId === 'copd_air_hunger_at_home') {
     return generateRnFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+  }
+  if (scenarioId === 'terminal_dyspnea_follow_up') {
+    return generateTerminalDyspneaFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
   }
 
   void conversationMessages;

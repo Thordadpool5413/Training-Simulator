@@ -33,8 +33,12 @@ export function generateDashboardSummary(
   const hadServiceFirst = hasBehavior(patientStateSnapshots, 'service_explanation_before_emotion');
   const hadHospiceReframe = hasBehavior(patientStateSnapshots, 'hospice_reframe');
 
+  const isRnScenario =
+    activeScenarioId === 'copd_air_hunger_at_home' ||
+    activeScenarioId === 'terminal_dyspnea_follow_up';
+
   let nextRecommendedScenario: string;
-  if (activeScenarioId === 'copd_air_hunger_at_home') {
+  if (isRnScenario) {
     const hadRnMedEvent = safetyEvents.some(
       (e) => e.violationCategory === 'rn_medication_dose_outside_orders'
     );
@@ -58,7 +62,9 @@ export function generateDashboardSummary(
     } else if (!hadCaregiverEmpow) {
       nextRecommendedScenario = 'Caregiver Empowerment and Next Step Practice';
     } else {
-      nextRecommendedScenario = 'Terminal Dyspnea Follow Up Conversation';
+      nextRecommendedScenario = activeScenarioId === 'terminal_dyspnea_follow_up'
+        ? 'Advanced Comfort Care Conversations'
+        : 'Terminal Dyspnea Follow Up Conversation';
     }
   } else {
     if (hadMedEvent) {
@@ -74,7 +80,7 @@ export function generateDashboardSummary(
 
   // Sequence-aware: only count resolved if a recovery snapshot is timestamped after the safety event
   let safetyFlagsResolved = 0;
-  if (activeScenarioId === 'copd_air_hunger_at_home') {
+  if (isRnScenario) {
     const firstRnMedEvent = safetyEvents.find(
       (e) => e.violationCategory === 'rn_medication_dose_outside_orders'
     );

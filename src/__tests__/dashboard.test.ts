@@ -71,4 +71,15 @@ describe('generateDashboardSummary', () => {
     );
     expect(result.safetyFlagsResolved).toBe(1);
   });
+
+  it('terminal_dyspnea_follow_up resolves scenarioTitle to Terminal Dyspnea Follow Up Conversation', () => {
+    const result = generateDashboardSummary(
+      'terminal_dyspnea_follow_up',
+      'rn',
+      [learnerMessage],
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scenarioTitle).toBe('Terminal Dyspnea Follow Up Conversation');
+  });
 });

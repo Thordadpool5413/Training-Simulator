@@ -38,7 +38,7 @@ export default function DashboardScreen() {
       <SafeAreaView style={styles.safe}>
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyText}>No completed simulation yet.</Text>
-          <Pressable style={styles.button} onPress={() => router.push('/role' as Href)}>
+          <Pressable style={styles.button} accessibilityRole="button" onPress={() => router.push('/role' as Href)}>
             <Text style={styles.buttonText}>Start Practice</Text>
           </Pressable>
         </View>
@@ -49,7 +49,7 @@ export default function DashboardScreen() {
   return (
     <SafeAreaView style={styles.safe}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.screenTitle}>Dashboard</Text>
+        <Text style={styles.screenTitle} accessibilityRole="header">Dashboard</Text>
 
         <View style={styles.summaryCard}>
           <Text style={styles.summaryText}>{summary.summaryMessage}</Text>
@@ -90,11 +90,13 @@ export default function DashboardScreen() {
 
         <Pressable
           style={styles.practiceAgainButton}
+          accessibilityRole="button"
           onPress={() => router.push('/scenario' as Href)}>
           <Text style={styles.practiceAgainButtonText}>Practice Again</Text>
         </Pressable>
         <Pressable
           style={[styles.button, styles.returnButton]}
+          accessibilityRole="button"
           onPress={() => router.push('/role' as Href)}>
           <Text style={styles.buttonText}>Return to Role Selection</Text>
         </Pressable>

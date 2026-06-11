@@ -17,7 +17,10 @@ export default function ScenarioScreen() {
       <SafeAreaView style={styles.safe}>
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>Please select a role before choosing a scenario.</Text>
-          <Pressable style={styles.errorButton} onPress={() => router.push('/role' as Href)}>
+          <Pressable
+            style={styles.errorButton}
+            accessibilityRole="button"
+            onPress={() => router.push('/role' as Href)}>
             <Text style={styles.errorButtonText}>Go to Role Selection</Text>
           </Pressable>
         </View>
@@ -32,7 +35,10 @@ export default function ScenarioScreen() {
       <SafeAreaView style={styles.safe}>
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>No scenarios available for the selected role.</Text>
-          <Pressable style={styles.errorButton} onPress={() => router.push('/role' as Href)}>
+          <Pressable
+            style={styles.errorButton}
+            accessibilityRole="button"
+            onPress={() => router.push('/role' as Href)}>
             <Text style={styles.errorButtonText}>Go to Role Selection</Text>
           </Pressable>
         </View>
@@ -54,7 +60,10 @@ export default function ScenarioScreen() {
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.headerRow}>
           <Text style={styles.title} accessibilityRole="header">Select a Scenario</Text>
-          <Pressable onPress={() => router.push('/role' as Href)}>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="Change role"
+            onPress={() => router.push('/role' as Href)}>
             <Text style={styles.changeRoleText}>Change Role</Text>
           </Pressable>
         </View>
@@ -72,6 +81,8 @@ export default function ScenarioScreen() {
                 styles.card,
                 pressed && styles.cardPressed,
               ]}
+              accessibilityRole="button"
+              accessibilityLabel={`${scenario.title}, ${scenario.patient.name}, age ${scenario.patient.age}, ${scenario.setting}`}
               onPress={() => handleSelect(scenario.id)}>
               <Text style={styles.scenarioTitle}>{scenario.title}</Text>
               <Text style={styles.scenarioMeta}>

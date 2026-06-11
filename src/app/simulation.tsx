@@ -83,7 +83,7 @@ export default function SimulationScreen() {
           <Text style={styles.centerText}>
             Please select a role before starting a simulation.
           </Text>
-          <Pressable style={styles.button} onPress={() => router.push('/role' as Href)}>
+          <Pressable style={styles.button} accessibilityRole="button" onPress={() => router.push('/role' as Href)}>
             <Text style={styles.buttonText}>Go to Role Selection</Text>
           </Pressable>
         </View>
@@ -98,7 +98,7 @@ export default function SimulationScreen() {
           <Text style={styles.centerText}>
             Please select a scenario before starting a simulation.
           </Text>
-          <Pressable style={styles.button} onPress={() => router.push('/scenario' as Href)}>
+          <Pressable style={styles.button} accessibilityRole="button" onPress={() => router.push('/scenario' as Href)}>
             <Text style={styles.buttonText}>Go to Scenario Selection</Text>
           </Pressable>
         </View>
@@ -113,7 +113,7 @@ export default function SimulationScreen() {
           <Text style={styles.centerText}>
             Scenario not found. Please select a scenario.
           </Text>
-          <Pressable style={styles.button} onPress={() => router.push('/scenario' as Href)}>
+          <Pressable style={styles.button} accessibilityRole="button" onPress={() => router.push('/scenario' as Href)}>
             <Text style={styles.buttonText}>Go to Scenario Selection</Text>
           </Pressable>
         </View>
@@ -215,6 +215,8 @@ export default function SimulationScreen() {
           </View>
           <Pressable
             style={styles.finishButton}
+            accessibilityRole="button"
+            accessibilityLabel="Finish simulation and view feedback"
             onPress={() => router.push('/feedback' as Href)}>
             <Text style={styles.finishButtonText}>Finish</Text>
           </Pressable>
@@ -244,11 +246,15 @@ export default function SimulationScreen() {
             onChangeText={setInputText}
             placeholder="Type your response..."
             placeholderTextColor={SimulatorColors.textPlaceholder}
+            accessibilityLabel="Type your response"
             multiline
             maxLength={500}
           />
           <Pressable
             style={[styles.sendButton, !inputText.trim() && styles.sendButtonDisabled]}
+            accessibilityRole="button"
+            accessibilityLabel="Send response"
+            accessibilityState={{ disabled: !inputText.trim() }}
             onPress={handleSend}
             disabled={!inputText.trim()}>
             <Text style={styles.sendButtonText}>Send</Text>

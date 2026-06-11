@@ -15,7 +15,10 @@ export default function IndexScreen() {
         <Text style={styles.disclaimer}>
           This is a fictional training simulator for hospice and palliative communication practice. Do not enter real patient information. This tool does not diagnose patients, determine hospice eligibility, prescribe medications, or replace clinical judgment.
         </Text>
-        <Pressable style={styles.button} onPress={() => router.push('/role' as Href)}>
+        <Pressable
+          style={styles.button}
+          accessibilityRole="button"
+          onPress={() => router.push('/role' as Href)}>
           <Text style={styles.buttonText}>Continue</Text>
         </Pressable>
       </View>

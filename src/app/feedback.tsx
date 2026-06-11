@@ -47,7 +47,7 @@ export default function FeedbackScreen() {
       <SafeAreaView style={styles.safe}>
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyText}>No completed simulation found.</Text>
-          <Pressable style={styles.button} onPress={() => router.push('/role' as Href)}>
+          <Pressable style={styles.button} accessibilityRole="button" onPress={() => router.push('/role' as Href)}>
             <Text style={styles.buttonText}>Return to Role Selection</Text>
           </Pressable>
         </View>
@@ -58,7 +58,7 @@ export default function FeedbackScreen() {
   return (
     <SafeAreaView style={styles.safe}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.screenTitle}>Simulation Feedback</Text>
+        <Text style={styles.screenTitle} accessibilityRole="header">Simulation Feedback</Text>
         {scenario != null && (
           <Text style={styles.screenSubtitle}>{scenario.title}</Text>
         )}
@@ -145,11 +145,13 @@ export default function FeedbackScreen() {
 
         <Pressable
           style={styles.viewDashboardButton}
+          accessibilityRole="button"
           onPress={() => router.push('/dashboard' as Href)}>
           <Text style={styles.viewDashboardButtonText}>View Dashboard</Text>
         </Pressable>
         <Pressable
           style={[styles.button, styles.returnButton]}
+          accessibilityRole="button"
           onPress={() => router.push('/role' as Href)}>
           <Text style={styles.buttonText}>Return to Role Selection</Text>
         </Pressable>

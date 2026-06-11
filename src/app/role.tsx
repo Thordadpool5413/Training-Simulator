@@ -32,6 +32,8 @@ export default function RoleScreen() {
           <Pressable
             key={role.id}
             style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
+            accessibilityRole="button"
+            accessibilityLabel={`Select ${role.name}`}
             onPress={() => handleSelect(role.id)}>
             <Text style={styles.roleName}>{role.name}</Text>
             {ROLE_BOUNDARY_NOTES[role.id] != null && (

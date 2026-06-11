@@ -17,7 +17,7 @@ export default function ScenarioBriefingScreen() {
       <SafeAreaView style={styles.safe}>
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>Please select a role before viewing a scenario.</Text>
-          <Pressable style={styles.button} onPress={() => router.push('/role' as Href)}>
+          <Pressable style={styles.button} accessibilityRole="button" onPress={() => router.push('/role' as Href)}>
             <Text style={styles.buttonText}>Go to Role Selection</Text>
           </Pressable>
         </View>
@@ -30,7 +30,7 @@ export default function ScenarioBriefingScreen() {
       <SafeAreaView style={styles.safe}>
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>Please select a scenario before viewing the briefing.</Text>
-          <Pressable style={styles.button} onPress={() => router.push('/scenario' as Href)}>
+          <Pressable style={styles.button} accessibilityRole="button" onPress={() => router.push('/scenario' as Href)}>
             <Text style={styles.buttonText}>Go to Scenario Selection</Text>
           </Pressable>
         </View>
@@ -45,7 +45,7 @@ export default function ScenarioBriefingScreen() {
       <SafeAreaView style={styles.safe}>
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>Scenario not found. Please select a scenario.</Text>
-          <Pressable style={styles.button} onPress={() => router.push('/scenario' as Href)}>
+          <Pressable style={styles.button} accessibilityRole="button" onPress={() => router.push('/scenario' as Href)}>
             <Text style={styles.buttonText}>Go to Scenario Selection</Text>
           </Pressable>
         </View>
@@ -59,10 +59,14 @@ export default function ScenarioBriefingScreen() {
   return (
     <SafeAreaView style={styles.safe}>
       <ScrollView contentContainerStyle={styles.container}>
-        <Pressable style={styles.backLink} onPress={() => router.back()}>
+        <Pressable
+          style={styles.backLink}
+          accessibilityRole="button"
+          accessibilityLabel="Back to scenarios"
+          onPress={() => router.back()}>
           <Text style={styles.backLinkText}>← Back to Scenarios</Text>
         </Pressable>
-        <Text style={styles.title}>{scenario.title}</Text>
+        <Text style={styles.title} accessibilityRole="header">{scenario.title}</Text>
 
         <View style={styles.card}>
           <BriefingRow label="Your role" value={role?.name ?? selectedRoleId} />
@@ -89,6 +93,7 @@ export default function ScenarioBriefingScreen() {
 
         <Pressable
           style={styles.button}
+          accessibilityRole="button"
           onPress={() => router.push('/simulation' as Href)}>
           <Text style={styles.buttonText}>Start Simulation</Text>
         </Pressable>

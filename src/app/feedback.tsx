@@ -144,6 +144,12 @@ export default function FeedbackScreen() {
         </SectionCard>
 
         <Pressable
+          style={styles.button}
+          accessibilityRole="button"
+          onPress={() => router.push('/clinical-debrief' as Href)}>
+          <Text style={styles.buttonText}>Clinical Knowledge Check</Text>
+        </Pressable>
+        <Pressable
           style={styles.viewDashboardButton}
           accessibilityRole="button"
           onPress={() => router.push('/dashboard' as Href)}>

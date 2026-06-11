@@ -1,3 +1,4 @@
+import { Audio } from 'expo-av';
 import { router } from 'expo-router';
 import type { Href } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
@@ -20,10 +21,12 @@ import { roles } from '@/data/roles';
 import { safeLanguage } from '@/data/safeLanguage';
 import { scenarioHints } from '@/data/scenarioHints';
 import { scenarioTemplates } from '@/data/scenarioTemplates';
+import { fetchPatientResponse } from '@/services/aiPatientService';
 import { fetchCoachHint } from '@/services/aiCoachService';
 import { checkMedicationSafety } from '@/services/medicationSafetyService';
 import { updateScenarioPatientState } from '@/services/patientStateDispatcher';
 import { generateScenarioResponse } from '@/services/scenarioResponseService';
+import { startRecording, stopAndTranscribe, speakText } from '@/services/voiceService';
 import { useSimulator } from '@/state/SimulatorContext';
 import type {
   ConversationMessage,
@@ -63,6 +66,19 @@ export default function SimulationScreen() {
   const lastHintMsgCount = useRef(-1);
   const scrollViewRef = useRef<ScrollView>(null);
 
+  // AI patient response states
+  const [isPatientTyping, setIsPatientTyping] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+
+  // Voice mode states
+  const [voiceEnabled, setVoiceEnabled] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [isTranscribing, setIsTranscribing] = useState(false);
+  const recordingRef = useRef<Audio.Recording | null>(null);
+
+  // Patient state panel
+  const [patientPanelOpen, setPatientPanelOpen] = useState(false);
+
   // Static fallback phrases
   const hintIds = scenario ? (scenarioHints[scenario.id] ?? []) : [];
   const staticFallback = hintIds.length > 0
@@ -93,9 +109,153 @@ export default function SimulationScreen() {
     }
   }
 
+  async function handleSend(textOverride?: string) {
+    if (!scenario || !selectedRoleId) return;
+    const text = (textOverride ?? inputText).trim();
+    if (!text || isSending || isPatientTyping) return;
+
+    const scenarioId = scenario.id;
+    const now = Date.now();
+    const msgCount = conversationMessages.length;
+
+    setIsSending(true);
+
+    const newMessage: ConversationMessage = {
+      id: `${now}-${msgCount}`,
+      sender: 'learner',
+      speakerName: role?.name ?? 'You',
+      text,
+      createdAt: new Date().toISOString(),
+    };
+
+    const safetyResult = checkMedicationSafety(text, selectedRoleId, roles);
+
+    if (safetyResult.trainingPauseRequired) {
+      const pauseMessage: ConversationMessage = {
+        id: `${now}-${msgCount + 1}`,
+        sender: 'system',
+        speakerName: 'Training Pause',
+        text: safetyResult.message ?? MEDICATION_FALLBACK_MESSAGE,
+        createdAt: new Date().toISOString(),
+      };
+      const safetyEvent: SafetyEvent = {
+        id: `${now}-safety`,
+        scenarioId,
+        learnerMessageText: text,
+        violationCategory: safetyResult.violationCategory ?? 'medication_outside_role',
+        severity: safetyResult.severity ?? 'critical_simulation_stop',
+        message: safetyResult.message ?? MEDICATION_FALLBACK_MESSAGE,
+        feedbackHook: safetyResult.feedbackHook ?? null,
+        createdAt: new Date().toISOString(),
+      };
+      appendConversationMessages([newMessage, pauseMessage]);
+      appendSafetyEvent(safetyEvent);
+      setInputText('');
+      setIsSending(false);
+      return;
+    }
+
+    // Update hidden patient state
+    const initialFallback: PatientState =
+      (patientStateDefaults as Record<string, PatientState | undefined>)[
+        scenario.patientStateDefaultId
+      ] ?? patientStateDefaults.hospice_means_giving_up;
+    const stateBefore: PatientState = currentPatientState ?? initialFallback;
+    const result = updateScenarioPatientState(scenarioId, stateBefore, text, conversationMessages);
+    setCurrentPatientState(result.updatedState);
+
+    const snapshot: PatientStateSnapshot = {
+      id: `${now}-snapshot`,
+      scenarioId,
+      learnerMessageId: newMessage.id,
+      stateBefore: { ...stateBefore },
+      stateAfter: { ...result.updatedState },
+      detectedBehaviors: result.detectedBehaviors,
+      stateChangeSummary: result.stateChangeSummary,
+      createdAt: new Date().toISOString(),
+    };
+    appendPatientStateSnapshot(snapshot);
+
+    // Append learner message immediately
+    appendConversationMessages([newMessage]);
+    setInputText('');
+    setIsSending(false);
+
+    // Get AI patient response
+    setIsPatientTyping(true);
+    try {
+      const historyWithLearner = [...conversationMessages, newMessage];
+      const aiText = await fetchPatientResponse({
+        scenarioTitle: scenario.title,
+        openingSpeakerName: scenario.openingSpeakerName,
+        role: role?.name ?? selectedRoleId ?? 'clinician',
+        learnerObjective: scenario.learnerObjective,
+        patientState: result.updatedState,
+        conversationHistory: historyWithLearner,
+      });
+
+      let responseText: string;
+      let responseSender: 'patient' | 'family';
+      let responseSpeakerName: string;
+
+      if (aiText) {
+        responseText = aiText;
+        responseSender = 'family';
+        responseSpeakerName = scenario.openingSpeakerName;
+      } else {
+        const fallback = generateScenarioResponse(scenarioId, text, historyWithLearner);
+        responseText = fallback.text;
+        responseSender = fallback.sender;
+        responseSpeakerName = fallback.speakerName;
+      }
+
+      const responseMessage: ConversationMessage = {
+        id: `${Date.now()}-response`,
+        sender: responseSender,
+        speakerName: responseSpeakerName,
+        text: responseText,
+        createdAt: new Date().toISOString(),
+      };
+      appendConversationMessages([responseMessage]);
+
+      if (voiceEnabled && aiText) {
+        void speakText(responseText);
+      }
+    } finally {
+      setIsPatientTyping(false);
+    }
+  }
+
+  async function handleMicPress() {
+    if (isRecording) {
+      setIsRecording(false);
+      setIsTranscribing(true);
+      try {
+        if (recordingRef.current) {
+          const transcript = await stopAndTranscribe(recordingRef.current);
+          recordingRef.current = null;
+          if (transcript) {
+            await handleSend(transcript);
+          }
+        }
+      } finally {
+        setIsTranscribing(false);
+      }
+    } else {
+      try {
+        const rec = await startRecording();
+        recordingRef.current = rec;
+        setIsRecording(true);
+      } catch {
+        // Permission denied — silently fall back to text mode
+        setVoiceEnabled(false);
+      }
+    }
+  }
+
   useEffect(() => {
     scrollViewRef.current?.scrollToEnd({ animated: true });
-  }, [conversationMessages.length]);
+  }, [conversationMessages.length, isPatientTyping]);
 
   useEffect(() => {
     if (!scenario) return;
@@ -159,81 +319,6 @@ export default function SimulationScreen() {
     );
   }
 
-  function handleSend() {
-    if (!scenario) return;
-    if (!selectedRoleId) return;
-    const scenarioId = scenario.id;
-    const trimmed = inputText.trim();
-    if (!trimmed) return;
-    const now = Date.now();
-    const newMessage: ConversationMessage = {
-      id: `${now}-${conversationMessages.length}`,
-      sender: 'learner',
-      speakerName: role?.name ?? 'You',
-      text: trimmed,
-      createdAt: new Date().toISOString(),
-    };
-
-    const safetyResult = checkMedicationSafety(trimmed, selectedRoleId, roles);
-
-    if (safetyResult.trainingPauseRequired) {
-      const pauseMessage: ConversationMessage = {
-        id: `${now}-${conversationMessages.length + 1}`,
-        sender: 'system',
-        speakerName: 'Training Pause',
-        text: safetyResult.message ?? MEDICATION_FALLBACK_MESSAGE,
-        createdAt: new Date().toISOString(),
-      };
-      const safetyEvent: SafetyEvent = {
-        id: `${now}-safety`,
-        scenarioId,
-        learnerMessageText: trimmed,
-        violationCategory: safetyResult.violationCategory ?? 'medication_outside_role',
-        severity: safetyResult.severity ?? 'critical_simulation_stop',
-        message: safetyResult.message ?? MEDICATION_FALLBACK_MESSAGE,
-        feedbackHook: safetyResult.feedbackHook ?? null,
-        createdAt: new Date().toISOString(),
-      };
-      appendConversationMessages([newMessage, pauseMessage]);
-      appendSafetyEvent(safetyEvent);
-      setInputText('');
-      return;
-    }
-
-    // Safe path — update hidden patient state before generating response
-    const initialFallback: PatientState =
-      (patientStateDefaults as Record<string, PatientState | undefined>)[
-        scenario.patientStateDefaultId
-      ] ?? patientStateDefaults.hospice_means_giving_up;
-    const stateBefore: PatientState = currentPatientState ?? initialFallback;
-
-    const result = updateScenarioPatientState(scenarioId, stateBefore, trimmed, conversationMessages);
-    setCurrentPatientState(result.updatedState);
-
-    const snapshot: PatientStateSnapshot = {
-      id: `${now}-snapshot`,
-      scenarioId,
-      learnerMessageId: newMessage.id,
-      stateBefore: { ...stateBefore },
-      stateAfter: { ...result.updatedState },
-      detectedBehaviors: result.detectedBehaviors,
-      stateChangeSummary: result.stateChangeSummary,
-      createdAt: new Date().toISOString(),
-    };
-    appendPatientStateSnapshot(snapshot);
-
-    const response = generateScenarioResponse(scenarioId, trimmed, conversationMessages);
-    const responseMessage: ConversationMessage = {
-      id: `${now}-${conversationMessages.length + 1}`,
-      sender: response.sender,
-      speakerName: response.speakerName,
-      text: response.text,
-      createdAt: new Date().toISOString(),
-    };
-    appendConversationMessages([newMessage, responseMessage]);
-    setInputText('');
-  }
-
   return (
     <SafeAreaView style={styles.safe}>
       <KeyboardAvoidingView
@@ -266,6 +351,15 @@ export default function SimulationScreen() {
           <Text style={styles.reminderText} numberOfLines={4}>{scenario.roleReminder}</Text>
         </View>
 
+        {/* Patient state panel */}
+        {currentPatientState != null && (
+          <PatientStatePanel
+            state={currentPatientState}
+            open={patientPanelOpen}
+            onToggle={() => setPatientPanelOpen((v) => !v)}
+          />
+        )}
+
         {/* Chat area */}
         <ScrollView
           ref={scrollViewRef}
@@ -274,6 +368,7 @@ export default function SimulationScreen() {
           {conversationMessages.map((msg) => (
             <MessageBubble key={msg.id} message={msg} />
           ))}
+          {isPatientTyping && <TypingBubble speakerName={scenario.openingSpeakerName} />}
         </ScrollView>
 
         {/* Hint banner */}
@@ -310,29 +405,142 @@ export default function SimulationScreen() {
               <Text style={styles.hintButtonText}>Hint</Text>
             </Pressable>
           )}
-          <TextInput
-            style={styles.textInput}
-            value={inputText}
-            onChangeText={setInputText}
-            placeholder="Type your response..."
-            placeholderTextColor={SimulatorColors.textPlaceholder}
-            accessibilityLabel="Type your response"
-            multiline
-            maxLength={500}
-          />
+
+          {voiceEnabled ? (
+            <Pressable
+              style={[
+                styles.micButton,
+                isRecording && styles.micButtonRecording,
+                isTranscribing && styles.micButtonTranscribing,
+              ]}
+              accessibilityRole="button"
+              accessibilityLabel={isRecording ? 'Stop recording' : 'Start recording'}
+              disabled={isTranscribing || isPatientTyping || isSending}
+              onPress={() => { void handleMicPress(); }}>
+              {isTranscribing ? (
+                <ActivityIndicator size="small" color={SimulatorColors.textOnBrand} />
+              ) : (
+                <Text style={styles.micButtonText}>
+                  {isRecording ? '⏹ Stop' : '🎤 Speak'}
+                </Text>
+              )}
+            </Pressable>
+          ) : (
+            <TextInput
+              style={styles.textInput}
+              value={inputText}
+              onChangeText={setInputText}
+              placeholder="Type your response..."
+              placeholderTextColor={SimulatorColors.textPlaceholder}
+              accessibilityLabel="Type your response"
+              multiline
+              maxLength={500}
+            />
+          )}
+
           <Pressable
-            style={[styles.sendButton, !inputText.trim() && styles.sendButtonDisabled]}
+            style={[styles.voiceToggle, voiceEnabled && styles.voiceToggleActive]}
             accessibilityRole="button"
-            accessibilityLabel="Send response"
-            accessibilityState={{ disabled: !inputText.trim() }}
-            onPress={handleSend}
-            disabled={!inputText.trim()}>
-            <Text style={styles.sendButtonText}>Send</Text>
+            accessibilityLabel={voiceEnabled ? 'Switch to text mode' : 'Switch to voice mode'}
+            onPress={() => {
+              if (voiceEnabled && isRecording && recordingRef.current) {
+                void recordingRef.current.stopAndUnloadAsync().catch(() => null);
+                recordingRef.current = null;
+                setIsRecording(false);
+              }
+              setVoiceEnabled((v) => !v);
+            }}>
+            <Text style={[styles.voiceToggleText, voiceEnabled && styles.voiceToggleTextActive]}>
+              {voiceEnabled ? '🎤' : '🎤'}
+            </Text>
           </Pressable>
+
+          {!voiceEnabled && (
+            <Pressable
+              style={[
+                styles.sendButton,
+                (!inputText.trim() || isSending || isPatientTyping) && styles.sendButtonDisabled,
+              ]}
+              accessibilityRole="button"
+              accessibilityLabel="Send response"
+              accessibilityState={{ disabled: !inputText.trim() || isSending || isPatientTyping }}
+              onPress={() => { void handleSend(); }}
+              disabled={!inputText.trim() || isSending || isPatientTyping}>
+              {isSending ? (
+                <ActivityIndicator size="small" color={SimulatorColors.textOnBrand} />
+              ) : (
+                <Text style={styles.sendButtonText}>Send</Text>
+              )}
+            </Pressable>
+          )}
         </View>
 
       </KeyboardAvoidingView>
     </SafeAreaView>
+  );
+}
+
+function TypingBubble({ speakerName }: { speakerName: string }) {
+  return (
+    <View style={bubbleStyles.container}>
+      <Text style={bubbleStyles.speakerName}>{speakerName}</Text>
+      <View style={[bubbleStyles.bubble, bubbleStyles.bubbleFamily, typingStyles.bubble]}>
+        <Text style={typingStyles.dots}>• • •</Text>
+      </View>
+    </View>
+  );
+}
+
+function PatientStatePanel({
+  state,
+  open,
+  onToggle,
+}: {
+  state: PatientState;
+  open: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <View style={panelStyles.container}>
+      <Pressable style={panelStyles.header} accessibilityRole="button" onPress={onToggle}>
+        <Text style={panelStyles.headerLabel}>Patient Signals</Text>
+        <Text style={panelStyles.toggle}>{open ? '▲' : '▼'}</Text>
+      </Pressable>
+      {open && (
+        <View style={panelStyles.bars}>
+          <SignalBar label="Trust" value={state.trust} positiveHigh />
+          <SignalBar label="Fear" value={state.fear} positiveHigh={false} />
+          <SignalBar label="Understanding" value={state.understanding} positiveHigh />
+          <SignalBar label="Readiness" value={state.readiness} positiveHigh />
+        </View>
+      )}
+    </View>
+  );
+}
+
+function SignalBar({
+  label,
+  value,
+  positiveHigh,
+}: {
+  label: string;
+  value: number;
+  positiveHigh: boolean;
+}) {
+  const pct = Math.max(0, Math.min(100, value));
+  const fillColor =
+    positiveHigh
+      ? pct >= 60 ? SimulatorColors.scoreGreen : pct >= 35 ? SimulatorColors.scoreYellow : SimulatorColors.scoreOrange
+      : pct >= 60 ? SimulatorColors.scoreOrange : pct >= 35 ? SimulatorColors.scoreYellow : SimulatorColors.scoreGreen;
+
+  return (
+    <View style={panelStyles.barRow}>
+      <Text style={panelStyles.barLabel}>{label}</Text>
+      <View style={panelStyles.barTrack}>
+        <View style={[panelStyles.barFill, { width: `${pct}%` as `${number}%`, backgroundColor: fillColor }]} />
+      </View>
+      <Text style={panelStyles.barValue}>{pct}</Text>
+    </View>
   );
 }
 
@@ -487,6 +695,8 @@ const styles = StyleSheet.create({
     borderRadius: Radius.md,
     paddingHorizontal: 16,
     paddingVertical: 10,
+    minWidth: 58,
+    alignItems: 'center',
   },
   sendButtonDisabled: {
     backgroundColor: SimulatorColors.brandDisabled,
@@ -553,6 +763,118 @@ const styles = StyleSheet.create({
   },
   hintButtonLoading: {
     opacity: 0.6,
+  },
+  micButton: {
+    flex: 1,
+    backgroundColor: SimulatorColors.brand,
+    borderRadius: Radius.md,
+    paddingVertical: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 44,
+  },
+  micButtonRecording: {
+    backgroundColor: SimulatorColors.scoreOrange,
+  },
+  micButtonTranscribing: {
+    backgroundColor: SimulatorColors.brandDisabled,
+  },
+  micButtonText: {
+    color: SimulatorColors.textOnBrand,
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  voiceToggle: {
+    width: 40,
+    height: 40,
+    borderRadius: Radius.md,
+    borderWidth: 1,
+    borderColor: SimulatorColors.borderInput,
+    backgroundColor: SimulatorColors.surface,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  voiceToggleActive: {
+    backgroundColor: SimulatorColors.indigoBackground,
+    borderColor: SimulatorColors.indigoBorder,
+  },
+  voiceToggleText: {
+    fontSize: 16,
+    opacity: 0.4,
+  },
+  voiceToggleTextActive: {
+    opacity: 1,
+  },
+});
+
+const typingStyles = StyleSheet.create({
+  bubble: {
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+  },
+  dots: {
+    fontSize: 18,
+    color: SimulatorColors.textSecondary,
+    letterSpacing: 3,
+  },
+});
+
+const panelStyles = StyleSheet.create({
+  container: {
+    backgroundColor: SimulatorColors.surface,
+    borderBottomWidth: 1,
+    borderBottomColor: SimulatorColors.border,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  headerLabel: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: SimulatorColors.textSecondary,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  toggle: {
+    fontSize: 10,
+    color: SimulatorColors.textSecondary,
+  },
+  bars: {
+    paddingHorizontal: 16,
+    paddingBottom: 10,
+    gap: 6,
+  },
+  barRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  barLabel: {
+    fontSize: 12,
+    color: SimulatorColors.textSecondary,
+    width: 88,
+  },
+  barTrack: {
+    flex: 1,
+    height: 6,
+    backgroundColor: SimulatorColors.borderDivider,
+    borderRadius: 3,
+    overflow: 'hidden',
+  },
+  barFill: {
+    height: 6,
+    borderRadius: 3,
+  },
+  barValue: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: SimulatorColors.textSecondary,
+    width: 26,
+    textAlign: 'right',
   },
 });
 

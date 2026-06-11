@@ -206,6 +206,7 @@ export interface CompletedSession {
   completedAt: string;
   overallScore: number;
   previousScore?: number;
+  skillScores?: Array<{ category: string; score: number }>;
 }
 
 export type ScenarioDifficulty = 'beginner' | 'intermediate' | 'advanced';

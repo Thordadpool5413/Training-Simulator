@@ -168,6 +168,14 @@ export default function DashboardScreen() {
         </Pressable>
         {completedSessions.length > 0 && (
           <Pressable
+            style={styles.analyticsButton}
+            accessibilityRole="button"
+            onPress={() => router.push('/analytics' as Href)}>
+            <Text style={styles.analyticsButtonText}>View Progress Analytics</Text>
+          </Pressable>
+        )}
+        {completedSessions.length > 0 && (
+          <Pressable
             style={styles.certificateButton}
             accessibilityRole="button"
             onPress={() => router.push('/certificate' as Href)}>
@@ -326,6 +334,19 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: SimulatorColors.textSecondary,
     fontWeight: '500',
+  },
+  analyticsButton: {
+    backgroundColor: SimulatorColors.surface,
+    borderRadius: Radius.md,
+    paddingVertical: 14,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: SimulatorColors.brand,
+  },
+  analyticsButtonText: {
+    color: SimulatorColors.brand,
+    fontSize: 15,
+    fontWeight: '600',
   },
   certificateButton: {
     backgroundColor: SimulatorColors.indigoBackground,

@@ -58,6 +58,7 @@ export default function FeedbackScreen() {
         scenarioTitle: scenario?.title ?? activeScenarioId,
         roleId: selectedRoleId ?? '',
         overallScore: scoreReport.overallScore,
+        skillScores: scoreReport.scores.map((s) => ({ category: s.category, score: s.score })),
       });
     }
   }, [scoreReport, activeScenarioId, scenario, selectedRoleId, recordCompletedSession]);

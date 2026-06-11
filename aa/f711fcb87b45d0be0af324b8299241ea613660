@@ -1,0 +1,26 @@
+src/__tests__/dashboard.test.ts
+  s_4dd6ce9d67e608::t_c0f0f97ead07f7 10
+  s_4dd6ce9d67e608::t_43064a699391b8 86-116
+src/services/copdPatientStateService.ts
+  s_4dd6ce9d67e608::t_2f4f7aa2499660 112
+  s_4dd6ce9d67e608::t_2f4c7dcfb36345 123-142,157,171,190,205
+src/__tests__/patientState.test.ts
+  s_4dd6ce9d67e608::t_088f7adfd8fb06 38-52
+  s_4dd6ce9d67e608::t_f7e679f5c6b715 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "aaf711fcb87b45d0be0af324b8299241ea613660",
+  "prompts": {},
+  "sessions": {
+    "s_4dd6ce9d67e608": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55cc4203-2362-432c-9323-e9946683cd1f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

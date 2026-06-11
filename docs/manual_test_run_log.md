@@ -1048,3 +1048,92 @@ No services, data files, state files, type files, component files, theme files, 
 ### Files Modified in Packet 46
 
 - `src/app/dashboard.tsx` — "Practice Again" outlined button added above "Return to Role Selection"; routes to /scenario so the learner can select another scenario without re-selecting role; `practiceAgainButton` and `practiceAgainButtonText` styles added
+
+---
+
+## Packet 48 — Full Five Scenario Regression
+
+**Date:** 2026-06-10
+**Commit at time of test:** 3405e42
+**Method:** Automated Jest suite (29 tests) + deterministic code trace across all five scenarios and all polished screens.
+
+### Pre-test Checks
+
+| Check | Result |
+|---|---|
+| git status | Clean — no modified files |
+| npm test | 29 of 29 passed |
+| npx tsc --noEmit | Zero errors |
+
+### Scenario Selector Regression
+
+| Check | Result |
+|---|---|
+| RN selector shows "Role: RN" | Pass |
+| RN selector shows "2 scenarios" | Pass |
+| RN selector shows COPD Air Hunger at Home card | Pass |
+| RN selector shows Terminal Dyspnea Follow Up Conversation card | Pass |
+| CL selector shows "Role: Clinical Liaison" | Pass |
+| CL selector shows "3 scenarios" | Pass |
+| CL selector shows Hospice Means Giving Up | Pass |
+| CL selector shows Hospice Is Only for the Last Few Days | Pass |
+| CL selector shows Can We Change Our Minds? | Pass |
+| Change Role routes to /role | Pass |
+| Full card tap routes to briefing | Pass |
+| No raw IDs visible | Pass |
+
+### Scenario Briefing Regression
+
+| Check | Result |
+|---|---|
+| Back to Scenarios link visible | Pass |
+| All 8 BriefingRows render for all 5 scenarios | Pass |
+| Start Simulation button present | Pass |
+| No raw IDs visible | Pass |
+
+### Simulation Screen Regression
+
+| Check | Result |
+|---|---|
+| Header meta shows role display name, not raw ID | Pass |
+| Role reminder clamped to 4 lines | Pass |
+| Finish button uses brand blue | Pass |
+| All five opening lines display correctly | Pass |
+| CL unsafe medication phrase triggers Training Pause | Pass |
+| RN unsafe dose phrase triggers Training Pause | Pass |
+| Safe recovery path sets safe_medication_routing behavior | Pass |
+| safetyFlagsResolved increments to 1 after recovery | Pass |
+| Finish navigates to feedback | Pass |
+
+### Feedback Screen Regression
+
+| Check | Result |
+|---|---|
+| Scenario subtitle shows for all 5 scenarios | Pass |
+| All ten sections render | Pass |
+| What Changed the Room uses bullet prefix | Pass |
+| What Changed the Room shows empty state when empty | Pass |
+| Suggested Wording is scenario-specific | Pass |
+| CL scores: 7 rows in CL category order | Pass |
+| RN scores: 7 rows in RN category order | Pass |
+| No raw IDs visible | Pass |
+
+### Dashboard Regression
+
+| Check | Result |
+|---|---|
+| Practice Again button visible | Pass |
+| Practice Again routes to /scenario | Pass |
+| Return to Role Selection present | Pass |
+| All nine dashboard fields populated | Pass |
+| Safety Corrections amber badge for non-zero values | Pass |
+| Next Recommended Scenario displays correctly | Pass |
+| No raw IDs visible | Pass |
+
+**Total regression checks:** 50 of 50 passed.
+
+**Open defects:** 0
+
+**Package changes:** None.
+**Service changes:** None.
+**Data changes:** None.

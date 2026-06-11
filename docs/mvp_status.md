@@ -1,6 +1,6 @@
 # MVP Status — Hospice Communication Training Simulator
 
-> **Updated:** 2026-06-10. This document reflects the stable five-scenario MVP state after Packet 34. It is maintained as a living status record updated at each stable checkpoint.
+> **Updated:** 2026-06-10. This document reflects the stable five-scenario MVP state after Packet 49 full regression. It is maintained as a living status record updated at each stable checkpoint.
 
 ---
 
@@ -9,7 +9,7 @@
 | Field | Value |
 |---|---|
 | Status | Stable MVP — five scenarios active |
-| Last Manual Test | 2026-06-10 |
+| Last Manual Test | 2026-06-10 (Packet 48 full regression — 50 of 50 checks passed) |
 | Open Defects | 0 |
 | TypeScript | Passes with zero errors |
 | Automated Tests | 29 of 29 passing (Jest 29, npm test) |
@@ -167,6 +167,18 @@ UI polish baseline completed. No behavior, logic, or content was changed.
 | Screen title margin | `src/app/feedback.tsx` and `src/app/dashboard.tsx` screen title `marginBottom` standardized to 8 |
 
 Manual UI smoke test passed 36 of 36 items. Zero defects found.
+
+### Full Five Scenario Regression (Packet 48, verified 2026-06-10)
+
+Full regression completed across all five scenarios and all polished screens. Automated suite plus deterministic code trace.
+
+| Field | Result |
+|---|---|
+| Automated tests | 29 of 29 passed |
+| TypeScript | Zero errors |
+| Manual regression checks | 50 of 50 passed |
+| Open defects | 0 |
+| Commit at test | 3405e42 |
 
 ### Dashboard Polish (Packet 46, verified 2026-06-10)
 

@@ -91,6 +91,64 @@ export const diagnoses: DiagnosisModule[] = [
     ],
   },
   {
+    id: 'advanced_prostate_cancer',
+    name: 'Advanced prostate cancer',
+    everydayLanguage:
+      'His prostate cancer has spread and is no longer responding to treatment. The focus has shifted to keeping him as comfortable as possible.',
+    declinePattern:
+      'Increasing pain from bone metastases, fatigue, reduced mobility, and weight loss over several months, with periods that may appear stable before further decline.',
+    commonSymptoms: [
+      'Bone pain, especially in the back and hips.',
+      'Fatigue.',
+      'Urinary difficulty.',
+      'Weight loss.',
+      'Reduced mobility.',
+      'Poor appetite.',
+    ],
+    familyMisconceptions: [
+      'If he is still in pain, hospice is not working.',
+      'The hospice team should eliminate all pain immediately.',
+      'Choosing hospice means no one is managing his symptoms anymore.',
+      'Pain means the family made the wrong choice.',
+    ],
+    trainingObjectives: [
+      'Acknowledge the family\'s fear that hospice has failed when pain is still present.',
+      'Clarify that pain management is the RN and provider\'s domain.',
+      'Route the family to the hospice nurse for clinical pain assessment.',
+      'Avoid suggesting or adjusting medications.',
+      'Validate that the concern is legitimate and will be acted on.',
+    ],
+  },
+  {
+    id: 'end_stage_heart_failure',
+    name: 'End stage heart failure',
+    everydayLanguage:
+      'Her heart is no longer able to pump well enough to keep up with her body\'s needs, even with medication. The focus of care has shifted toward comfort and quality of life.',
+    declinePattern:
+      'Increasing breathlessness, fatigue, and fluid retention that is no longer responding well to treatment, with shorter periods of improvement after each episode.',
+    commonSymptoms: [
+      'Severe breathlessness.',
+      'Fluid retention in legs and abdomen.',
+      'Fatigue.',
+      'Reduced alertness.',
+      'Poor appetite.',
+      'Pain or pressure in the chest.',
+    ],
+    familyMisconceptions: [
+      'Refusing medication means the patient wants to die.',
+      'It is the caregiver\'s job to make the patient take medicine.',
+      'If the patient refuses comfort medication, the family has failed.',
+      'There must be a medication she will agree to take.',
+    ],
+    trainingObjectives: [
+      'Explain patient autonomy in plain language.',
+      'Validate the caregiver\'s distress when the patient refuses comfort care.',
+      'Provide communication strategies for gently offering medication.',
+      'Clarify that a patient who refuses is not the caregiver\'s failure.',
+      'Route ongoing refusal concerns to the hospice on-call team.',
+    ],
+  },
+  {
     id: 'end_stage_copd',
     name: 'End stage COPD',
     everydayLanguage:

@@ -62,6 +62,36 @@ export const safeLanguage: SafeLanguageEntry[] = [
     text: 'The hospice team has a comfort plan in place for exactly this. I do not want to guess at amounts because that needs to come from the hospice orders and the on-call team. Let me make sure you know exactly when and how to reach them.',
   },
   {
+    id: 'cl_pain_concern_validation',
+    context: 'Clinical Liaison — validating pain concern and routing to nurse',
+    text: 'What you are seeing is real and your concern matters. Pain assessment and management is something the hospice nurse handles directly. I want to make sure the nurse knows what you have seen so they can address it today.',
+  },
+  {
+    id: 'cl_pain_routing_response',
+    context: 'Clinical Liaison — routing pain question to hospice nurse',
+    text: 'I do not want to give you a guess when this deserves a real clinical answer. The hospice nurse is the right person to assess what is happening and whether the pain plan needs to change. Can I help you reach the nurse directly?',
+  },
+  {
+    id: 'cl_pain_decision_validation',
+    context: 'Clinical Liaison — validating family decision to choose hospice despite ongoing pain',
+    text: 'Agreeing to hospice was not the wrong decision. It means your father has a team focused on his comfort. Seeing pain does not mean the team has failed. It means we need to look more closely at what he needs, and the nurse can do that.',
+  },
+  {
+    id: 'rn_patient_autonomy',
+    context: 'RN — explaining patient autonomy when patient refuses medication',
+    text: 'Your mother has the right to refuse medication. That is part of hospice — comfort care is always her choice, not something we can impose. Your role is to offer, not to make her take it. That is not a failure on your part.',
+  },
+  {
+    id: 'rn_medication_offer_strategy',
+    context: 'RN — communication strategy for offering comfort medication compassionately',
+    text: 'Try offering it at a moment when she seems the most uncomfortable, and let her know what it does and does not do. You could say: this might ease the pain without taking away your thinking. And then let her decide.',
+  },
+  {
+    id: 'rn_covert_refusal',
+    context: 'RN — refusing to suggest covert medication administration',
+    text: 'I cannot suggest that, even when watching someone you love suffer is unbearable. Giving medication without her knowledge is not something we are able to do. But there are things we can try together, and I want to help you find them.',
+  },
+  {
     id: 'rn_followup_comfort_reassurance',
     context: 'RN, follow-up visit when caregiver fears medication is not working',
     text: 'I can hear how frightening it is to watch her still struggling even after giving the medication. What you are seeing does not mean the medication is failing or that you did anything wrong. Air hunger can still look intense even when the medication is easing the sensation on the inside. Let me show you what to watch for and when that means it is time to call.',

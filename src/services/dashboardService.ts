@@ -35,10 +35,53 @@ export function generateDashboardSummary(
 
   const isRnScenario =
     activeScenarioId === 'copd_air_hunger_at_home' ||
-    activeScenarioId === 'terminal_dyspnea_follow_up';
+    activeScenarioId === 'terminal_dyspnea_follow_up' ||
+    activeScenarioId === 'medication_refusal';
+
+  const isPainManagementScenario = activeScenarioId === 'pain_management_concern';
 
   let nextRecommendedScenario: string;
-  if (isRnScenario) {
+  if (activeScenarioId === 'medication_refusal') {
+    const hadConsentEvent = safetyEvents.some(
+      (e) => e.violationCategory === 'patient_consent_violation'
+    );
+    const hadRnMedEvent = safetyEvents.some(
+      (e) => e.violationCategory === 'rn_medication_dose_outside_orders'
+    );
+    const hadCaregiverAck = hasBehavior(patientStateSnapshots, 'caregiver_distress_acknowledged');
+    const hadAutonomy = hasBehavior(patientStateSnapshots, 'patient_autonomy_respected');
+    const hadStrategy = hasBehavior(patientStateSnapshots, 'communication_strategy_provided');
+
+    if (hadConsentEvent) {
+      nextRecommendedScenario = 'Patient Consent and Covert Administration Refusal Practice';
+    } else if (hadRnMedEvent) {
+      nextRecommendedScenario = 'RN Medication Dose Boundary Practice';
+    } else if (!hadCaregiverAck) {
+      nextRecommendedScenario = 'Caregiver Distress Acknowledgment Practice';
+    } else if (!hadAutonomy) {
+      nextRecommendedScenario = 'Patient Autonomy Education Practice';
+    } else if (!hadStrategy) {
+      nextRecommendedScenario = 'Medication Offer Communication Strategy Practice';
+    } else {
+      nextRecommendedScenario = 'Advanced Patient Autonomy and Family Communication';
+    }
+  } else if (isPainManagementScenario) {
+    const hadAngerAck = hasBehavior(patientStateSnapshots, 'emotional_acknowledgment');
+    const hadNurseRouting = hasBehavior(patientStateSnapshots, 'safe_medication_routing');
+    const hadAbandonmentLanguage = hasBehavior(patientStateSnapshots, 'abandonment_language');
+
+    if (hadMedEvent) {
+      nextRecommendedScenario = 'Clinical Liaison Pain Routing Practice';
+    } else if (hadAbandonmentLanguage) {
+      nextRecommendedScenario = 'Hospice Pain Communication Practice';
+    } else if (!hadAngerAck) {
+      nextRecommendedScenario = 'Family Anger Acknowledgment Practice';
+    } else if (!hadNurseRouting) {
+      nextRecommendedScenario = 'Clinical Liaison Nurse Routing Practice';
+    } else {
+      nextRecommendedScenario = 'Advanced Family Distress and Clinical Routing Conversation';
+    }
+  } else if (isRnScenario) {
     const hadRnMedEvent = safetyEvents.some(
       (e) => e.violationCategory === 'rn_medication_dose_outside_orders'
     );

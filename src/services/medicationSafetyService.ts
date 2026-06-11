@@ -104,6 +104,21 @@ function isRnDoseUnsafe(lower: string): boolean {
   return false;
 }
 
+// ── Consent violation (universal — applies to all roles) ─────────────────────
+
+const CONSENT_VIOLATION_TERMS = [
+  'put it in her food', 'put it in his food',
+  'mix it in her drink', 'mix it in his drink',
+  'hide it in her food', 'hide it in his food',
+  'add it to her food', 'add it to his food',
+  'give it without telling', 'give it without her knowing', 'give it without him knowing',
+  'without her knowing', 'without him knowing',
+  'slip it into', 'sneak it into', 'covert',
+];
+
+const CONSENT_VIOLATION_MESSAGE =
+  'Administering medication without a patient\'s knowledge or consent is not permitted and may constitute abuse. Even in hospice, patients have the right to refuse treatment. Acknowledge the caregiver\'s distress, explain patient autonomy, offer communication strategies, and involve the on-call team if comfort is unmanaged.';
+
 // ── Shared helper ────────────────────────────────────────────────────────────
 
 function containsAny(text: string, terms: string[]): boolean {
@@ -130,6 +145,18 @@ export function checkMedicationSafety(
 
   // Step 2 — Normalize
   const lower = learnerMessageText.toLowerCase();
+
+  // Step 2A — Consent violation check (applies to ALL roles before any other check)
+  if (containsAny(lower, CONSENT_VIOLATION_TERMS)) {
+    return {
+      safeToContinue: false,
+      trainingPauseRequired: true,
+      severity: 'compliance_or_ethical_concern',
+      violationCategory: 'patient_consent_violation',
+      message: CONSENT_VIOLATION_MESSAGE,
+      feedbackHook: 'patient_consent_violation',
+    };
+  }
 
   // Step 3 — RN dose safety check (medicationAccessLevel === 2)
   if (role.medicationAccessLevel === 2) {

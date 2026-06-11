@@ -1,3 +1,5 @@
+import { generateMedicationRefusalSkillScoreReport } from '@/services/medicationRefusalScoringService';
+import { generatePainManagementSkillScoreReport } from '@/services/painManagementScoringService';
 import { generateRnSkillScoreReport } from '@/services/rnScoringService';
 import type {
   ConversationMessage,
@@ -414,6 +416,12 @@ export function generateSkillScoreReport(
 ): SkillScoreReport {
   if (scenarioId === 'copd_air_hunger_at_home' || scenarioId === 'terminal_dyspnea_follow_up') {
     return generateRnSkillScoreReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+  }
+  if (scenarioId === 'pain_management_concern') {
+    return generatePainManagementSkillScoreReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+  }
+  if (scenarioId === 'medication_refusal') {
+    return generateMedicationRefusalSkillScoreReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
   }
 
   const hadEmotionalAck = hasBehavior(patientStateSnapshots, 'emotional_acknowledgment');

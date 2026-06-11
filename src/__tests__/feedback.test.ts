@@ -60,6 +60,48 @@ describe('generateFeedbackReport — suggestedWording', () => {
     expect(result.suggestedWording[0]).toBe(expected);
   });
 
+  it('pain_management_concern returns 3 suggested wording entries', () => {
+    const result = generateFeedbackReport(
+      'pain_management_concern',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.suggestedWording).toHaveLength(3);
+  });
+
+  it('pain_management_concern first entry matches cl_pain_concern_validation text', () => {
+    const result = generateFeedbackReport(
+      'pain_management_concern',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    const expected = safeLanguage.find((e) => e.id === 'cl_pain_concern_validation')!.text;
+    expect(result.suggestedWording[0]).toBe(expected);
+  });
+
+  it('medication_refusal returns 3 suggested wording entries', () => {
+    const result = generateFeedbackReport(
+      'medication_refusal',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.suggestedWording).toHaveLength(3);
+  });
+
+  it('medication_refusal first entry matches rn_patient_autonomy text', () => {
+    const result = generateFeedbackReport(
+      'medication_refusal',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    const expected = safeLanguage.find((e) => e.id === 'rn_patient_autonomy')!.text;
+    expect(result.suggestedWording[0]).toBe(expected);
+  });
+
   it('terminal_dyspnea_follow_up suggestedWording does not include CL-only wording', () => {
     const result = generateFeedbackReport(
       'terminal_dyspnea_follow_up',

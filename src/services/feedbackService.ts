@@ -1,4 +1,6 @@
 import { safeLanguage } from '@/data/safeLanguage';
+import { generateMedicationRefusalFeedbackReport } from '@/services/medicationRefusalFeedbackService';
+import { generatePainManagementFeedbackReport } from '@/services/painManagementFeedbackService';
 import { generateRnFeedbackReport } from '@/services/rnFeedbackService';
 import { generateTerminalDyspneaFeedbackReport } from '@/services/terminalDyspneaFeedbackService';
 import type {
@@ -51,6 +53,12 @@ export function generateFeedbackReport(
   }
   if (scenarioId === 'terminal_dyspnea_follow_up') {
     return generateTerminalDyspneaFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+  }
+  if (scenarioId === 'pain_management_concern') {
+    return generatePainManagementFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+  }
+  if (scenarioId === 'medication_refusal') {
+    return generateMedicationRefusalFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
   }
 
   void conversationMessages;

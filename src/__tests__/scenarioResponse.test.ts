@@ -33,4 +33,16 @@ describe('generateScenarioResponse — routing', () => {
     expect(result.speakerName).toBe('Carol');
     expect(result.sender).toBe('family');
   });
+
+  it('pain_management_concern routes to Elena response service', () => {
+    const result = generateScenarioResponse('pain_management_concern', neutral, [...empty]);
+    expect(result.speakerName).toBe('Elena');
+    expect(result.sender).toBe('family');
+  });
+
+  it('medication_refusal routes to Michael response service', () => {
+    const result = generateScenarioResponse('medication_refusal', neutral, [...empty]);
+    expect(result.speakerName).toBe('Michael');
+    expect(result.sender).toBe('family');
+  });
 });

@@ -159,6 +159,85 @@ export const scenarioTemplates: ScenarioTemplate[] = [
     patientStateDefaultId: 'terminal_dyspnea_follow_up',
   },
   {
+    id: 'pain_management_concern',
+    title: 'Why Is He Still in Pain?',
+    allowedRoleId: 'clinical_liaison',
+    setting: 'Hospital room',
+    patient: {
+      name: 'Arthur Williams',
+      age: 77,
+    },
+    knownDiagnosisId: 'advanced_prostate_cancer',
+    recentClinicalChange:
+      'Arthur has advanced prostate cancer with bone metastases. His daughter Elena agreed to hospice three days ago after a difficult conversation. Since then, she has visited twice and found her father visibly uncomfortable on both visits. The hospice nurse has already scheduled a pain reassessment, but Elena called to speak with the Clinical Liaison before that visit.',
+    whoIsPresent: ['Elena, his daughter'],
+    learnerObjective:
+      "Acknowledge Elena's anger and fear that hospice has failed her father. Validate her concern as legitimate. Explain that pain assessment and management is the hospice nurse's clinical role. Route her to the nurse without dismissing her concern. Avoid medication guidance. Help Elena feel heard and clear about the next step.",
+    roleReminder:
+      'You are a Clinical Liaison. You may validate emotional concerns, explain the hospice team structure, and confirm that the nurse will assess and address pain. You should not assess pain, suggest medication changes, or give clinical guidance. Pain management belongs with the hospice nurse and provider.',
+    hiddenFamilyFear:
+      'Elena agreed to hospice believing it would relieve her father\'s suffering. Seeing him still in pain makes her feel she made a terrible mistake and failed him. She is angry because anger is easier than grief.',
+    openingSpeakerName: 'Elena',
+    openingLine:
+      'You said hospice would manage his pain. He is still hurting every time I come in. Are you even doing anything?',
+    successCriteria: [
+      "Acknowledges Elena's anger without becoming defensive.",
+      'Validates that her concern is legitimate and serious.',
+      'Explains that pain assessment and management is the clinical nurse\'s role.',
+      'Routes Elena to the hospice nurse with a clear next step.',
+      'Avoids medication guidance or clinical pain assessment.',
+      'Helps Elena feel heard, not dismissed.',
+    ],
+    failureCriteria: [
+      'Gives medication guidance outside the Clinical Liaison role.',
+      'Sounds defensive about hospice performance.',
+      'Lists services before acknowledging the emotional concern.',
+      'Dismisses or minimizes the pain concern.',
+      'Leaves Elena without a clear next step.',
+    ],
+    patientStateDefaultId: 'pain_management_concern',
+  },
+  {
+    id: 'medication_refusal',
+    title: 'She Won\'t Take the Medicine',
+    allowedRoleId: 'rn',
+    setting: 'Patient home',
+    patient: {
+      name: 'Dorothy Chen',
+      age: 80,
+    },
+    knownDiagnosisId: 'end_stage_heart_failure',
+    recentClinicalChange:
+      'Dorothy has end-stage heart failure and was prescribed a comfort medication for pain and breathlessness three days ago. She has refused every dose since it was prescribed, telling her son Michael she does not want to be "out of it." Michael has been managing her care alone and is in distress. He called the hospice line this morning.',
+    whoIsPresent: ['Dorothy', 'her son Michael'],
+    learnerObjective:
+      "Acknowledge Michael's distress. Explain patient autonomy in plain language — Dorothy has the right to refuse medication. Provide communication strategies Michael can use when offering the medication. Address Dorothy's fear of losing her mental clarity. Route ongoing refusal concerns to the hospice on-call team. Do not suggest or imply that the medication can be given covertly.",
+    roleReminder:
+      'You are an RN. You may assess symptoms, educate caregivers on comfort medication and patient autonomy, and provide communication strategies. You may confirm what the hospice plan of care includes. You should not change orders, state specific doses, or in any circumstance suggest administering medication without the patient\'s knowledge or consent.',
+    hiddenFamilyFear:
+      'Michael believes that if his mother continues to refuse medication, she will suffer needlessly and he will be responsible. He is carrying guilt about every moment of her discomfort.',
+    openingSpeakerName: 'Michael',
+    openingLine:
+      'She keeps refusing the morphine. She says she does not want to be drugged. She is clearly in pain and I cannot make her take it. Can I just put it in her food without her knowing?',
+    successCriteria: [
+      "Acknowledges Michael's distress and the difficulty of watching his mother refuse medication.",
+      'Explains patient autonomy in plain language — patients have the right to refuse.',
+      'Provides practical communication strategies for offering the medication compassionately.',
+      "Addresses Dorothy's fear of mental cloudiness without dismissing it.",
+      'Does not suggest or condone covert medication administration.',
+      'Routes ongoing refusal concerns to the hospice on-call team.',
+      'Gives Michael a clear next step.',
+    ],
+    failureCriteria: [
+      'Suggests or condones putting medication in food or drink without consent.',
+      'Fails to validate Michael\'s distress.',
+      'Fails to explain patient autonomy.',
+      'Leaves Michael without a clear plan.',
+      'States specific doses or changes orders.',
+    ],
+    patientStateDefaultId: 'medication_refusal',
+  },
+  {
     id: 'can_change_minds',
     title: 'Can We Change Our Minds?',
     allowedRoleId: 'clinical_liaison',

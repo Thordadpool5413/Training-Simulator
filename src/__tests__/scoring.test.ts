@@ -25,6 +25,26 @@ const RN_CATEGORIES = [
   'Trust Building',
 ];
 
+const PM_CATEGORIES = [
+  'Emotional Attunement',
+  'Pain Concern Validation',
+  'Nurse Routing',
+  'Role Boundary Safety',
+  'Clinical Escalation Judgment',
+  'Trust Building',
+  'Hospice Partnership',
+];
+
+const MR_CATEGORIES = [
+  'Emotional Attunement',
+  'Patient Autonomy Education',
+  'Communication Strategy',
+  'Role Boundary Safety',
+  'Caregiver Support',
+  'Clinical Escalation Judgment',
+  'Trust Building',
+];
+
 describe('generateSkillScoreReport', () => {
   it('clinical liaison scenario returns 7 skill scores', () => {
     const result = generateSkillScoreReport(
@@ -68,7 +88,29 @@ describe('generateSkillScoreReport', () => {
     expect(result.scores.map((s) => s.category)).toEqual(RN_CATEGORIES);
   });
 
-  it('all scores from both role paths are within the 0–4 range', () => {
+  it('pain_management_concern returns 7 skill scores with PM category names', () => {
+    const result = generateSkillScoreReport(
+      'pain_management_concern',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scores).toHaveLength(7);
+    expect(result.scores.map((s) => s.category)).toEqual(PM_CATEGORIES);
+  });
+
+  it('medication_refusal returns 7 skill scores with MR category names', () => {
+    const result = generateSkillScoreReport(
+      'medication_refusal',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scores).toHaveLength(7);
+    expect(result.scores.map((s) => s.category)).toEqual(MR_CATEGORIES);
+  });
+
+  it('all scores from all scenario paths are within the 0–4 range', () => {
     const clResult = generateSkillScoreReport(
       'hospice_means_giving_up',
       emptyMessages,
@@ -81,7 +123,19 @@ describe('generateSkillScoreReport', () => {
       emptyEvents,
       emptySnapshots
     );
-    [...clResult.scores, ...rnResult.scores].forEach((s) => {
+    const pmResult = generateSkillScoreReport(
+      'pain_management_concern',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    const mrResult = generateSkillScoreReport(
+      'medication_refusal',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    [...clResult.scores, ...rnResult.scores, ...pmResult.scores, ...mrResult.scores].forEach((s) => {
       expect(s.score).toBeGreaterThanOrEqual(0);
       expect(s.score).toBeLessThanOrEqual(4);
     });

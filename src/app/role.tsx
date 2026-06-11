@@ -18,7 +18,7 @@ export default function RoleScreen() {
   function handleSelect(roleId: string) {
     resetSimulationSession();
     setSelectedRoleId(roleId);
-    router.push('/profile' as Href);
+    router.push('/scenario' as Href);
   }
 
   return (

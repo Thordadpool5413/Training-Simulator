@@ -1016,3 +1016,35 @@ No services, data files, state files, type files, component files, theme files, 
 ### Files Modified in Packet 43
 
 - `src/app/feedback.tsx` — `scenarioTemplates` import added; `scenario` derived from `activeScenarioId`; scenario title subtitle added below screen title; `whatChangedTheRoom` updated to use bullet prefix and empty-state guard matching `whatWentWell`; `screenTitle` margin reduced from 8 to 4; `screenSubtitle` style added
+
+---
+
+## Packet 46 — Dashboard Polish
+
+**Date:** 2026-06-10
+**Commit:** 2e26ba3
+**Scope:** Dashboard UI polish only. One file modified: `src/app/dashboard.tsx`. No service, data, state, type, component, theme, or package changes.
+
+### UI Verification — Dashboard Screen
+
+**Method:** Deterministic code trace and clean TypeScript compile.
+
+| Check | Expected | Result |
+|---|---|---|
+| Practice Again button visible | Outlined brand button above Return to Role Selection | Pass |
+| Practice Again routes to /scenario | router.push('/scenario') called on press | Pass |
+| Return to Role Selection still present | Unchanged | Pass |
+| Dashboard renders for all five scenarios | dashboardService routing unchanged | Pass |
+| All dashboard fields visible | Session, Skill Summary, Safety, Next Steps sections unchanged | Pass |
+| Safety Corrections displays correctly | Amber badge for non-zero, plain value for zero | Pass |
+| Next Recommended Scenario displays | dashboardService unchanged | Pass |
+| No raw IDs visible | All values from service output, no ID strings | Pass |
+
+**Total checks:** 8 of 8 passed.
+
+**npm test result:** Passed 29 of 29. Zero failures.
+**npx tsc --noEmit result:** Zero errors.
+
+### Files Modified in Packet 46
+
+- `src/app/dashboard.tsx` — "Practice Again" outlined button added above "Return to Role Selection"; routes to /scenario so the learner can select another scenario without re-selecting role; `practiceAgainButton` and `practiceAgainButtonText` styles added

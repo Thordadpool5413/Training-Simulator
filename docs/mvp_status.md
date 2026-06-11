@@ -168,6 +168,16 @@ UI polish baseline completed. No behavior, logic, or content was changed.
 
 Manual UI smoke test passed 36 of 36 items. Zero defects found.
 
+### Dashboard Polish (Packet 46, verified 2026-06-10)
+
+Dashboard polish completed. One file modified: `src/app/dashboard.tsx`.
+
+| Change | Detail |
+|---|---|
+| Practice Again button added | Outlined brand button above Return to Role Selection — routes to /scenario for fast repeat practice without role re-selection |
+
+UI verification: 8 of 8 checks passed by code trace. Automated tests: 29 of 29 passing. TypeScript: zero errors. Commit: `2e26ba3`.
+
 ### Feedback Screen Polish (Packet 43, verified 2026-06-10)
 
 Feedback screen polish completed. One file modified: `src/app/feedback.tsx`.

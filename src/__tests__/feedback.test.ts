@@ -165,6 +165,132 @@ describe('generateFeedbackReport — suggestedWording', () => {
     expect(result.suggestedWording[0]).toBe(expected);
   });
 
+  it('active_dying_recognition returns 2 suggested wording entries', () => {
+    const result = generateFeedbackReport(
+      'active_dying_recognition',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.suggestedWording).toHaveLength(2);
+  });
+
+  it('active_dying_recognition first entry matches rn_dying_process_explanation text', () => {
+    const result = generateFeedbackReport(
+      'active_dying_recognition',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    const expected = safeLanguage.find((e) => e.id === 'rn_dying_process_explanation')!.text;
+    expect(result.suggestedWording[0]).toBe(expected);
+  });
+
+  it('terminal_secretion_distress returns 2 suggested wording entries', () => {
+    const result = generateFeedbackReport(
+      'terminal_secretion_distress',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.suggestedWording).toHaveLength(2);
+  });
+
+  it('terminal_secretion_distress first entry matches rn_secretion_explanation text', () => {
+    const result = generateFeedbackReport(
+      'terminal_secretion_distress',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    const expected = safeLanguage.find((e) => e.id === 'rn_secretion_explanation')!.text;
+    expect(result.suggestedWording[0]).toBe(expected);
+  });
+
+  it('breakthrough_pain_at_home returns 2 suggested wording entries', () => {
+    const result = generateFeedbackReport(
+      'breakthrough_pain_at_home',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.suggestedWording).toHaveLength(2);
+  });
+
+  it('breakthrough_pain_at_home first entry matches rn_pain_assessment_response text', () => {
+    const result = generateFeedbackReport(
+      'breakthrough_pain_at_home',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    const expected = safeLanguage.find((e) => e.id === 'rn_pain_assessment_response')!.text;
+    expect(result.suggestedWording[0]).toBe(expected);
+  });
+
+  it('advance_directive_conflict returns 2 suggested wording entries', () => {
+    const result = generateFeedbackReport(
+      'advance_directive_conflict',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.suggestedWording).toHaveLength(2);
+  });
+
+  it('advance_directive_conflict first entry matches sw_surrogate_decision_explained text', () => {
+    const result = generateFeedbackReport(
+      'advance_directive_conflict',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    const expected = safeLanguage.find((e) => e.id === 'sw_surrogate_decision_explained')!.text;
+    expect(result.suggestedWording[0]).toBe(expected);
+  });
+
+  it('caregiver_burnout returns 2 suggested wording entries', () => {
+    const result = generateFeedbackReport(
+      'caregiver_burnout',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.suggestedWording).toHaveLength(2);
+  });
+
+  it('caregiver_burnout first entry matches sw_caregiver_burden_validation text', () => {
+    const result = generateFeedbackReport(
+      'caregiver_burnout',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    const expected = safeLanguage.find((e) => e.id === 'sw_caregiver_burden_validation')!.text;
+    expect(result.suggestedWording[0]).toBe(expected);
+  });
+
+  it('bereavement_first_call returns 2 suggested wording entries', () => {
+    const result = generateFeedbackReport(
+      'bereavement_first_call',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.suggestedWording).toHaveLength(2);
+  });
+
+  it('bereavement_first_call first entry matches sw_grief_normalization text', () => {
+    const result = generateFeedbackReport(
+      'bereavement_first_call',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    const expected = safeLanguage.find((e) => e.id === 'sw_grief_normalization')!.text;
+    expect(result.suggestedWording[0]).toBe(expected);
+  });
+
   it('terminal_dyspnea_follow_up suggestedWording does not include CL-only wording', () => {
     const result = generateFeedbackReport(
       'terminal_dyspnea_follow_up',

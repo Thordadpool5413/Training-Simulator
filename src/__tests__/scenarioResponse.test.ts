@@ -63,4 +63,40 @@ describe('generateScenarioResponse — routing', () => {
     expect(result.speakerName).toBe('Anne');
     expect(result.sender).toBe('family');
   });
+
+  it('active_dying_recognition routes to Patricia response service', () => {
+    const result = generateScenarioResponse('active_dying_recognition', neutral, [...empty]);
+    expect(result.speakerName).toBe('Patricia');
+    expect(result.sender).toBe('family');
+  });
+
+  it('terminal_secretion_distress routes to Linda response service', () => {
+    const result = generateScenarioResponse('terminal_secretion_distress', neutral, [...empty]);
+    expect(result.speakerName).toBe('Linda');
+    expect(result.sender).toBe('family');
+  });
+
+  it('breakthrough_pain_at_home routes to Maria response service', () => {
+    const result = generateScenarioResponse('breakthrough_pain_at_home', neutral, [...empty]);
+    expect(result.speakerName).toBe('Maria');
+    expect(result.sender).toBe('family');
+  });
+
+  it('advance_directive_conflict routes to Robert response service', () => {
+    const result = generateScenarioResponse('advance_directive_conflict', neutral, [...empty]);
+    expect(result.speakerName).toBe('Robert');
+    expect(result.sender).toBe('family');
+  });
+
+  it('caregiver_burnout routes to Dorothy response service', () => {
+    const result = generateScenarioResponse('caregiver_burnout', neutral, [...empty]);
+    expect(result.speakerName).toBe('Dorothy');
+    expect(result.sender).toBe('family');
+  });
+
+  it('bereavement_first_call routes to Margaret response service', () => {
+    const result = generateScenarioResponse('bereavement_first_call', neutral, [...empty]);
+    expect(result.speakerName).toBe('Margaret');
+    expect(result.sender).toBe('family');
+  });
 });

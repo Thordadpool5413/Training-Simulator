@@ -11,6 +11,9 @@ const rnBaseState = patientStateDefaults['terminal_dyspnea_follow_up'];
 const pmBaseState = patientStateDefaults['pain_management_concern'];
 const mrBaseState = patientStateDefaults['medication_refusal'];
 const puBaseState = patientStateDefaults['prognostic_uncertainty'];
+const adBaseState = patientStateDefaults['active_dying_recognition'];
+const tsBaseState = patientStateDefaults['terminal_secretion_distress'];
+const bpBaseState = patientStateDefaults['breakthrough_pain_at_home'];
 
 const learnerMessage: ConversationMessage = {
   id: 'msg-1',
@@ -308,5 +311,230 @@ describe('generateDashboardSummary', () => {
       [rnRecoverySnapshot]
     );
     expect(result.safetyFlagsResolved).toBe(1);
+  });
+
+  it('active_dying_recognition resolves scenarioTitle to Is She Dying Right Now?', () => {
+    const result = generateDashboardSummary(
+      'active_dying_recognition',
+      'rn',
+      [learnerMessage],
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scenarioTitle).toBe('Is She Dying Right Now?');
+  });
+
+  it('active_dying_recognition safetyFlagsResolved is 0 when no safety events exist', () => {
+    const result = generateDashboardSummary(
+      'active_dying_recognition',
+      'rn',
+      [learnerMessage],
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.safetyFlagsResolved).toBe(0);
+  });
+
+  it('active_dying_recognition safetyFlagsResolved is 1 after RN dose event followed by routing recovery', () => {
+    const adMedEvent: SafetyEvent = {
+      id: 'evt-ad-1',
+      scenarioId: 'active_dying_recognition',
+      learnerMessageText: 'You can give her extra morphine.',
+      violationCategory: 'rn_medication_dose_outside_orders',
+      severity: 'clinical_safety_concern',
+      message: 'Training Pause',
+      feedbackHook: null,
+      createdAt: '2026-01-01T10:01:00.000Z',
+    };
+    const adRecoverySnapshot: PatientStateSnapshot = {
+      id: 'snap-ad-1',
+      scenarioId: 'active_dying_recognition',
+      learnerMessageId: 'msg-2',
+      stateBefore: adBaseState,
+      stateAfter: adBaseState,
+      detectedBehaviors: ['safe_medication_routing'],
+      stateChangeSummary: 'Learner routed dose question to provider.',
+      createdAt: '2026-01-01T10:02:00.000Z',
+    };
+    const result = generateDashboardSummary(
+      'active_dying_recognition',
+      'rn',
+      [learnerMessage],
+      [adMedEvent],
+      [adRecoverySnapshot]
+    );
+    expect(result.safetyFlagsResolved).toBe(1);
+  });
+
+  it('terminal_secretion_distress resolves scenarioTitle to He Sounds Like He Is Drowning', () => {
+    const result = generateDashboardSummary(
+      'terminal_secretion_distress',
+      'rn',
+      [learnerMessage],
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scenarioTitle).toBe('He Sounds Like He Is Drowning');
+  });
+
+  it('terminal_secretion_distress safetyFlagsResolved is 0 when no safety events exist', () => {
+    const result = generateDashboardSummary(
+      'terminal_secretion_distress',
+      'rn',
+      [learnerMessage],
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.safetyFlagsResolved).toBe(0);
+  });
+
+  it('terminal_secretion_distress safetyFlagsResolved is 1 after RN dose event followed by routing recovery', () => {
+    const tsMedEvent: SafetyEvent = {
+      id: 'evt-ts-1',
+      scenarioId: 'terminal_secretion_distress',
+      learnerMessageText: 'Give him an extra dose of the glycopyrrolate.',
+      violationCategory: 'rn_medication_dose_outside_orders',
+      severity: 'clinical_safety_concern',
+      message: 'Training Pause',
+      feedbackHook: null,
+      createdAt: '2026-01-01T10:01:00.000Z',
+    };
+    const tsRecoverySnapshot: PatientStateSnapshot = {
+      id: 'snap-ts-1',
+      scenarioId: 'terminal_secretion_distress',
+      learnerMessageId: 'msg-2',
+      stateBefore: tsBaseState,
+      stateAfter: tsBaseState,
+      detectedBehaviors: ['safe_medication_routing'],
+      stateChangeSummary: 'Learner routed dose question to provider.',
+      createdAt: '2026-01-01T10:02:00.000Z',
+    };
+    const result = generateDashboardSummary(
+      'terminal_secretion_distress',
+      'rn',
+      [learnerMessage],
+      [tsMedEvent],
+      [tsRecoverySnapshot]
+    );
+    expect(result.safetyFlagsResolved).toBe(1);
+  });
+
+  it('breakthrough_pain_at_home resolves scenarioTitle to The Medicine Is Not Working', () => {
+    const result = generateDashboardSummary(
+      'breakthrough_pain_at_home',
+      'rn',
+      [learnerMessage],
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scenarioTitle).toBe('The Medicine Is Not Working');
+  });
+
+  it('breakthrough_pain_at_home safetyFlagsResolved is 0 when no safety events exist', () => {
+    const result = generateDashboardSummary(
+      'breakthrough_pain_at_home',
+      'rn',
+      [learnerMessage],
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.safetyFlagsResolved).toBe(0);
+  });
+
+  it('breakthrough_pain_at_home safetyFlagsResolved is 1 after RN dose event followed by routing recovery', () => {
+    const bpMedEvent: SafetyEvent = {
+      id: 'evt-bp-1',
+      scenarioId: 'breakthrough_pain_at_home',
+      learnerMessageText: 'You can give him 10 mg of oxycodone now.',
+      violationCategory: 'rn_medication_dose_outside_orders',
+      severity: 'clinical_safety_concern',
+      message: 'Training Pause',
+      feedbackHook: null,
+      createdAt: '2026-01-01T10:01:00.000Z',
+    };
+    const bpRecoverySnapshot: PatientStateSnapshot = {
+      id: 'snap-bp-1',
+      scenarioId: 'breakthrough_pain_at_home',
+      learnerMessageId: 'msg-2',
+      stateBefore: bpBaseState,
+      stateAfter: bpBaseState,
+      detectedBehaviors: ['safe_medication_routing'],
+      stateChangeSummary: 'Learner routed dose question to provider.',
+      createdAt: '2026-01-01T10:02:00.000Z',
+    };
+    const result = generateDashboardSummary(
+      'breakthrough_pain_at_home',
+      'rn',
+      [learnerMessage],
+      [bpMedEvent],
+      [bpRecoverySnapshot]
+    );
+    expect(result.safetyFlagsResolved).toBe(1);
+  });
+
+  it("advance_directive_conflict resolves scenarioTitle to She Never Said What She Wanted", () => {
+    const result = generateDashboardSummary(
+      'advance_directive_conflict',
+      'social_worker',
+      [learnerMessage],
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scenarioTitle).toBe("She Never Said What She Wanted");
+  });
+
+  it('advance_directive_conflict safetyFlagsResolved is 0 when no safety events exist', () => {
+    const result = generateDashboardSummary(
+      'advance_directive_conflict',
+      'social_worker',
+      [learnerMessage],
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.safetyFlagsResolved).toBe(0);
+  });
+
+  it("caregiver_burnout resolves scenarioTitle to I Cannot Keep Doing This", () => {
+    const result = generateDashboardSummary(
+      'caregiver_burnout',
+      'social_worker',
+      [learnerMessage],
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scenarioTitle).toBe("I Cannot Keep Doing This");
+  });
+
+  it('caregiver_burnout safetyFlagsResolved is 0 when no safety events exist', () => {
+    const result = generateDashboardSummary(
+      'caregiver_burnout',
+      'social_worker',
+      [learnerMessage],
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.safetyFlagsResolved).toBe(0);
+  });
+
+  it("bereavement_first_call resolves scenarioTitle to I Keep Forgetting He Is Gone", () => {
+    const result = generateDashboardSummary(
+      'bereavement_first_call',
+      'social_worker',
+      [learnerMessage],
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scenarioTitle).toBe("I Keep Forgetting He Is Gone");
+  });
+
+  it('bereavement_first_call safetyFlagsResolved is 0 when no safety events exist', () => {
+    const result = generateDashboardSummary(
+      'bereavement_first_call',
+      'social_worker',
+      [learnerMessage],
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.safetyFlagsResolved).toBe(0);
   });
 });

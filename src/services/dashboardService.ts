@@ -36,12 +36,18 @@ export function generateDashboardSummary(
   const isRnScenario =
     activeScenarioId === 'copd_air_hunger_at_home' ||
     activeScenarioId === 'terminal_dyspnea_follow_up' ||
-    activeScenarioId === 'medication_refusal';
+    activeScenarioId === 'medication_refusal' ||
+    activeScenarioId === 'active_dying_recognition' ||
+    activeScenarioId === 'terminal_secretion_distress' ||
+    activeScenarioId === 'breakthrough_pain_at_home';
 
   const isPainManagementScenario = activeScenarioId === 'pain_management_concern';
   const isPrognosticUncertainty = activeScenarioId === 'prognostic_uncertainty';
   const isEsrdComfortCare = activeScenarioId === 'esrd_comfort_care';
   const isAdvancedDementiaGrief = activeScenarioId === 'advanced_dementia_grief';
+  const isAdvanceDirectiveConflict = activeScenarioId === 'advance_directive_conflict';
+  const isCaregiverBurnout = activeScenarioId === 'caregiver_burnout';
+  const isBereavementFirstCall = activeScenarioId === 'bereavement_first_call';
 
   let nextRecommendedScenario: string;
   if (activeScenarioId === 'medication_refusal') {
@@ -139,6 +145,75 @@ export function generateDashboardSummary(
       nextRecommendedScenario = 'Hospice Revocation Education Practice';
     } else {
       nextRecommendedScenario = 'Advanced Grief and Hospice Readiness Conversation';
+    }
+  } else if (isAdvanceDirectiveConflict) {
+    const hadSidesTakenAdc = hasBehavior(patientStateSnapshots, 'sides_taken');
+    const hadDirectivePressure = hasBehavior(patientStateSnapshots, 'directive_pressure');
+    const hadFamilyMeeting = hasBehavior(patientStateSnapshots, 'family_meeting_offered');
+    const hadSurrogateConcept = hasBehavior(patientStateSnapshots, 'surrogate_decision_explained');
+    const hadAdvDirectiveEd = hasBehavior(patientStateSnapshots, 'advance_directive_education');
+    const hadEmotionalAckAdc = hasBehavior(patientStateSnapshots, 'emotional_acknowledgment');
+
+    if (hadSidesTakenAdc) {
+      nextRecommendedScenario = 'Social Worker Neutrality in Family Conflict Practice';
+    } else if (hadDirectivePressure) {
+      nextRecommendedScenario = 'Facilitation Without Directive Pressure Practice';
+    } else if (!hadEmotionalAckAdc) {
+      nextRecommendedScenario = 'Grief Acknowledgment in Family Conflict Practice';
+    } else if (!hadSurrogateConcept) {
+      nextRecommendedScenario = 'Surrogate Decision-Making Education Practice';
+    } else if (!hadAdvDirectiveEd) {
+      nextRecommendedScenario = 'Advance Directive Education Practice';
+    } else if (!hadFamilyMeeting) {
+      nextRecommendedScenario = 'Family Meeting Facilitation Practice';
+    } else {
+      nextRecommendedScenario = 'Advanced Advance Directive Conflict Mediation';
+    }
+  } else if (isCaregiverBurnout) {
+    const hadPlacementPressure = hasBehavior(patientStateSnapshots, 'placement_pressure');
+    const hadMinimizationCb = hasBehavior(patientStateSnapshots, 'minimization');
+    const hadGuiltValidation = hasBehavior(patientStateSnapshots, 'guilt_validation');
+    const hadResourceOffered = hasBehavior(patientStateSnapshots, 'resource_offered');
+    const hadCaregiverAssessment = hasBehavior(patientStateSnapshots, 'caregiver_assessment');
+    const hadEmotionalAckCb = hasBehavior(patientStateSnapshots, 'emotional_acknowledgment');
+
+    if (hadPlacementPressure) {
+      nextRecommendedScenario = 'Caregiver Placement Pressure Awareness Practice';
+    } else if (hadMinimizationCb) {
+      nextRecommendedScenario = 'Caregiver Burden Validation Without Minimization Practice';
+    } else if (!hadEmotionalAckCb) {
+      nextRecommendedScenario = 'Caregiver Exhaustion Acknowledgment Practice';
+    } else if (!hadGuiltValidation) {
+      nextRecommendedScenario = 'Caregiver Guilt Validation Practice';
+    } else if (!hadCaregiverAssessment) {
+      nextRecommendedScenario = 'Caregiver Needs Assessment Practice';
+    } else if (!hadResourceOffered) {
+      nextRecommendedScenario = 'Caregiver Resource Navigation Practice';
+    } else {
+      nextRecommendedScenario = 'Advanced Caregiver Burnout and Resource Planning';
+    }
+  } else if (isBereavementFirstCall) {
+    const hadMinimizationBfc = hasBehavior(patientStateSnapshots, 'minimization');
+    const hadPathologizing = hasBehavior(patientStateSnapshots, 'pathologizing');
+    const hadGriefNorm = hasBehavior(patientStateSnapshots, 'grief_normalization');
+    const hadBereavementEd = hasBehavior(patientStateSnapshots, 'bereavement_education');
+    const hadComplicatedGriefRouting = hasBehavior(patientStateSnapshots, 'complicated_grief_routing');
+    const hadEmotionalAckBfc = hasBehavior(patientStateSnapshots, 'emotional_acknowledgment');
+
+    if (hadPathologizing) {
+      nextRecommendedScenario = 'Bereavement Normalization Without Pathologizing Practice';
+    } else if (hadMinimizationBfc) {
+      nextRecommendedScenario = 'Grief Validation Without Minimization Practice';
+    } else if (!hadEmotionalAckBfc) {
+      nextRecommendedScenario = 'Bereavement Grief Acknowledgment Practice';
+    } else if (!hadGriefNorm) {
+      nextRecommendedScenario = 'Morning Re-Grief Normalization Practice';
+    } else if (!hadBereavementEd) {
+      nextRecommendedScenario = 'Bereavement Program Education Practice';
+    } else if (!hadComplicatedGriefRouting) {
+      nextRecommendedScenario = 'Complicated Grief Assessment Practice';
+    } else {
+      nextRecommendedScenario = 'Advanced Bereavement First Call Conversation';
     }
   } else if (isRnScenario) {
     const hadRnMedEvent = safetyEvents.some(

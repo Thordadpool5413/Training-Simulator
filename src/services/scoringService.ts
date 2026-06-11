@@ -1,9 +1,15 @@
+import { generateActiveDyingSkillScoreReport } from '@/services/activeDyingScoringService';
 import { generateAdvancedDementiaGriefSkillScoreReport } from '@/services/advancedDementiaGriefScoringService';
+import { generateAdvanceDirectiveConflictSkillScoreReport } from '@/services/advanceDirectiveConflictScoringService';
+import { generateBereavementFirstCallSkillScoreReport } from '@/services/bereavementFirstCallScoringService';
+import { generateBreakthroughPainSkillScoreReport } from '@/services/breakthroughPainScoringService';
+import { generateCaregiverBurnoutSkillScoreReport } from '@/services/caregiverBurnoutScoringService';
 import { generateEsrdComfortCareSkillScoreReport } from '@/services/esrdComfortCareScoringService';
 import { generateMedicationRefusalSkillScoreReport } from '@/services/medicationRefusalScoringService';
 import { generatePainManagementSkillScoreReport } from '@/services/painManagementScoringService';
 import { generatePrognosticUncertaintySkillScoreReport } from '@/services/prognosticUncertaintyScoringService';
 import { generateRnSkillScoreReport } from '@/services/rnScoringService';
+import { generateTerminalSecretionSkillScoreReport } from '@/services/terminalSecretionScoringService';
 import type {
   ConversationMessage,
   PatientStateSnapshot,
@@ -434,6 +440,24 @@ export function generateSkillScoreReport(
   }
   if (scenarioId === 'advanced_dementia_grief') {
     return generateAdvancedDementiaGriefSkillScoreReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+  }
+  if (scenarioId === 'active_dying_recognition') {
+    return generateActiveDyingSkillScoreReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+  }
+  if (scenarioId === 'terminal_secretion_distress') {
+    return generateTerminalSecretionSkillScoreReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+  }
+  if (scenarioId === 'breakthrough_pain_at_home') {
+    return generateBreakthroughPainSkillScoreReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+  }
+  if (scenarioId === 'advance_directive_conflict') {
+    return generateAdvanceDirectiveConflictSkillScoreReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+  }
+  if (scenarioId === 'caregiver_burnout') {
+    return generateCaregiverBurnoutSkillScoreReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+  }
+  if (scenarioId === 'bereavement_first_call') {
+    return generateBereavementFirstCallSkillScoreReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
   }
 
   const hadEmotionalAck = hasBehavior(patientStateSnapshots, 'emotional_acknowledgment');

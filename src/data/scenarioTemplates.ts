@@ -356,6 +356,242 @@ export const scenarioTemplates: ScenarioTemplate[] = [
     patientStateDefaultId: 'advanced_dementia_grief',
   },
   {
+    id: 'active_dying_recognition',
+    title: 'Is She Dying Right Now?',
+    allowedRoleId: 'rn',
+    setting: 'Patient home, urgent home visit',
+    patient: {
+      name: 'Betty Collins',
+      age: 81,
+    },
+    knownDiagnosisId: 'end_stage_heart_failure',
+    recentClinicalChange:
+      "Betty has end-stage heart failure and has been declining steadily over two weeks. This morning her daughter Patricia called the hospice line. Betty is unresponsive to voice, has mottling on her lower extremities, her hands are cool and discolored, and her breathing has changed to a Cheyne-Stokes pattern — periods of shallow rapid breaths followed by pauses.",
+    whoIsPresent: ['Betty', 'her daughter Patricia'],
+    learnerObjective:
+      "Acknowledge Patricia's fear. Explain active dying in plain language — what the signs mean and why they are normal. Empower Patricia to hold a vigil and stay present. Do not suggest calling 911 or pursuing curative intervention. Route any medication questions to the hospice orders and on-call team.",
+    roleReminder:
+      "You are an RN on a hospice home visit. You may explain the signs of active dying in plain language, provide comfort education, and empower the caregiver to stay present. You should not state specific medication doses, modify orders, or suggest 911. Medication questions should be routed to the hospice on-call provider.",
+    hiddenFamilyFear:
+      'Patricia believes she is responsible for preventing her mother\'s death and does not understand that the physical changes she is seeing are normal. She is terrified she is watching her mother suffer and that she has done something wrong by not acting sooner.',
+    openingSpeakerName: 'Patricia',
+    openingLine:
+      "She is not responding to me. Her hands are cold and blotchy and her breathing sounds different — like it stops and then starts again. Is she dying right now? Should I call 911?",
+    successCriteria: [
+      "Acknowledges Patricia's fear before explaining anything.",
+      'Explains active dying signs in plain language — what mottling and Cheyne-Stokes breathing mean.',
+      'Clarifies that the signs are a natural process, not suffering.',
+      'Does not suggest calling 911 or pursuing curative intervention.',
+      'Empowers Patricia to stay present — talking to Betty, holding her hand.',
+      'Routes any medication questions to the hospice orders and on-call provider.',
+    ],
+    failureCriteria: [
+      'Suggests calling 911 or going to the hospital.',
+      'States specific medication doses without referencing hospice orders.',
+      'Overpromises that intervention will stop or reverse the dying process.',
+      'Leaves Patricia without a role or a clear next step.',
+      'Uses clinical jargon without explaining what it means.',
+    ],
+    patientStateDefaultId: 'active_dying_recognition',
+  },
+  {
+    id: 'terminal_secretion_distress',
+    title: 'He Sounds Like He Is Drowning',
+    allowedRoleId: 'rn',
+    setting: 'Patient home',
+    patient: {
+      name: 'Earl Thompson',
+      age: 77,
+    },
+    knownDiagnosisId: 'end_stage_copd',
+    recentClinicalChange:
+      'Earl has end-stage COPD and has been largely unresponsive since yesterday. His breathing has changed and he has developed audible terminal secretions — a gurgling sound caused by secretions in the throat that he can no longer clear. His wife Linda called the hospice line in distress.',
+    whoIsPresent: ['Earl', 'his wife Linda'],
+    learnerObjective:
+      "Acknowledge Linda's fear. Explain terminal secretions in plain language — what they are, why suctioning does not help, and why the sound is not a sign of drowning or choking. Describe positioning and comfort measures. Do not promise the sound will stop completely. Route medication questions to the hospice on-call team.",
+    roleReminder:
+      "You are an RN. You may explain terminal secretions and comfort measures in plain language. You should not state specific medication doses, recommend suctioning, or promise the sound will eliminate. Route medication dose questions to the hospice orders and on-call provider.",
+    hiddenFamilyFear:
+      "Linda believes her husband is drowning or choking and that she is doing nothing while he suffers. She does not understand that terminal secretions are not experienced the way they sound from outside, and she fears that not acting means she has failed him.",
+    openingSpeakerName: 'Linda',
+    openingLine:
+      "He is making this terrible gurgling sound when he breathes. It sounds like he is drowning from the inside. Is he suffering? Can we suction him or do something to make it stop?",
+    successCriteria: [
+      "Acknowledges Linda's fear and distress before explaining anything.",
+      'Explains terminal secretions in plain language — not drowning, not choking.',
+      'Explains why suctioning would not help and would be uncomfortable.',
+      'Describes repositioning and comfort measures Linda can use.',
+      'Avoids promising the sound will stop completely.',
+      'Routes medication dose questions to the hospice orders and on-call provider.',
+    ],
+    failureCriteria: [
+      'Recommends or agrees to suctioning.',
+      'States specific medication doses without referencing hospice orders.',
+      'Overpromises that the sound will stop.',
+      'Leaves Linda without comfort tools or a clear next step.',
+      'Uses clinical jargon without plain language explanation.',
+    ],
+    patientStateDefaultId: 'terminal_secretion_distress',
+  },
+  {
+    id: 'breakthrough_pain_at_home',
+    title: 'The Medicine Is Not Working',
+    allowedRoleId: 'rn',
+    setting: 'Patient home',
+    patient: {
+      name: 'Frank Martinez',
+      age: 74,
+    },
+    knownDiagnosisId: 'als_terminal',
+    recentClinicalChange:
+      'Frank has ALS and has been receiving hospice comfort care for two months. He was prescribed a breakthrough pain medication that his wife Maria has been managing. This morning she gave the medication as prescribed but Frank still appears to be in pain two hours later. Maria called the hospice line asking whether the dose is too low.',
+    whoIsPresent: ['Frank', 'his wife Maria'],
+    learnerObjective:
+      "Acknowledge Maria's fear that the medication is not helping and that she may have done something wrong. Assess the pain picture through Maria's description. Route the dose question to the hospice on-call provider. Empower Maria with non-medication comfort tools. Validate that she followed the plan correctly.",
+    roleReminder:
+      "You are an RN. You may assess symptoms through the caregiver's description, provide comfort education, and validate that the caregiver followed the plan. You should not adjust doses, state specific amounts, or tell the caregiver to give additional medication. Dose adjustment questions must go to the on-call hospice provider.",
+    hiddenFamilyFear:
+      "Maria believes the medication isn't working because she did something wrong. She is afraid to call the provider because she fears being judged or told she used the medication incorrectly. She carries the weight of being the sole caregiver and feels responsible for every moment of Frank's pain.",
+    openingSpeakerName: 'Maria',
+    openingLine:
+      "I gave him his breakthrough medicine two hours ago exactly like it says to. He is still moaning and moving around like he is in pain. Is the dose too low? Can I give him more?",
+    successCriteria: [
+      "Acknowledges Maria's fear that the medication failed and that she may have done something wrong.",
+      'Asks about the pain — location, what it looks like, whether anything helps.',
+      'Validates that she followed the plan correctly.',
+      'Does not state a specific dose or instruct her to give additional medication.',
+      'Routes the dose question to the hospice on-call provider.',
+      'Describes non-medication comfort measures Maria can use while waiting.',
+      'Gives Maria a clear next step.',
+    ],
+    failureCriteria: [
+      'States a specific dose or tells Maria to give additional medication.',
+      'Leaves Maria without an assessment or a next step.',
+      'Fails to validate that she followed the plan correctly.',
+      'Overpromises that the on-call provider will eliminate all pain immediately.',
+      'Does not route the dose question to the on-call provider.',
+    ],
+    patientStateDefaultId: 'breakthrough_pain_at_home',
+  },
+  {
+    id: 'advance_directive_conflict',
+    title: 'She Never Said What She Wanted',
+    allowedRoleId: 'social_worker',
+    setting: 'Hospital family consultation room',
+    patient: {
+      name: 'Helen Morris',
+      age: 86,
+    },
+    knownDiagnosisId: 'advanced_dementia',
+    recentClinicalChange:
+      "Helen has advanced dementia and can no longer make decisions for herself. Her physician has recommended a goals of care conversation. Her son Robert wants full aggressive treatment. Her daughter Carol wants comfort care only. There is no advance directive. The family conflict is escalating and the social work team has been asked to meet with Robert.",
+    whoIsPresent: ['Robert Morris, her son'],
+    learnerObjective:
+      "Acknowledge Robert's grief and fear. Explain surrogate decision-making in plain language — what it means to speak for someone who cannot speak. Explain what an advance directive is and what happens without one. Stay neutral and do not take Carol's side or Robert's side. Offer to facilitate a family meeting with the clinical team.",
+    roleReminder:
+      'You are a Social Worker. You may acknowledge emotional distress, explain surrogate decision-making and advance directive concepts, and offer to facilitate a family meeting. You should not take sides in the family decision, tell Robert what Helen would have wanted, or provide medication guidance.',
+    hiddenFamilyFear:
+      "Robert has never accepted the severity of his mother's dementia. Agreeing to comfort care feels to him like agreeing that she is dying, and he is not ready to accept that. He projects his resistance onto Carol, framing it as a family conflict rather than a grief he cannot face.",
+    openingSpeakerName: 'Robert',
+    openingLine:
+      "She never filled out an advance directive. That means we decide. Carol says to do comfort care only, but I want everything done. I am her son. How does anyone know what she would have wanted?",
+    successCriteria: [
+      "Acknowledges Robert's grief and the weight of the decision.",
+      'Explains surrogate decision-making — speaking for her based on her values.',
+      'Explains what an advance directive is and what it means that one does not exist.',
+      'Stays neutral — does not take Carol\'s side or Robert\'s side.',
+      'Offers to facilitate a family meeting with the clinical team.',
+      'Avoids medication guidance outside the Social Worker role.',
+    ],
+    failureCriteria: [
+      'Takes Carol\'s side or implies comfort care is clearly the right choice.',
+      'Takes Robert\'s side or validates aggressive treatment as clearly correct.',
+      'Tells Robert what Helen would have wanted.',
+      'Moves to paperwork or logistics before addressing the emotional reality.',
+      'Provides medication guidance outside Social Worker role.',
+    ],
+    patientStateDefaultId: 'advance_directive_conflict',
+  },
+  {
+    id: 'caregiver_burnout',
+    title: 'I Cannot Keep Doing This',
+    allowedRoleId: 'social_worker',
+    setting: 'Patient home, social work visit',
+    patient: {
+      name: 'Walter Simmons',
+      age: 79,
+    },
+    knownDiagnosisId: 'end_stage_heart_failure',
+    recentClinicalChange:
+      "Walter's condition has declined steadily over the past month. His wife Dorothy, 77, has been his sole caregiver. She has not slept more than two to three hours at a time in two weeks, has lost weight, and is tearful. She is caring for Walter alone without family support nearby. The social work team has been notified by the hospice nurse.",
+    whoIsPresent: ['Dorothy Simmons, his wife'],
+    learnerObjective:
+      "Acknowledge Dorothy's exhaustion without minimizing it or rushing to solutions. Validate that her feelings are a sign of how hard she has been working, not a sign she has failed. Assess her support network and her own health. Offer concrete respite options. Do not pressure her toward placing Walter or toward any particular decision.",
+    roleReminder:
+      'You are a Social Worker. You may validate caregiver distress, assess caregiver needs and support networks, and offer concrete resources such as respite care and hospice aide visits. You should not minimize the burden, pressure Dorothy toward placement, or provide medication guidance.',
+    hiddenFamilyFear:
+      "Dorothy believes that saying she can't cope is the same as abandoning Walter. She carries deep guilt because there are moments when she wishes this was over, and she cannot say that out loud. She fears being judged as a bad wife if she accepts help or admits she is failing.",
+    openingSpeakerName: 'Dorothy',
+    openingLine:
+      "I am exhausted. I have not slept more than a few hours in a week. I feel like a terrible person for saying this, but I cannot keep doing this. I do not know how much longer I can go on.",
+    successCriteria: [
+      "Acknowledges Dorothy's exhaustion and validates that saying she cannot cope is not the same as giving up.",
+      "Validates the guilt Dorothy feels without reinforcing it.",
+      "Assesses her support network and her own health.",
+      "Offers concrete respite resources without pressure.",
+      "Does not pressure Dorothy toward placing Walter.",
+      "Avoids platitudes or minimizing language.",
+      "Gives Dorothy a clear next step.",
+    ],
+    failureCriteria: [
+      'Minimizes the burden with phrases like it will get easier.',
+      'Suggests or implies Walter should be placed in a facility.',
+      'Rushes to solutions before acknowledging the emotional weight.',
+      'Leaves Dorothy without concrete resources or a next step.',
+      'Provides medication guidance outside the Social Worker role.',
+    ],
+    patientStateDefaultId: 'caregiver_burnout',
+  },
+  {
+    id: 'bereavement_first_call',
+    title: 'I Keep Forgetting He Is Gone',
+    allowedRoleId: 'social_worker',
+    setting: 'Bereavement follow-up call',
+    patient: {
+      name: 'Thomas Walsh',
+      age: 74,
+    },
+    knownDiagnosisId: 'advanced_heart_failure',
+    recentClinicalChange:
+      'Thomas Walsh died at home on hospice three weeks ago after a decline from advanced heart failure. His wife Margaret, 74, received a bereavement follow-up call from the hospice social work team. This is her first call with the team since the death.',
+    whoIsPresent: ['Margaret Walsh, his wife'],
+    learnerObjective:
+      "Acknowledge Margaret's grief and normalize her experience — especially the morning re-grief pattern of waking up and forgetting he is gone. Explain that early grief often works this way. Offer a brief assessment for complicated grief indicators. Introduce the hospice bereavement program and what is available. Do not pathologize normal grief or rush her toward closure.",
+    roleReminder:
+      'You are a Social Worker conducting a bereavement follow-up call. You may normalize grief experiences, assess for complicated grief indicators, and offer bereavement support resources. You should not diagnose grief disorders, pressure toward closure or acceptance, or provide medication guidance.',
+    hiddenFamilyFear:
+      "Margaret is afraid her grief is abnormal — that forgetting he is gone each morning and then re-experiencing the loss is a sign she is broken. She has no one in her immediate network who understands grief at this scale. She fears calling the hospice team will make her seem pathetic or unable to cope.",
+    openingSpeakerName: 'Margaret',
+    openingLine:
+      "I keep waking up and forgetting he is gone. Every morning I reach for him and then I remember. Is that normal? How long is this going to feel like this?",
+    successCriteria: [
+      "Acknowledges Margaret's grief before explaining anything.",
+      'Validates that the morning re-grief experience is common and not a sign of abnormality.',
+      'Explains that early grief often involves this kind of forgetting and re-remembering.',
+      'Offers a gentle assessment for complicated grief without pathologizing.',
+      'Introduces the hospice bereavement program and available resources.',
+      'Avoids pressure toward closure, acceptance, or a timeline.',
+    ],
+    failureCriteria: [
+      'Suggests a timeline for when grief should ease.',
+      'Pathologizes the normal morning grief pattern.',
+      'Rushes to resources before acknowledging the emotional weight.',
+      'Leaves Margaret without information about available support.',
+      'Provides medication guidance outside the Social Worker role.',
+    ],
+    patientStateDefaultId: 'bereavement_first_call',
+  },
+  {
     id: 'can_change_minds',
     title: 'Can We Change Our Minds?',
     allowedRoleId: 'clinical_liaison',

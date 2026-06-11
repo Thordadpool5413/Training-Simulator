@@ -1,5 +1,10 @@
 import type { ConversationMessage, GeneratedResponse } from '@/types/simulator';
+import { generateActiveDyingResponse } from '@/services/activeDyingResponseService';
 import { generateAdvancedDementiaGriefResponse } from '@/services/advancedDementiaGriefResponseService';
+import { generateBereavementFirstCallResponse } from '@/services/bereavementFirstCallResponseService';
+import { generateBreakthroughPainResponse } from '@/services/breakthroughPainResponseService';
+import { generateAdvanceDirectiveConflictResponse } from '@/services/advanceDirectiveConflictResponseService';
+import { generateCaregiverBurnoutResponse } from '@/services/caregiverBurnoutResponseService';
 import { generateCopdResponse } from '@/services/copdResponseService';
 import { generateDaughterResponse } from '@/services/daughterResponseService';
 import { generateEsrdComfortCareResponse } from '@/services/esrdComfortCareResponseService';
@@ -9,6 +14,7 @@ import { generatePainManagementResponse } from '@/services/painManagementRespons
 import { generatePrognosticUncertaintyResponse } from '@/services/prognosticUncertaintyResponseService';
 import { generateSonResponse } from '@/services/sonResponseService';
 import { generateTerminalDyspneaResponse } from '@/services/terminalDyspneaResponseService';
+import { generateTerminalSecretionResponse } from '@/services/terminalSecretionResponseService';
 
 export function generateScenarioResponse(
   scenarioId: string,
@@ -41,6 +47,24 @@ export function generateScenarioResponse(
   }
   if (scenarioId === 'advanced_dementia_grief') {
     return generateAdvancedDementiaGriefResponse(learnerMessageText, conversationMessages);
+  }
+  if (scenarioId === 'active_dying_recognition') {
+    return generateActiveDyingResponse(learnerMessageText, conversationMessages);
+  }
+  if (scenarioId === 'terminal_secretion_distress') {
+    return generateTerminalSecretionResponse(learnerMessageText, conversationMessages);
+  }
+  if (scenarioId === 'breakthrough_pain_at_home') {
+    return generateBreakthroughPainResponse(learnerMessageText, conversationMessages);
+  }
+  if (scenarioId === 'advance_directive_conflict') {
+    return generateAdvanceDirectiveConflictResponse(learnerMessageText, conversationMessages);
+  }
+  if (scenarioId === 'caregiver_burnout') {
+    return generateCaregiverBurnoutResponse(learnerMessageText, conversationMessages);
+  }
+  if (scenarioId === 'bereavement_first_call') {
+    return generateBereavementFirstCallResponse(learnerMessageText, conversationMessages);
   }
   return generateDaughterResponse(learnerMessageText, conversationMessages);
 }

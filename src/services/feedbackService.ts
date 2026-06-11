@@ -1,11 +1,17 @@
 import { safeLanguage } from '@/data/safeLanguage';
+import { generateActiveDyingFeedbackReport } from '@/services/activeDyingFeedbackService';
 import { generateAdvancedDementiaGriefFeedbackReport } from '@/services/advancedDementiaGriefFeedbackService';
+import { generateAdvanceDirectiveConflictFeedbackReport } from '@/services/advanceDirectiveConflictFeedbackService';
+import { generateBereavementFirstCallFeedbackReport } from '@/services/bereavementFirstCallFeedbackService';
+import { generateBreakthroughPainFeedbackReport } from '@/services/breakthroughPainFeedbackService';
+import { generateCaregiverBurnoutFeedbackReport } from '@/services/caregiverBurnoutFeedbackService';
 import { generateEsrdComfortCareFeedbackReport } from '@/services/esrdComfortCareFeedbackService';
 import { generateMedicationRefusalFeedbackReport } from '@/services/medicationRefusalFeedbackService';
 import { generatePainManagementFeedbackReport } from '@/services/painManagementFeedbackService';
 import { generatePrognosticUncertaintyFeedbackReport } from '@/services/prognosticUncertaintyFeedbackService';
 import { generateRnFeedbackReport } from '@/services/rnFeedbackService';
 import { generateTerminalDyspneaFeedbackReport } from '@/services/terminalDyspneaFeedbackService';
+import { generateTerminalSecretionFeedbackReport } from '@/services/terminalSecretionFeedbackService';
 import type {
   ConversationMessage,
   FeedbackReport,
@@ -71,6 +77,24 @@ export function generateFeedbackReport(
   }
   if (scenarioId === 'advanced_dementia_grief') {
     return generateAdvancedDementiaGriefFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+  }
+  if (scenarioId === 'active_dying_recognition') {
+    return generateActiveDyingFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+  }
+  if (scenarioId === 'terminal_secretion_distress') {
+    return generateTerminalSecretionFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+  }
+  if (scenarioId === 'breakthrough_pain_at_home') {
+    return generateBreakthroughPainFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+  }
+  if (scenarioId === 'advance_directive_conflict') {
+    return generateAdvanceDirectiveConflictFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+  }
+  if (scenarioId === 'caregiver_burnout') {
+    return generateCaregiverBurnoutFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+  }
+  if (scenarioId === 'bereavement_first_call') {
+    return generateBereavementFirstCallFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
   }
 
   void conversationMessages;

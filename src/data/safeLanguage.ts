@@ -136,4 +136,64 @@ export const safeLanguage: SafeLanguageEntry[] = [
     context: 'Clinical Liaison — framing hospice for advanced dementia as dignity and presence, not abandonment',
     text: "Choosing hospice for your mother does not mean giving up on her. It means bringing in a team focused on her comfort, her dignity, and reducing any distress she might feel — while giving you more support so you can actually be present with her instead of managing everything alone.",
   },
+  {
+    id: 'rn_dying_process_explanation',
+    context: 'RN — explaining active dying signs to a caregiver in plain language',
+    text: "What you are describing — the mottling, the cooler hands, the change in her breathing pattern — are signs that her body is shifting into the final stage of dying. This is a natural process. It does not mean she is in pain. It means her body is letting go of the work of staying alive, and it is doing so in the way bodies are designed to.",
+  },
+  {
+    id: 'rn_vigil_empowerment',
+    context: 'RN — empowering caregiver to hold a presence vigil at the bedside',
+    text: "Your job right now is not to fix this or stop it. Your job is to be beside her. Talk to her. Touch her hand. She may still be able to hear you even if she cannot respond. Staying with her, keeping the room calm, and letting her know she is not alone — that is exactly the right thing to do.",
+  },
+  {
+    id: 'rn_secretion_explanation',
+    context: 'RN — explaining terminal secretions in plain language without causing more fear',
+    text: "The sound you are hearing is not choking and it is not drowning. It is the sound of secretions in the throat that he can no longer clear on his own because the muscles that do that are relaxing. Most people in this stage are not aware of the sound the way we hear it from outside. Suctioning would not help and would be uncomfortable for him.",
+  },
+  {
+    id: 'rn_repositioning_guidance',
+    context: 'RN — guiding repositioning and non-pharmacologic comfort for terminal secretions',
+    text: "The most helpful things are repositioning him gently onto his side so gravity helps, keeping the head of the bed raised a little, and keeping the room calm. A cool, slightly damp cloth near his mouth can help. You do not need to fix the sound. You need to stay beside him and keep him comfortable.",
+  },
+  {
+    id: 'rn_pain_assessment_response',
+    context: 'RN — acknowledging breakthrough pain concern and beginning assessment',
+    text: "You did the right thing giving the medication as the plan describes, and I hear how frightening it is to watch him still seem uncomfortable. I want to ask you a few questions so I can understand exactly what I am hearing — where the pain seems to be, what it looks like, whether anything is helping even a little. That is going to help me tell the right person the right things.",
+  },
+  {
+    id: 'rn_provider_routing',
+    context: 'RN — routing breakthrough pain dose question to on-call hospice provider',
+    text: "A question about whether the current dose is enough or whether it needs to change is a clinical decision that needs to come from the hospice provider, not from me alone. I am going to contact the on-call team right now and give them a full picture of what you are describing. They are the right person to decide if the plan needs to be adjusted.",
+  },
+  {
+    id: 'sw_surrogate_decision_explained',
+    context: 'Social Worker — explaining surrogate decision-making in plain language without taking sides',
+    text: "When someone has not left written instructions, the people who loved them most become her voice. That means trying to understand what she would have chosen — based on what she said, how she lived, what she valued — not just what you would choose for her, and not just what feels safest. That is a hard thing to hold, and it is exactly what I want to help your family work through together.",
+  },
+  {
+    id: 'sw_advance_directive_education',
+    context: 'Social Worker — explaining advance directives and what happens without one',
+    text: "An advance directive is a written document where someone records their own wishes for medical care. Without one, the medical team turns to the family — the legal next of kin — to make decisions based on what the person would have wanted. That is the role you are in right now. It does not mean you decide what you want. It means you decide what she would have wanted.",
+  },
+  {
+    id: 'sw_caregiver_burden_validation',
+    context: 'Social Worker — validating caregiver exhaustion without minimization or platitudes',
+    text: "What you are describing is not a character flaw. Caring for someone around the clock, alone, without sleep, without a break — the fact that you are exhausted is not a sign that you love him less. It is a sign that you have been doing something that no single person can sustain forever. Saying you cannot keep going is not giving up on him. It is being honest about what you need.",
+  },
+  {
+    id: 'sw_respite_resource_offer',
+    context: 'Social Worker — offering respite care and concrete caregiver support resources',
+    text: "There are options I want to talk through with you. Hospice has a respite benefit — that is time where Walter can receive care in a facility for a short period so you can rest and recover. There may also be a hospice aide or volunteer who can come in to give you a few hours. I want to understand what would actually help you, and then figure out what we can put in place.",
+  },
+  {
+    id: 'sw_grief_normalization',
+    context: 'Social Worker — normalizing the morning re-grief experience in early bereavement',
+    text: "What you are describing — waking up and having a few seconds before you remember, and then the grief hitting all over again — is one of the most common experiences in early grief. It is not a sign that something is wrong with you. It is the mind trying to protect you from something too large to hold all at once. Many people describe exactly this, and it does tend to ease over time.",
+  },
+  {
+    id: 'sw_bereavement_education',
+    context: 'Social Worker — explaining the hospice bereavement program and available support',
+    text: "You do not have to navigate this alone. Our hospice bereavement program offers ongoing support after a loss — that can include calls from our team, support groups with other people who understand this kind of grief, or a referral to a grief counselor if you want someone to talk with more consistently. I want to tell you what is available and then find out what feels right for where you are.",
+  },
 ];

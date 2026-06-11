@@ -168,6 +168,16 @@ UI polish baseline completed. No behavior, logic, or content was changed.
 
 Manual UI smoke test passed 36 of 36 items. Zero defects found.
 
+### Scenario Briefing Polish (Packet 37, verified 2026-06-10)
+
+Scenario briefing polish completed. One file modified: `src/app/scenario-briefing.tsx`.
+
+| Change | Detail |
+|---|---|
+| Back link added | "← Back to Scenarios" text Pressable added above the scenario title — calls `router.back()` to return to scenario selector |
+
+UI verification: 8 of 8 checks passed by code trace. Automated tests: 29 of 29 passing. TypeScript: zero errors. Commit: `6a33054`.
+
 ### Scenario Selector Polish (Packet 34, verified 2026-06-10)
 
 Scenario selector polish completed. No service logic, scenario data, state, types, components, or packages were changed. One file modified: `src/app/scenario.tsx`.

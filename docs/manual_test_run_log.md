@@ -916,3 +916,35 @@ No test files were added or modified. Service logic was not changed. All 29 exis
 - `src/app/scenario.tsx` — role label added, scenario count added, Change Role action added, scenario card changed from View + inner Select button to single outer Pressable, learner objective limited to 2 lines on card
 
 No services, data files, state files, type files, component files, theme files, test files, or package files were modified.
+
+---
+
+## Packet 37 — Scenario Briefing Polish
+
+**Date:** 2026-06-10
+**Commit:** 6a33054
+**Scope:** Briefing UI polish only. One file modified: `src/app/scenario-briefing.tsx`. No service, data, state, type, component, theme, or package changes.
+
+### UI Verification — Scenario Briefing
+
+**Method:** Deterministic code trace and clean TypeScript compile.
+
+| Check | Expected | Result |
+|---|---|---|
+| "← Back to Scenarios" link visible in happy path | Visible above scenario title | Pass |
+| Back link routes to previous screen | `router.back()` called on press | Pass |
+| Scenario title still renders | scenario.title displayed | Pass |
+| All 8 BriefingRows still render | role, setting, patient, diagnosis, recent clinical change, who is present, objective, role reminder | Pass |
+| Start Simulation button still present | Routes to /simulation | Pass |
+| Error guard states unchanged | Missing role and missing scenario guards unmodified | Pass |
+| No raw IDs visible | Role and diagnosis resolved via data lookups | Pass |
+| All five briefing screens open correctly | Routing unchanged | Pass |
+
+**Total checks:** 8 of 8 passed.
+
+**npm test result:** Passed 29 of 29. Zero failures.
+**npx tsc --noEmit result:** Zero errors.
+
+### Files Modified in Packet 37
+
+- `src/app/scenario-briefing.tsx` — `← Back to Scenarios` Pressable added above scenario title; `backLink` and `backLinkText` styles added

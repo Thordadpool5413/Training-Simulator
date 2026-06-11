@@ -1,6 +1,6 @@
 # MVP Status — Hospice Communication Training Simulator
 
-> **Updated:** 2026-06-10. This document reflects the stable five-scenario MVP state after Packet 32. It is maintained as a living status record updated at each stable checkpoint.
+> **Updated:** 2026-06-10. This document reflects the stable five-scenario MVP state after Packet 34. It is maintained as a living status record updated at each stable checkpoint.
 
 ---
 
@@ -167,6 +167,23 @@ UI polish baseline completed. No behavior, logic, or content was changed.
 | Screen title margin | `src/app/feedback.tsx` and `src/app/dashboard.tsx` screen title `marginBottom` standardized to 8 |
 
 Manual UI smoke test passed 36 of 36 items. Zero defects found.
+
+### Scenario Selector Polish (Packet 34, verified 2026-06-10)
+
+Scenario selector polish completed. No service logic, scenario data, state, types, components, or packages were changed. One file modified: `src/app/scenario.tsx`.
+
+| Change | Detail |
+|---|---|
+| Role context label | Selected role name displayed near the top of the selector — "Role: Clinical Liaison" or "Role: RN" |
+| Scenario count | Count of available scenarios displayed — "3 scenarios" (CL) or "2 scenarios" (RN) |
+| Change Role action | Text Pressable routes to /role — allows role change without device back gesture |
+| Full-card tap target | Scenario cards changed from View + inner Select button to single outer Pressable — consistent with role screen pattern |
+| Card pressed state | brandTint background and brand border applied on press |
+| Select button removed | Inner Select button eliminated — full card is the tap target |
+| Learner objective clipped | `numberOfLines={2}` applied — full objective remains visible on briefing screen |
+| No raw IDs exposed | Role name resolved via `roles` data; diagnosis resolved via `diagnoses` data; no internal ID strings rendered |
+
+UI verification: 16 of 16 checks passed by deterministic code trace and clean Expo export compile. Automated tests: 29 of 29 passing. TypeScript: zero errors. Commit: `c22c8e5`.
 
 ### Automated Service Tests (Packet 30, extended Packet 32)
 

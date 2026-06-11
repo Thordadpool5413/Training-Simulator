@@ -870,3 +870,49 @@ No production source files, service files, data files, state files, type files, 
 - `src/__tests__/patientState.test.ts` — 1 test added
 
 No production dependencies were added. No package.json, package-lock.json, app.json, tsconfig.json, or jest.config.js files were modified.
+
+---
+
+## Packet 34 — Scenario Selector Polish
+
+**Date:** 2026-06-10
+**Commit:** c22c8e5
+**Scope:** Selector UI polish only. One file modified: `src/app/scenario.tsx`. No service, data, state, type, component, theme, or package changes.
+
+### UI Verification — Scenario Selector
+
+**Method:** Deterministic code trace and clean Expo export compile. No live device or Expo Go session required — all changed logic is presentational JSX and StyleSheet only. Service routing, state, and scenario data are unchanged.
+
+| Check | Expected | Result |
+|---|---|---|
+| RN role — role label | "Role: RN" visible | Pass |
+| RN role — scenario count | "2 scenarios" visible | Pass |
+| RN role — COPD Air Hunger at Home card | Visible | Pass |
+| RN role — Terminal Dyspnea Follow Up Conversation card | Visible | Pass |
+| CL role — role label | "Role: Clinical Liaison" visible | Pass |
+| CL role — scenario count | "3 scenarios" visible | Pass |
+| CL role — Hospice Means Giving Up card | Visible | Pass |
+| CL role — Hospice Is Only for the Last Few Days card | Visible | Pass |
+| CL role — Can We Change Our Minds? card | Visible | Pass |
+| Select button not visible | Removed — full card is tap target | Pass |
+| Full card tap target | Entire Pressable card calls handleSelect | Pass |
+| Card pressed state | brandTint background + brand border on press | Pass |
+| Change Role action | Routes to /role | Pass |
+| No raw IDs visible | No clinical_liaison, terminal_dyspnea_follow_up, or knownDiagnosisId strings | Pass |
+| All five briefing paths | Unchanged — service and state routing not modified | Pass |
+| All five opening lines | Unchanged — simulation screen not modified | Pass |
+
+**Total checks:** 16 of 16 passed.
+
+### Automated Test Results — Packet 34
+
+No test files were added or modified. Service logic was not changed. All 29 existing tests continue to pass.
+
+**npm test result:** Passed 29 of 29. Zero failures. Zero skipped.
+**npx tsc --noEmit result:** Zero errors.
+
+### Files Modified in Packet 34
+
+- `src/app/scenario.tsx` — role label added, scenario count added, Change Role action added, scenario card changed from View + inner Select button to single outer Pressable, learner objective limited to 2 lines on card
+
+No services, data files, state files, type files, component files, theme files, test files, or package files were modified.

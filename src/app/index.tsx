@@ -21,6 +21,12 @@ export default function IndexScreen() {
           onPress={() => router.push('/role' as Href)}>
           <Text style={styles.buttonText}>Continue</Text>
         </Pressable>
+        <Pressable
+          style={styles.referenceButton}
+          accessibilityRole="button"
+          onPress={() => router.push('/reference' as Href)}>
+          <Text style={styles.referenceButtonText}>Clinical Reference Library</Text>
+        </Pressable>
       </View>
     </SafeAreaView>
   );
@@ -62,6 +68,20 @@ const styles = StyleSheet.create({
   buttonText: {
     color: SimulatorColors.textOnBrand,
     fontSize: 16,
+    fontWeight: '600',
+  },
+  referenceButton: {
+    marginTop: 12,
+    paddingVertical: 12,
+    borderRadius: Radius.md,
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: SimulatorColors.brand,
+  },
+  referenceButtonText: {
+    color: SimulatorColors.brand,
+    fontSize: 14,
     fontWeight: '600',
   },
 });

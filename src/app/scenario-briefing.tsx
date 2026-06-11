@@ -3,7 +3,10 @@ import type { Href } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { DiagnosisChip } from '@/components/DiagnosisChip';
+import { SectionCard } from '@/components/SectionCard';
 import { Radius, SimulatorColors } from '@/constants/theme';
+import { clinicalDiagnoses } from '@/data/clinicalDiagnoses';
 import { diagnoses } from '@/data/diagnoses';
 import { roles } from '@/data/roles';
 import { scenarioTemplates } from '@/data/scenarioTemplates';
@@ -55,6 +58,7 @@ export default function ScenarioBriefingScreen() {
 
   const role = roles.find((r) => r.id === selectedRoleId);
   const diagnosis = diagnoses.find((d) => d.id === scenario.knownDiagnosisId);
+  const clinicalDx = clinicalDiagnoses.find((d) => d.diagnosisId === scenario.knownDiagnosisId);
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -75,10 +79,19 @@ export default function ScenarioBriefingScreen() {
             label="Patient"
             value={`${scenario.patient.name}, age ${scenario.patient.age}`}
           />
-          <BriefingRow
-            label="Known diagnosis"
-            value={diagnosis?.name ?? scenario.knownDiagnosisId}
-          />
+          <View style={[rowStyles.row, rowStyles.rowBorder]}>
+            <Text style={rowStyles.label}>Known diagnosis</Text>
+            <Text style={rowStyles.value}>{diagnosis?.name ?? scenario.knownDiagnosisId}</Text>
+            {clinicalDx != null && (
+              <View style={styles.chipContainer}>
+                <DiagnosisChip
+                  icd10Code={clinicalDx.icd10Code}
+                  icd10Description={clinicalDx.icd10Description}
+                  lcdId={clinicalDx.lcdId}
+                />
+              </View>
+            )}
+          </View>
           <BriefingRow
             label="Recent clinical change"
             value={scenario.recentClinicalChange}
@@ -90,6 +103,43 @@ export default function ScenarioBriefingScreen() {
           <BriefingRow label="Your objective" value={scenario.learnerObjective} emphasized />
           <BriefingRow label="Role reminder" value={scenario.roleReminder} emphasized last />
         </View>
+
+        {diagnosis != null && diagnosis.familyMisconceptions.length > 0 && (
+          <SectionCard title="What the Family May Believe">
+            <Text style={styles.misconceptionIntro}>
+              These are common misconceptions families hold about this diagnosis. Expect to hear resistance shaped by one or more of these beliefs.
+            </Text>
+            {diagnosis.familyMisconceptions.map((m, i) => (
+              <View key={i} style={styles.misconceptionRow}>
+                <Text style={styles.misconceptionBullet}>!</Text>
+                <Text style={styles.misconceptionText}>{m}</Text>
+              </View>
+            ))}
+          </SectionCard>
+        )}
+
+        {clinicalDx != null && (
+          <SectionCard title="Clinical Eligibility Context">
+            <Text style={styles.eligibilityIntro}>
+              Top indicators supporting hospice eligibility for this diagnosis — per CMS LCD {clinicalDx.lcdId}.
+            </Text>
+            {clinicalDx.eligibilityCriteria.slice(0, 3).map((criterion, i) => (
+              <View key={i} style={styles.criterionRow}>
+                <Text style={styles.criterionBullet}>•</Text>
+                <Text style={styles.criterionText}>{criterion}</Text>
+              </View>
+            ))}
+            <View style={styles.declineHeader}>
+              <Text style={styles.declineSectionLabel}>Clinical decline indicators</Text>
+            </View>
+            {clinicalDx.clinicalDeclineIndicators.slice(0, 3).map((indicator, i) => (
+              <View key={i} style={styles.criterionRow}>
+                <Text style={styles.criterionBullet}>◦</Text>
+                <Text style={styles.indicatorText}>{indicator}</Text>
+              </View>
+            ))}
+          </SectionCard>
+        )}
 
         <Pressable
           style={styles.button}
@@ -129,9 +179,9 @@ const styles = StyleSheet.create({
   container: {
     padding: 24,
     paddingBottom: 48,
+    gap: 16,
   },
   backLink: {
-    marginBottom: 12,
     alignSelf: 'flex-start',
   },
   backLinkText: {
@@ -143,15 +193,80 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '700',
     color: SimulatorColors.textPrimary,
-    marginBottom: 20,
   },
   card: {
     backgroundColor: SimulatorColors.surface,
     borderRadius: Radius.lg,
     borderWidth: 1,
     borderColor: SimulatorColors.border,
-    marginBottom: 28,
     overflow: 'hidden',
+  },
+  chipContainer: {
+    marginTop: 8,
+  },
+  misconceptionIntro: {
+    fontSize: 13,
+    color: SimulatorColors.textSecondary,
+    lineHeight: 19,
+    marginBottom: 8,
+  },
+  misconceptionRow: {
+    flexDirection: 'row',
+    gap: 8,
+    paddingVertical: 4,
+  },
+  misconceptionBullet: {
+    fontSize: 13,
+    color: SimulatorColors.scoreOrange,
+    fontWeight: '700',
+    width: 14,
+    lineHeight: 20,
+  },
+  misconceptionText: {
+    flex: 1,
+    fontSize: 13,
+    color: '#374151',
+    lineHeight: 20,
+  },
+  eligibilityIntro: {
+    fontSize: 13,
+    color: SimulatorColors.textSecondary,
+    lineHeight: 19,
+    marginBottom: 8,
+  },
+  criterionRow: {
+    flexDirection: 'row',
+    gap: 6,
+    paddingVertical: 2,
+  },
+  criterionBullet: {
+    fontSize: 14,
+    color: SimulatorColors.brand,
+    lineHeight: 20,
+    width: 12,
+  },
+  criterionText: {
+    flex: 1,
+    fontSize: 13,
+    color: '#1F2937',
+    lineHeight: 20,
+  },
+  declineHeader: {
+    marginTop: 10,
+    marginBottom: 4,
+  },
+  declineSectionLabel: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: SimulatorColors.textSecondary,
+    textTransform: 'uppercase',
+    letterSpacing: 0.4,
+  },
+  indicatorText: {
+    flex: 1,
+    fontSize: 13,
+    color: '#374151',
+    lineHeight: 20,
   },
   button: {
     backgroundColor: SimulatorColors.brand,

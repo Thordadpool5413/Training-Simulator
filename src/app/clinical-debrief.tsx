@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import type { Href } from 'expo-router';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -8,17 +8,19 @@ import { DiagnosisChip } from '@/components/DiagnosisChip';
 import { EvidenceCard } from '@/components/EvidenceCard';
 import { KnowledgeQuizCard } from '@/components/KnowledgeQuizCard';
 import { LCDCriteriaCard } from '@/components/LCDCriteriaCard';
+import { MedicationCard } from '@/components/MedicationCard';
 import { SectionCard } from '@/components/SectionCard';
 import { Radius, SimulatorColors } from '@/constants/theme';
 import { clinicalDiagnoses } from '@/data/clinicalDiagnoses';
 import { evidenceStatements } from '@/data/evidenceStatements';
+import { hospiceMedications } from '@/data/hospiceMedications';
 import { scenarioTemplates } from '@/data/scenarioTemplates';
 import { getQuizForScenario } from '@/services/knowledgeQuizService';
 import { useSimulator } from '@/state/SimulatorContext';
 import type { QuizAnswer } from '@/types/quiz';
 
 export default function ClinicalDebriefScreen() {
-  const { activeScenarioId } = useSimulator();
+  const { activeScenarioId, selectedRoleId, setQuizResult } = useSimulator();
 
   const scenario = scenarioTemplates.find((s) => s.id === activeScenarioId);
   const clinicalDiagnosis = clinicalDiagnoses.find(
@@ -26,6 +28,9 @@ export default function ClinicalDebriefScreen() {
   );
   const questions = activeScenarioId ? getQuizForScenario(activeScenarioId) : [];
   const evidence = evidenceStatements.find((e) => e.scenarioId === activeScenarioId);
+  const relevantMeds = hospiceMedications.filter(
+    (m) => activeScenarioId != null && m.scenarioRelevance.includes(activeScenarioId)
+  );
 
   const [answers, setAnswers] = useState<QuizAnswer[]>([]);
 
@@ -41,6 +46,18 @@ export default function ClinicalDebriefScreen() {
 
   const score = answers.filter((a) => a.isCorrect).length;
   const allAnswered = answers.length === questions.length && questions.length > 0;
+
+  useEffect(() => {
+    if (allAnswered && activeScenarioId) {
+      setQuizResult({
+        scenarioId: activeScenarioId,
+        answers,
+        score,
+        totalQuestions: questions.length,
+        completedAt: new Date().toISOString(),
+      });
+    }
+  }, [allAnswered, activeScenarioId, answers, score, questions.length, setQuizResult]);
 
   if (!scenario || !clinicalDiagnosis) {
     return (
@@ -124,6 +141,17 @@ export default function ClinicalDebriefScreen() {
           </SectionCard>
         )}
 
+        {relevantMeds.length > 0 && (
+          <SectionCard title="Hospice Medications">
+            <Text style={styles.medsIntro}>
+              Medications commonly used in this clinical scenario. Tap any card to expand.
+            </Text>
+            {relevantMeds.map((med) => (
+              <MedicationCard key={med.id} medication={med} roleId={selectedRoleId ?? undefined} />
+            ))}
+          </SectionCard>
+        )}
+
         <Pressable
           style={styles.dashboardButton}
           accessibilityRole="button"
@@ -175,6 +203,12 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: SimulatorColors.textBody,
     lineHeight: 22,
+  },
+  medsIntro: {
+    fontSize: 13,
+    color: SimulatorColors.textSecondary,
+    lineHeight: 19,
+    marginBottom: 8,
   },
   divider: {
     height: 1,

@@ -4,11 +4,12 @@ import { useMemo } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { SectionCard } from '@/components/SectionCard';
 import { Radius, SimulatorColors } from '@/constants/theme';
+import { scenarioTemplates } from '@/data/scenarioTemplates';
 import { generateDashboardSummary } from '@/services/dashboardService';
 import { useSimulator } from '@/state/SimulatorContext';
-import type { DashboardSummary } from '@/types/simulator';
-import { SectionCard } from '@/components/SectionCard';
+import type { CompletedSession, DashboardSummary } from '@/types/simulator';
 
 export default function DashboardScreen() {
   const {
@@ -17,6 +18,8 @@ export default function DashboardScreen() {
     conversationMessages,
     safetyEvents,
     patientStateSnapshots,
+    quizResult,
+    completedSessions,
   } = useSimulator();
 
   const hasSession =
@@ -88,6 +91,43 @@ export default function DashboardScreen() {
           </View>
         </SectionCard>
 
+        {quizResult != null && (
+          <SectionCard title="Knowledge Check Score">
+            <View style={quizStyles.scoreRow}>
+              <Text style={quizStyles.scoreValue}>
+                {quizResult.score} / {quizResult.totalQuestions}
+              </Text>
+              <View style={[quizStyles.scoreBadge, quizResult.score === quizResult.totalQuestions ? quizStyles.badgePerfect : quizResult.score >= 2 ? quizStyles.badgeGood : quizStyles.badgeLow]}>
+                <Text style={quizStyles.badgeText}>
+                  {quizResult.score === quizResult.totalQuestions
+                    ? 'Excellent'
+                    : quizResult.score >= 2
+                    ? 'Good'
+                    : 'Needs Review'}
+                </Text>
+              </View>
+            </View>
+            <Text style={quizStyles.scenarioLabel}>
+              {scenarioTemplates.find((s) => s.id === quizResult.scenarioId)?.title ?? quizResult.scenarioId}
+            </Text>
+          </SectionCard>
+        )}
+
+        {completedSessions.length > 0 && (
+          <SectionCard title="Scenario Mastery Map">
+            {scenarioTemplates.map((scenario) => {
+              const session = completedSessions.find((s) => s.scenarioId === scenario.id);
+              return (
+                <MasteryRow
+                  key={scenario.id}
+                  title={scenario.title}
+                  session={session}
+                />
+              );
+            })}
+          </SectionCard>
+        )}
+
         <Pressable
           style={styles.practiceAgainButton}
           accessibilityRole="button"
@@ -102,6 +142,21 @@ export default function DashboardScreen() {
         </Pressable>
       </ScrollView>
     </SafeAreaView>
+  );
+}
+
+function MasteryRow({ title, session }: { title: string; session: CompletedSession | undefined }) {
+  const done = session != null;
+  return (
+    <View style={masteryStyles.row}>
+      <View style={[masteryStyles.dot, done ? masteryStyles.dotDone : masteryStyles.dotEmpty]} />
+      <Text style={[masteryStyles.title, !done && masteryStyles.titleMuted]} numberOfLines={1}>
+        {title}
+      </Text>
+      {done && (
+        <Text style={masteryStyles.score}>{session.overallScore.toFixed(1)}</Text>
+      )}
+    </View>
   );
 }
 
@@ -238,5 +293,90 @@ const statStyles = StyleSheet.create({
   valueStacked: {
     flex: 0,
     textAlign: 'left',
+  },
+});
+
+const quizStyles = StyleSheet.create({
+  scoreRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginBottom: 4,
+  },
+  scoreValue: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: SimulatorColors.brand,
+  },
+  scoreBadge: {
+    borderRadius: Radius.sm,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+  },
+  badgePerfect: {
+    backgroundColor: SimulatorColors.greenBackground,
+    borderWidth: 1,
+    borderColor: SimulatorColors.greenBorder,
+  },
+  badgeGood: {
+    backgroundColor: SimulatorColors.brandTint,
+    borderWidth: 1,
+    borderColor: SimulatorColors.brand,
+  },
+  badgeLow: {
+    backgroundColor: SimulatorColors.warningBackground,
+    borderWidth: 1,
+    borderColor: '#FDE68A',
+  },
+  badgeText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: SimulatorColors.textPrimary,
+  },
+  scenarioLabel: {
+    fontSize: 13,
+    color: SimulatorColors.textSecondary,
+    lineHeight: 19,
+  },
+});
+
+const masteryStyles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingVertical: 5,
+    borderBottomWidth: 1,
+    borderBottomColor: SimulatorColors.borderDivider,
+  },
+  dot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    flexShrink: 0,
+  },
+  dotDone: {
+    backgroundColor: SimulatorColors.scoreGreen,
+  },
+  dotEmpty: {
+    backgroundColor: SimulatorColors.borderDivider,
+    borderWidth: 1,
+    borderColor: SimulatorColors.border,
+  },
+  title: {
+    flex: 1,
+    fontSize: 13,
+    color: SimulatorColors.textBody,
+    lineHeight: 19,
+  },
+  titleMuted: {
+    color: SimulatorColors.textSecondary,
+  },
+  score: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: SimulatorColors.brand,
+    width: 32,
+    textAlign: 'right',
   },
 });

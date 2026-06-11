@@ -15,6 +15,7 @@ import { generateTerminalSecretionFeedbackReport } from '@/services/terminalSecr
 import type {
   ConversationMessage,
   FeedbackReport,
+  LearnerProfile,
   PatientStateSnapshot,
   SafetyEvent,
 } from '@/types/simulator';
@@ -51,50 +52,94 @@ function firstIndexWithBehavior(snapshots: PatientStateSnapshot[], behavior: str
   return snapshots.findIndex((s) => s.detectedBehaviors.includes(behavior));
 }
 
+function applyProfileAdjustments(report: FeedbackReport, profile: LearnerProfile): FeedbackReport {
+  const additions: string[] = [];
+
+  if (profile.hospiceExperienceLevel === 'none') {
+    additions.push(
+      'As someone new to hospice, these conversations are genuinely difficult. The emotional weight and role boundaries take time to navigate with confidence — the discomfort you feel is part of the learning.'
+    );
+  }
+
+  const lowestComfort = Math.min(
+    profile.comfortHospiceConversations,
+    profile.comfortFamilyObjections,
+    profile.comfortDeathAndDying
+  );
+  if (lowestComfort <= 2) {
+    additions.push(
+      'Given your self-reported comfort level, the highest-value habit to build is acknowledgment-first: emotional response before education. That single pattern change creates the most visible shift in family trust.'
+    );
+  }
+
+  if (profile.comfortMedicationQuestions <= 2) {
+    additions.push(
+      'Medication questions will keep arising across every role. The core boundary to practice: validate the concern and route to the clinical team — that one move handles every medication question, regardless of specifics.'
+    );
+  }
+
+  if (profile.hospiceExperienceLevel === 'extensive') {
+    additions.push(
+      'With your hospice background, the next growth edge is sequencing — not just what to say, but when each piece lands most effectively for this specific family\'s emotional state.'
+    );
+  }
+
+  if (additions.length === 0) return report;
+
+  return {
+    ...report,
+    nextPracticeFocus: report.nextPracticeFocus + '\n\n' + additions.join(' '),
+  };
+}
+
 export function generateFeedbackReport(
   scenarioId: string,
   conversationMessages: ConversationMessage[],
   safetyEvents: SafetyEvent[],
-  patientStateSnapshots: PatientStateSnapshot[]
+  patientStateSnapshots: PatientStateSnapshot[],
+  learnerProfile?: LearnerProfile | null
 ): FeedbackReport {
+  const wrap = (r: FeedbackReport) =>
+    learnerProfile ? applyProfileAdjustments(r, learnerProfile) : r;
+
   if (scenarioId === 'copd_air_hunger_at_home') {
-    return generateRnFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+    return wrap(generateRnFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots));
   }
   if (scenarioId === 'terminal_dyspnea_follow_up') {
-    return generateTerminalDyspneaFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+    return wrap(generateTerminalDyspneaFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots));
   }
   if (scenarioId === 'pain_management_concern') {
-    return generatePainManagementFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+    return wrap(generatePainManagementFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots));
   }
   if (scenarioId === 'medication_refusal') {
-    return generateMedicationRefusalFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+    return wrap(generateMedicationRefusalFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots));
   }
   if (scenarioId === 'prognostic_uncertainty') {
-    return generatePrognosticUncertaintyFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+    return wrap(generatePrognosticUncertaintyFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots));
   }
   if (scenarioId === 'esrd_comfort_care') {
-    return generateEsrdComfortCareFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+    return wrap(generateEsrdComfortCareFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots));
   }
   if (scenarioId === 'advanced_dementia_grief') {
-    return generateAdvancedDementiaGriefFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+    return wrap(generateAdvancedDementiaGriefFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots));
   }
   if (scenarioId === 'active_dying_recognition') {
-    return generateActiveDyingFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+    return wrap(generateActiveDyingFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots));
   }
   if (scenarioId === 'terminal_secretion_distress') {
-    return generateTerminalSecretionFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+    return wrap(generateTerminalSecretionFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots));
   }
   if (scenarioId === 'breakthrough_pain_at_home') {
-    return generateBreakthroughPainFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+    return wrap(generateBreakthroughPainFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots));
   }
   if (scenarioId === 'advance_directive_conflict') {
-    return generateAdvanceDirectiveConflictFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+    return wrap(generateAdvanceDirectiveConflictFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots));
   }
   if (scenarioId === 'caregiver_burnout') {
-    return generateCaregiverBurnoutFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+    return wrap(generateCaregiverBurnoutFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots));
   }
   if (scenarioId === 'bereavement_first_call') {
-    return generateBereavementFirstCallFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+    return wrap(generateBereavementFirstCallFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots));
   }
 
   void conversationMessages;
@@ -279,7 +324,7 @@ export function generateFeedbackReport(
       'The emotional and educational foundation is in place. The next step is practicing how to close the conversation clearly, such as asking what questions the family still has or explaining what happens next.';
   }
 
-  return {
+  return wrap({
     id: `${Date.now()}-feedback`,
     scenarioId,
     overallCoachingSummary,
@@ -292,5 +337,5 @@ export function generateFeedbackReport(
     suggestedWording,
     nextPracticeFocus,
     createdAt: new Date().toISOString(),
-  };
+  });
 }

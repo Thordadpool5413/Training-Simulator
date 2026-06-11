@@ -1,11 +1,13 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useCallback, useContext, useRef, useState } from 'react';
 import type {
+  CompletedSession,
   ConversationMessage,
   LearnerProfile,
   PatientState,
   PatientStateSnapshot,
   SafetyEvent,
 } from '@/types/simulator';
+import type { QuizResult } from '@/types/quiz';
 
 interface SimulatorState {
   selectedRoleId: string | null;
@@ -16,6 +18,8 @@ interface SimulatorState {
   safetyEvents: SafetyEvent[];
   currentPatientState: PatientState | null;
   patientStateSnapshots: PatientStateSnapshot[];
+  quizResult: QuizResult | null;
+  completedSessions: CompletedSession[];
   setSelectedRoleId: (id: string) => void;
   setLearnerProfile: (profile: LearnerProfile) => void;
   setSelectedScenarioId: (id: string) => void;
@@ -28,6 +32,8 @@ interface SimulatorState {
   appendSafetyEvent: (event: SafetyEvent) => void;
   setCurrentPatientState: (state: PatientState) => void;
   appendPatientStateSnapshot: (snapshot: PatientStateSnapshot) => void;
+  setQuizResult: (result: QuizResult) => void;
+  recordCompletedSession: (session: Omit<CompletedSession, 'id' | 'completedAt'>) => void;
   resetSimulationSession: () => void;
 }
 
@@ -42,6 +48,10 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
   const [safetyEvents, setSafetyEvents] = useState<SafetyEvent[]>([]);
   const [currentPatientState, setCurrentPatientStateInternal] = useState<PatientState | null>(null);
   const [patientStateSnapshots, setPatientStateSnapshots] = useState<PatientStateSnapshot[]>([]);
+  const [quizResult, setQuizResultInternal] = useState<QuizResult | null>(null);
+  const [completedSessions, setCompletedSessions] = useState<CompletedSession[]>([]);
+
+  const sessionIdCounter = useRef(0);
 
   function startSimulationSession(
     scenarioId: string,
@@ -54,6 +64,7 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
     setSafetyEvents([]);
     setCurrentPatientStateInternal({ ...initialPatientState });
     setPatientStateSnapshots([]);
+    setQuizResultInternal(null);
   }
 
   function appendConversationMessages(messages: ConversationMessage[]): void {
@@ -76,6 +87,26 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
     setPatientStateSnapshots((prev) => [...prev, snapshot]);
   }
 
+  const setQuizResult = useCallback((result: QuizResult): void => {
+    setQuizResultInternal(result);
+  }, []);
+
+  const recordCompletedSession = useCallback(
+    (session: Omit<CompletedSession, 'id' | 'completedAt'>): void => {
+      sessionIdCounter.current += 1;
+      const full: CompletedSession = {
+        ...session,
+        id: `session_${sessionIdCounter.current}_${Date.now()}`,
+        completedAt: new Date().toISOString(),
+      };
+      setCompletedSessions((prev) => {
+        const withoutDuplicate = prev.filter((s) => s.scenarioId !== session.scenarioId || s.roleId !== session.roleId);
+        return [...withoutDuplicate, full];
+      });
+    },
+    []
+  );
+
   function resetSimulationSession(): void {
     setSelectedScenarioIdInternal(null);
     setActiveScenarioId(null);
@@ -83,6 +114,7 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
     setSafetyEvents([]);
     setCurrentPatientStateInternal(null);
     setPatientStateSnapshots([]);
+    // quizResult and completedSessions are intentionally preserved across resets
   }
 
   return (
@@ -96,6 +128,8 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
         safetyEvents,
         currentPatientState,
         patientStateSnapshots,
+        quizResult,
+        completedSessions,
         setSelectedRoleId,
         setLearnerProfile,
         setSelectedScenarioId,
@@ -104,6 +138,8 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
         appendSafetyEvent,
         setCurrentPatientState,
         appendPatientStateSnapshot,
+        setQuizResult,
+        recordCompletedSession,
         resetSimulationSession,
       }}>
       {children}

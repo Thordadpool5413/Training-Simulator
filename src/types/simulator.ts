@@ -196,6 +196,15 @@ export interface ConversationMessage {
   createdAt: string;
 }
 
+export interface CompletedSession {
+  id: string;
+  scenarioId: string;
+  scenarioTitle: string;
+  roleId: string;
+  completedAt: string;
+  overallScore: number;
+}
+
 export interface ScenarioTemplate {
   id: string;
   title: string;

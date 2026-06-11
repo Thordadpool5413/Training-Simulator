@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import type { Href } from 'expo-router';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -15,12 +15,16 @@ import { SectionCard } from '@/components/SectionCard';
 export default function FeedbackScreen() {
   const {
     activeScenarioId,
+    selectedRoleId,
+    learnerProfile,
     conversationMessages,
     safetyEvents,
     patientStateSnapshots,
+    recordCompletedSession,
   } = useSimulator();
 
   const scenario = scenarioTemplates.find((s) => s.id === activeScenarioId);
+  const sessionRecorded = useRef(false);
 
   const report = useMemo<FeedbackReport | null>(() => {
     if (!activeScenarioId || conversationMessages.length === 0) return null;
@@ -28,9 +32,10 @@ export default function FeedbackScreen() {
       activeScenarioId,
       conversationMessages,
       safetyEvents,
-      patientStateSnapshots
+      patientStateSnapshots,
+      learnerProfile
     );
-  }, [activeScenarioId, conversationMessages, safetyEvents, patientStateSnapshots]);
+  }, [activeScenarioId, conversationMessages, safetyEvents, patientStateSnapshots, learnerProfile]);
 
   const scoreReport = useMemo<SkillScoreReport | null>(() => {
     if (!activeScenarioId || conversationMessages.length === 0) return null;
@@ -41,6 +46,18 @@ export default function FeedbackScreen() {
       patientStateSnapshots
     );
   }, [activeScenarioId, conversationMessages, safetyEvents, patientStateSnapshots]);
+
+  useEffect(() => {
+    if (scoreReport && activeScenarioId && !sessionRecorded.current) {
+      sessionRecorded.current = true;
+      recordCompletedSession({
+        scenarioId: activeScenarioId,
+        scenarioTitle: scenario?.title ?? activeScenarioId,
+        roleId: selectedRoleId ?? '',
+        overallScore: scoreReport.overallScore,
+      });
+    }
+  }, [scoreReport, activeScenarioId, scenario, selectedRoleId, recordCompletedSession]);
 
   if (!report) {
     return (
@@ -137,6 +154,28 @@ export default function FeedbackScreen() {
           </SectionCard>
         )}
 
+        {scenario != null && (
+          <SectionCard title="Success Criteria">
+            {scenario.successCriteria.map((criterion, i) => (
+              <View key={i} style={styles.criterionRow}>
+                <Text style={styles.successBullet}>✓</Text>
+                <Text style={styles.criterionText}>{criterion}</Text>
+              </View>
+            ))}
+          </SectionCard>
+        )}
+
+        {scenario != null && (
+          <SectionCard title="Watch-Out Criteria">
+            {scenario.failureCriteria.map((criterion, i) => (
+              <View key={i} style={styles.criterionRow}>
+                <Text style={styles.failBullet}>✗</Text>
+                <Text style={styles.criterionText}>{criterion}</Text>
+              </View>
+            ))}
+          </SectionCard>
+        )}
+
         <SectionCard title="Next Practice Focus">
           <View style={styles.focusCallout}>
             <Text style={styles.focusText}>{report.nextPracticeFocus}</Text>
@@ -223,6 +262,31 @@ const styles = StyleSheet.create({
     color: SimulatorColors.textBody,
     lineHeight: 22,
     marginBottom: 2,
+  },
+  criterionRow: {
+    flexDirection: 'row',
+    gap: 8,
+    paddingVertical: 3,
+  },
+  successBullet: {
+    fontSize: 14,
+    color: SimulatorColors.scoreGreen,
+    fontWeight: '700',
+    lineHeight: 21,
+    width: 16,
+  },
+  failBullet: {
+    fontSize: 14,
+    color: SimulatorColors.scoreOrange,
+    fontWeight: '700',
+    lineHeight: 21,
+    width: 16,
+  },
+  criterionText: {
+    flex: 1,
+    fontSize: 14,
+    color: SimulatorColors.textBody,
+    lineHeight: 21,
   },
   wordingCard: {
     backgroundColor: SimulatorColors.brandTint,

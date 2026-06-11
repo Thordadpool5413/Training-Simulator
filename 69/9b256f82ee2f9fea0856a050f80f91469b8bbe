@@ -1,0 +1,73 @@
+src/data/safeLanguage.ts
+  s_4dd6ce9d67e608::t_75a1dcf71ff9fa 64-93
+src/app/_layout.tsx
+  s_4dd6ce9d67e608::t_7084c74e44f8cf 2,10
+src/services/dashboardService.ts
+  s_4dd6ce9d67e608::t_feb7e312bfdde5 44-84
+  s_4dd6ce9d67e608::t_2540bcc441b68b 38-41
+src/__tests__/scoring.test.ts
+  s_4dd6ce9d67e608::t_56b22411aa47f4 28-47,134-137
+  s_4dd6ce9d67e608::t_ac8dfbd186c57a 91-113,126-133,138
+src/services/medicationRefusalPatientStateService.ts
+  s_4dd6ce9d67e608::t_a791cef324370c 1-169
+src/data/diagnoses.ts
+  s_4dd6ce9d67e608::t_26cba78c14f8e8 93-150
+src/services/feedbackService.ts
+  s_4dd6ce9d67e608::t_1c3b79d83d06c4 2-3
+  s_4dd6ce9d67e608::t_47e85fbf8c243f 57-62
+src/__tests__/scenarioResponse.test.ts
+  s_4dd6ce9d67e608::t_b8d5d5831a06be 36-47
+src/services/medicationRefusalResponseService.ts
+  s_4dd6ce9d67e608::t_d9c73b492ab893 1-136
+src/__tests__/dashboard.test.ts
+  s_4dd6ce9d67e608::t_20823dd59536cd 11-12
+  s_4dd6ce9d67e608::t_ac18132cd7e917 89-183
+src/app/role.tsx
+  s_4dd6ce9d67e608::t_01d85ec0f5edfb 21
+src/__tests__/feedback.test.ts
+  s_4dd6ce9d67e608::t_c62ad0e9627023 63-104
+src/services/painManagementScoringService.ts
+  s_4dd6ce9d67e608::t_9fe6e88fc37713 1-408
+src/services/painManagementFeedbackService.ts
+  s_4dd6ce9d67e608::t_199e1514aa4aa3 1-190
+src/services/scenarioResponseService.ts
+  s_4dd6ce9d67e608::t_0e1e09450d405a 5-6,27-32
+src/data/scenarioTemplates.ts
+  s_4dd6ce9d67e608::t_785a79256ec7c7 161-239
+src/services/scoringService.ts
+  s_4dd6ce9d67e608::t_f65627cef1c56b 1-2
+  s_4dd6ce9d67e608::t_2edd7aeee6d7ca 420-425
+src/services/painManagementPatientStateService.ts
+  s_4dd6ce9d67e608::t_e99775aba37291 1-227
+src/services/medicationRefusalScoringService.ts
+  s_4dd6ce9d67e608::t_1074d38cb78758 1-486
+src/services/painManagementResponseService.ts
+  s_4dd6ce9d67e608::t_ba21c467751597 1-135
+src/services/medicationRefusalFeedbackService.ts
+  s_4dd6ce9d67e608::t_cc68c691ee307e 1-203
+src/components/app-tabs.web.tsx
+  s_4dd6ce9d67e608::t_cbb13a967a221f 27-28
+src/data/patientStateDefaults.ts
+  s_4dd6ce9d67e608::t_00fbdbc60f8456 68-99
+src/services/medicationSafetyService.ts
+  s_4dd6ce9d67e608::t_61fed2270b81c9 149-160
+  s_4dd6ce9d67e608::t_e0b0932df7774a 107-121
+src/services/patientStateDispatcher.ts
+  s_4dd6ce9d67e608::t_c22e1670b89b6d 3-4,16-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "699b256f82ee2f9fea0856a050f80f91469b8bbe",
+  "prompts": {},
+  "sessions": {
+    "s_4dd6ce9d67e608": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55cc4203-2362-432c-9323-e9946683cd1f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

@@ -59,6 +59,9 @@ export default function ScenarioBriefingScreen() {
   return (
     <SafeAreaView style={styles.safe}>
       <ScrollView contentContainerStyle={styles.container}>
+        <Pressable style={styles.backLink} onPress={() => router.back()}>
+          <Text style={styles.backLinkText}>← Back to Scenarios</Text>
+        </Pressable>
         <Text style={styles.title}>{scenario.title}</Text>
 
         <View style={styles.card}>
@@ -121,6 +124,15 @@ const styles = StyleSheet.create({
   container: {
     padding: 24,
     paddingBottom: 48,
+  },
+  backLink: {
+    marginBottom: 12,
+    alignSelf: 'flex-start',
+  },
+  backLinkText: {
+    fontSize: 14,
+    color: SimulatorColors.brand,
+    fontWeight: '600',
   },
   title: {
     fontSize: 24,

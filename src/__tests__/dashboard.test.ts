@@ -7,6 +7,7 @@ const emptyEvents: SafetyEvent[] = [];
 const emptySnapshots: PatientStateSnapshot[] = [];
 
 const baseState = patientStateDefaults['hospice_means_giving_up'];
+const rnBaseState = patientStateDefaults['terminal_dyspnea_follow_up'];
 
 const learnerMessage: ConversationMessage = {
   id: 'msg-1',
@@ -81,5 +82,36 @@ describe('generateDashboardSummary', () => {
       emptySnapshots
     );
     expect(result.scenarioTitle).toBe('Terminal Dyspnea Follow Up Conversation');
+  });
+
+  it('terminal_dyspnea_follow_up safetyFlagsResolved is 1 after RN dose event followed by routing recovery', () => {
+    const rnMedEvent: SafetyEvent = {
+      id: 'evt-rn-1',
+      scenarioId: 'terminal_dyspnea_follow_up',
+      learnerMessageText: 'Give her 2 mg more of the morphine.',
+      violationCategory: 'rn_medication_dose_outside_orders',
+      severity: 'clinical_safety_concern',
+      message: 'Training Pause',
+      feedbackHook: null,
+      createdAt: '2026-01-01T10:01:00.000Z',
+    };
+    const rnRecoverySnapshot: PatientStateSnapshot = {
+      id: 'snap-rn-1',
+      scenarioId: 'terminal_dyspnea_follow_up',
+      learnerMessageId: 'msg-2',
+      stateBefore: rnBaseState,
+      stateAfter: rnBaseState,
+      detectedBehaviors: ['safe_medication_routing'],
+      stateChangeSummary: 'Learner routed medication question safely.',
+      createdAt: '2026-01-01T10:02:00.000Z',
+    };
+    const result = generateDashboardSummary(
+      'terminal_dyspnea_follow_up',
+      'rn',
+      [learnerMessage],
+      [rnMedEvent],
+      [rnRecoverySnapshot]
+    );
+    expect(result.safetyFlagsResolved).toBe(1);
   });
 });

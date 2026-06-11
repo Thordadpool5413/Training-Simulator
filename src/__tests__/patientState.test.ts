@@ -1,3 +1,4 @@
+import { updateCopdPatientState } from '@/services/copdPatientStateService';
 import { updatePatientState } from '@/services/patientStateService';
 import { patientStateDefaults } from '@/data/patientStateDefaults';
 
@@ -32,5 +33,20 @@ describe('updatePatientState — behavior detection', () => {
       [...empty]
     );
     expect(result.detectedBehaviors).toContain('safe_medication_routing');
+  });
+});
+
+describe('updateCopdPatientState — RN behavior detection', () => {
+  const baseState = patientStateDefaults['terminal_dyspnea_follow_up'];
+  const empty = [] as const;
+
+  it('safe routing phrase detects safe_medication_routing and not medication_dose_overstep', () => {
+    const result = updateCopdPatientState(
+      baseState,
+      'I cannot change the dose without the hospice orders. The on-call provider should walk through that with us.',
+      [...empty]
+    );
+    expect(result.detectedBehaviors).toContain('safe_medication_routing');
+    expect(result.detectedBehaviors).not.toContain('medication_dose_overstep');
   });
 });

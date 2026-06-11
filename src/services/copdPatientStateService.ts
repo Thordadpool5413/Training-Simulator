@@ -109,6 +109,7 @@ const MED_ROUTING_REFUSAL_TERMS = [
   'needs to come from',
   'follow the hospice',
   'comes from the',
+  'cannot change',
 ];
 
 export function updateCopdPatientState(
@@ -119,7 +120,26 @@ export function updateCopdPatientState(
   void conversationMessages;
   const lower = learnerMessageText.toLowerCase();
 
-  // Rule 1 — Specific dose stated (role boundary overstep)
+  // Rule 1 — Safe medication routing (checked before dose overstep so that refusal
+  // phrases containing 'the dose' are not misclassified as overstep)
+  if (
+    containsAny(lower, MED_ROUTING_PROVIDER_TERMS) &&
+    containsAny(lower, MED_ROUTING_REFUSAL_TERMS)
+  ) {
+    return {
+      updatedState: applyDelta(currentState, {
+        trust: 8,
+        medicationFear: -10,
+        perceivedHonesty: 8,
+        perceivedCompassion: 5,
+      }),
+      detectedBehaviors: ['safe_medication_routing', 'role_boundary_respected'],
+      stateChangeSummary:
+        'The learner routed the medication dose question to the hospice orders and on-call provider.',
+    };
+  }
+
+  // Rule 2 — Specific dose stated (role boundary overstep)
   if (containsAny(lower, DOSE_OVERSTEP_TERMS)) {
     return {
       updatedState: applyDelta(currentState, {
@@ -134,7 +154,7 @@ export function updateCopdPatientState(
     };
   }
 
-  // Rule 2 — Overpromise about symptom elimination
+  // Rule 3 — Overpromise about symptom elimination
   if (containsAny(lower, OVERPROMISE_TERMS)) {
     return {
       updatedState: applyDelta(currentState, {
@@ -148,7 +168,7 @@ export function updateCopdPatientState(
     };
   }
 
-  // Rule 3 — Fear acknowledgment combined with air hunger explanation
+  // Rule 4 — Fear acknowledgment combined with air hunger explanation
   const hasFearAck = containsAny(lower, FEAR_ACK_TERMS);
   const hasAirHungerExplanation = containsAny(lower, AIR_HUNGER_EXPLANATION_TERMS);
   if (hasFearAck && hasAirHungerExplanation) {
@@ -167,7 +187,7 @@ export function updateCopdPatientState(
     };
   }
 
-  // Rule 4 — Fear acknowledgment only
+  // Rule 5 — Fear acknowledgment only
   if (hasFearAck) {
     return {
       updatedState: applyDelta(currentState, {
@@ -182,7 +202,7 @@ export function updateCopdPatientState(
     };
   }
 
-  // Rule 5 — Comfort tools described
+  // Rule 6 — Comfort tools described
   if (containsAny(lower, COMFORT_TOOL_TERMS)) {
     return {
       updatedState: applyDelta(currentState, {
@@ -195,24 +215,6 @@ export function updateCopdPatientState(
       detectedBehaviors: ['comfort_education', 'caregiver_empowerment'],
       stateChangeSummary:
         'The learner described non-pharmacologic comfort tools Margaret can use.',
-    };
-  }
-
-  // Rule 6 — Safe medication routing (RN-appropriate)
-  if (
-    containsAny(lower, MED_ROUTING_PROVIDER_TERMS) &&
-    containsAny(lower, MED_ROUTING_REFUSAL_TERMS)
-  ) {
-    return {
-      updatedState: applyDelta(currentState, {
-        trust: 8,
-        medicationFear: -10,
-        perceivedHonesty: 8,
-        perceivedCompassion: 5,
-      }),
-      detectedBehaviors: ['safe_medication_routing', 'role_boundary_respected'],
-      stateChangeSummary:
-        'The learner routed the medication dose question to the hospice orders and on-call provider.',
     };
   }
 

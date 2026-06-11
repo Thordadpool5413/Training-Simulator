@@ -948,3 +948,37 @@ No services, data files, state files, type files, component files, theme files, 
 ### Files Modified in Packet 37
 
 - `src/app/scenario-briefing.tsx` — `← Back to Scenarios` Pressable added above scenario title; `backLink` and `backLinkText` styles added
+
+---
+
+## Packet 40 — Simulation Screen Polish
+
+**Date:** 2026-06-10
+**Commit:** ca0b886
+**Scope:** Simulation UI polish only. One file modified: `src/app/simulation.tsx`. No service, data, state, type, component, theme, or package changes.
+
+### UI Verification — Simulation Screen
+
+**Method:** Deterministic code trace and clean TypeScript compile.
+
+| Check | Expected | Result |
+|---|---|---|
+| Header meta no raw ID | Role name shown as display name, fallback is "Learner" not raw ID | Pass |
+| Role reminder clamp | `numberOfLines={4}` prevents reminder from dominating screen | Pass |
+| Finish button border color | Brand blue border instead of textBody gray | Pass |
+| Finish button text color | Brand blue text instead of textBody gray | Pass |
+| All five scenarios open | Routing and service logic unchanged | Pass |
+| All five opening lines display | Scenario opening line logic unchanged | Pass |
+| Training Pause fires for unsafe CL phrases | medicationSafetyService unchanged | Pass |
+| Training Pause fires for unsafe RN phrases | medicationSafetyService unchanged | Pass |
+| Safe recovery path works | patientStateDispatcher unchanged | Pass |
+| Finish navigates to feedback | router.push('/feedback') unchanged | Pass |
+
+**Total checks:** 10 of 10 passed.
+
+**npm test result:** Passed 29 of 29. Zero failures.
+**npx tsc --noEmit result:** Zero errors.
+
+### Files Modified in Packet 40
+
+- `src/app/simulation.tsx` — header meta fallback changed from `selectedRoleId` to `'Learner'`; `numberOfLines={4}` added to role reminder text; Finish button border and text color changed from `textBody` to `brand`

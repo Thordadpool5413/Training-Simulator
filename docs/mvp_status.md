@@ -168,6 +168,18 @@ UI polish baseline completed. No behavior, logic, or content was changed.
 
 Manual UI smoke test passed 36 of 36 items. Zero defects found.
 
+### Simulation Screen Polish (Packet 40, verified 2026-06-10)
+
+Simulation screen polish completed. One file modified: `src/app/simulation.tsx`.
+
+| Change | Detail |
+|---|---|
+| Raw ID removed from header | Header meta fallback changed from `selectedRoleId` to `'Learner'` — prevents raw ID exposure if role lookup fails |
+| Role reminder clamped | `numberOfLines={4}` added — prevents long reminder text from dominating the chat area |
+| Finish button color | Border and text color changed from `textBody` gray to `brand` blue — clearer call to action |
+
+UI verification: 10 of 10 checks passed by code trace. Automated tests: 29 of 29 passing. TypeScript: zero errors. Commit: `ca0b886`.
+
 ### Scenario Briefing Polish (Packet 37, verified 2026-06-10)
 
 Scenario briefing polish completed. One file modified: `src/app/scenario-briefing.tsx`.

@@ -1137,3 +1137,26 @@ No services, data files, state files, type files, component files, theme files, 
 **Package changes:** None.
 **Service changes:** None.
 **Data changes:** None.
+
+---
+
+## Packet 51 — App Identity Update
+
+**Date:** 2026-06-10
+**Commit:** d24cba9
+**Scope:** App identity and splash color. Two files modified: `app.json` and `src/components/animated-icon.tsx`.
+
+| Change | Old | New |
+|---|---|---|
+| App name | `my-first-app` | `Hospice Training Simulator` |
+| Slug | `my-first-app` | `hospice-training-simulator` |
+| Scheme | `myfirstapp` | `hospicetraining` |
+| userInterfaceStyle | `automatic` | `light` |
+| iOS icon | `./assets/expo.icon` | `./assets/images/icon.png` |
+| iOS bundleIdentifier | `com.thordadpool.myfirstapp` | `com.thordadpool.hospicetraining` |
+| Android package | `com.thordadpool.myfirstapp` | `com.thordadpool.hospicetraining` |
+| Splash backgroundColor | `#208AEF` | `#2563EB` |
+| Animated overlay color | `#208AEF` | `#2563EB` |
+
+**npm test result:** Passed 29 of 29. Zero failures.
+**npx tsc --noEmit result:** Zero errors.

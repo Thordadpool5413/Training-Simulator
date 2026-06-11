@@ -1,6 +1,6 @@
 # MVP Status — Hospice Communication Training Simulator
 
-> **Updated:** 2026-06-10. This document reflects the stable five-scenario MVP state after Packet 49 full regression. It is maintained as a living status record updated at each stable checkpoint.
+> **Updated:** 2026-06-10. This document reflects the stable five-scenario MVP state after Packet 51 app identity update. It is maintained as a living status record updated at each stable checkpoint.
 
 ---
 
@@ -167,6 +167,24 @@ UI polish baseline completed. No behavior, logic, or content was changed.
 | Screen title margin | `src/app/feedback.tsx` and `src/app/dashboard.tsx` screen title `marginBottom` standardized to 8 |
 
 Manual UI smoke test passed 36 of 36 items. Zero defects found.
+
+### App Identity Update (Packet 51, verified 2026-06-10)
+
+App identity updated to production values. Two files modified: `app.json` and `src/components/animated-icon.tsx`.
+
+| Field | Old Value | New Value |
+|---|---|---|
+| App name | `my-first-app` | `Hospice Training Simulator` |
+| Slug | `my-first-app` | `hospice-training-simulator` |
+| Scheme | `myfirstapp` | `hospicetraining` |
+| userInterfaceStyle | `automatic` | `light` (dark mode not yet implemented) |
+| iOS icon | `./assets/expo.icon` (broken) | `./assets/images/icon.png` |
+| iOS bundleIdentifier | `com.thordadpool.myfirstapp` | `com.thordadpool.hospicetraining` |
+| Android package | `com.thordadpool.myfirstapp` | `com.thordadpool.hospicetraining` |
+| Splash backgroundColor | `#208AEF` (Expo default) | `#2563EB` (brand blue) |
+| Animated overlay color | `#208AEF` | `#2563EB` (matches splash) |
+
+Automated tests: 29 of 29 passing. TypeScript: zero errors. Commit: `d24cba9`.
 
 ### Full Five Scenario Regression (Packet 48, verified 2026-06-10)
 

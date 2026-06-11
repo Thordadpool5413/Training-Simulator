@@ -1,6 +1,9 @@
 import { safeLanguage } from '@/data/safeLanguage';
+import { generateAdvancedDementiaGriefFeedbackReport } from '@/services/advancedDementiaGriefFeedbackService';
+import { generateEsrdComfortCareFeedbackReport } from '@/services/esrdComfortCareFeedbackService';
 import { generateMedicationRefusalFeedbackReport } from '@/services/medicationRefusalFeedbackService';
 import { generatePainManagementFeedbackReport } from '@/services/painManagementFeedbackService';
+import { generatePrognosticUncertaintyFeedbackReport } from '@/services/prognosticUncertaintyFeedbackService';
 import { generateRnFeedbackReport } from '@/services/rnFeedbackService';
 import { generateTerminalDyspneaFeedbackReport } from '@/services/terminalDyspneaFeedbackService';
 import type {
@@ -59,6 +62,15 @@ export function generateFeedbackReport(
   }
   if (scenarioId === 'medication_refusal') {
     return generateMedicationRefusalFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+  }
+  if (scenarioId === 'prognostic_uncertainty') {
+    return generatePrognosticUncertaintyFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+  }
+  if (scenarioId === 'esrd_comfort_care') {
+    return generateEsrdComfortCareFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+  }
+  if (scenarioId === 'advanced_dementia_grief') {
+    return generateAdvancedDementiaGriefFeedbackReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
   }
 
   void conversationMessages;

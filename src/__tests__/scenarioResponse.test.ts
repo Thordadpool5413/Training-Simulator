@@ -45,4 +45,22 @@ describe('generateScenarioResponse — routing', () => {
     expect(result.speakerName).toBe('Michael');
     expect(result.sender).toBe('family');
   });
+
+  it('prognostic_uncertainty routes to David response service', () => {
+    const result = generateScenarioResponse('prognostic_uncertainty', neutral, [...empty]);
+    expect(result.speakerName).toBe('David');
+    expect(result.sender).toBe('family');
+  });
+
+  it('esrd_comfort_care routes to James response service', () => {
+    const result = generateScenarioResponse('esrd_comfort_care', neutral, [...empty]);
+    expect(result.speakerName).toBe('James');
+    expect(result.sender).toBe('family');
+  });
+
+  it('advanced_dementia_grief routes to Anne response service', () => {
+    const result = generateScenarioResponse('advanced_dementia_grief', neutral, [...empty]);
+    expect(result.speakerName).toBe('Anne');
+    expect(result.sender).toBe('family');
+  });
 });

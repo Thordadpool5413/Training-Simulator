@@ -39,6 +39,9 @@ export function generateDashboardSummary(
     activeScenarioId === 'medication_refusal';
 
   const isPainManagementScenario = activeScenarioId === 'pain_management_concern';
+  const isPrognosticUncertainty = activeScenarioId === 'prognostic_uncertainty';
+  const isEsrdComfortCare = activeScenarioId === 'esrd_comfort_care';
+  const isAdvancedDementiaGrief = activeScenarioId === 'advanced_dementia_grief';
 
   let nextRecommendedScenario: string;
   if (activeScenarioId === 'medication_refusal') {
@@ -80,6 +83,62 @@ export function generateDashboardSummary(
       nextRecommendedScenario = 'Clinical Liaison Nurse Routing Practice';
     } else {
       nextRecommendedScenario = 'Advanced Family Distress and Clinical Routing Conversation';
+    }
+  } else if (isPrognosticUncertainty) {
+    const hadPrognosisPromise = hasBehavior(patientStateSnapshots, 'prognosis_promise');
+    const hadPanicAck = hasBehavior(patientStateSnapshots, 'emotional_acknowledgment');
+    const hadPrognosisReframe = hasBehavior(patientStateSnapshots, 'prognosis_reframe');
+    const hadClinicalRouting = hasBehavior(patientStateSnapshots, 'clinical_routing');
+
+    if (hadPrognosisPromise) {
+      nextRecommendedScenario = 'Prognosis Communication Boundary Practice';
+    } else if (!hadPanicAck) {
+      nextRecommendedScenario = 'Family Panic Acknowledgment Practice';
+    } else if (!hadPrognosisReframe) {
+      nextRecommendedScenario = 'Prognosis Estimate Reframing Practice';
+    } else if (!hadClinicalRouting) {
+      nextRecommendedScenario = 'Clinical Signs Routing Practice';
+    } else {
+      nextRecommendedScenario = 'Advanced Prognosis Communication and Family Planning';
+    }
+  } else if (isEsrdComfortCare) {
+    const hadSidesTaken = hasBehavior(patientStateSnapshots, 'sides_taken');
+    const hadCapacityDetermination = hasBehavior(patientStateSnapshots, 'capacity_determination');
+    const hadEmotionalAckEsrd = hasBehavior(patientStateSnapshots, 'emotional_acknowledgment');
+    const hadAutonomy = hasBehavior(patientStateSnapshots, 'autonomy_respected');
+    const hadValues = hasBehavior(patientStateSnapshots, 'values_elicitation');
+
+    if (hadSidesTaken) {
+      nextRecommendedScenario = 'Social Worker Neutrality Practice';
+    } else if (hadCapacityDetermination) {
+      nextRecommendedScenario = 'Clinical Capacity Routing Practice';
+    } else if (!hadEmotionalAckEsrd) {
+      nextRecommendedScenario = 'Family Grief Acknowledgment Practice';
+    } else if (!hadAutonomy) {
+      nextRecommendedScenario = 'Patient Autonomy Education Practice';
+    } else if (!hadValues) {
+      nextRecommendedScenario = 'Patient Values Elicitation Practice';
+    } else {
+      nextRecommendedScenario = 'Advanced Autonomy and Family Mediation Conversation';
+    }
+  } else if (isAdvancedDementiaGrief) {
+    const hadAbandonmentAdg = hasBehavior(patientStateSnapshots, 'abandonment_language');
+    const hadGriefAck = hasBehavior(patientStateSnapshots, 'grief_normalization');
+    const hadHospiceReframeAdg = hasBehavior(patientStateSnapshots, 'hospice_reframe');
+    const hadRevocation = hasBehavior(patientStateSnapshots, 'revocation_education');
+
+    if (hadMedEvent) {
+      nextRecommendedScenario = 'Clinical Liaison Role Boundary Practice';
+    } else if (hadAbandonmentAdg) {
+      nextRecommendedScenario = 'Hospice Framing Without Abandonment Language Practice';
+    } else if (!hadGriefAck) {
+      nextRecommendedScenario = 'Ambiguous Loss Acknowledgment Practice';
+    } else if (!hadHospiceReframeAdg) {
+      nextRecommendedScenario = 'Dementia Hospice Reframe Practice';
+    } else if (!hadRevocation) {
+      nextRecommendedScenario = 'Hospice Revocation Education Practice';
+    } else {
+      nextRecommendedScenario = 'Advanced Grief and Hospice Readiness Conversation';
     }
   } else if (isRnScenario) {
     const hadRnMedEvent = safetyEvents.some(

@@ -45,6 +45,36 @@ const MR_CATEGORIES = [
   'Trust Building',
 ];
 
+const PU_CATEGORIES = [
+  'Emotional Attunement',
+  'Prognosis Education',
+  'Objection Handling',
+  'Compliance Safe Language',
+  'Clinical Escalation Judgment',
+  'Trust Building',
+  'Role Boundary Safety',
+];
+
+const ESRD_CATEGORIES = [
+  'Emotional Attunement',
+  'Autonomy Advocacy',
+  'Values Elicitation',
+  'Conflict Mediation',
+  'Role Boundary Safety',
+  'Clinical Escalation Judgment',
+  'Trust Building',
+];
+
+const ADG_CATEGORIES = [
+  'Emotional Attunement',
+  'Grief Acknowledgment',
+  'Hospice Education',
+  'Role Boundary Safety',
+  'Clinical Escalation Judgment',
+  'Trust Building',
+  'Revocation Education',
+];
+
 describe('generateSkillScoreReport', () => {
   it('clinical liaison scenario returns 7 skill scores', () => {
     const result = generateSkillScoreReport(
@@ -110,6 +140,39 @@ describe('generateSkillScoreReport', () => {
     expect(result.scores.map((s) => s.category)).toEqual(MR_CATEGORIES);
   });
 
+  it('prognostic_uncertainty returns 7 skill scores with PU category names', () => {
+    const result = generateSkillScoreReport(
+      'prognostic_uncertainty',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scores).toHaveLength(7);
+    expect(result.scores.map((s) => s.category)).toEqual(PU_CATEGORIES);
+  });
+
+  it('esrd_comfort_care returns 7 skill scores with ESRD category names', () => {
+    const result = generateSkillScoreReport(
+      'esrd_comfort_care',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scores).toHaveLength(7);
+    expect(result.scores.map((s) => s.category)).toEqual(ESRD_CATEGORIES);
+  });
+
+  it('advanced_dementia_grief returns 7 skill scores with ADG category names', () => {
+    const result = generateSkillScoreReport(
+      'advanced_dementia_grief',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scores).toHaveLength(7);
+    expect(result.scores.map((s) => s.category)).toEqual(ADG_CATEGORIES);
+  });
+
   it('all scores from all scenario paths are within the 0–4 range', () => {
     const clResult = generateSkillScoreReport(
       'hospice_means_giving_up',
@@ -135,7 +198,26 @@ describe('generateSkillScoreReport', () => {
       emptyEvents,
       emptySnapshots
     );
-    [...clResult.scores, ...rnResult.scores, ...pmResult.scores, ...mrResult.scores].forEach((s) => {
+    const puResult = generateSkillScoreReport(
+      'prognostic_uncertainty',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    const esrdResult = generateSkillScoreReport(
+      'esrd_comfort_care',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    const adgResult = generateSkillScoreReport(
+      'advanced_dementia_grief',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    [...clResult.scores, ...rnResult.scores, ...pmResult.scores, ...mrResult.scores,
+     ...puResult.scores, ...esrdResult.scores, ...adgResult.scores].forEach((s) => {
       expect(s.score).toBeGreaterThanOrEqual(0);
       expect(s.score).toBeLessThanOrEqual(4);
     });

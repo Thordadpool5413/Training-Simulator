@@ -10,6 +10,7 @@ const baseState = patientStateDefaults['hospice_means_giving_up'];
 const rnBaseState = patientStateDefaults['terminal_dyspnea_follow_up'];
 const pmBaseState = patientStateDefaults['pain_management_concern'];
 const mrBaseState = patientStateDefaults['medication_refusal'];
+const puBaseState = patientStateDefaults['prognostic_uncertainty'];
 
 const learnerMessage: ConversationMessage = {
   id: 'msg-1',
@@ -179,6 +180,103 @@ describe('generateDashboardSummary', () => {
       [mrRecoverySnapshot]
     );
     expect(result.safetyFlagsResolved).toBe(1);
+  });
+
+  it('prognostic_uncertainty resolves scenarioTitle to Six Months Was Six Months Ago', () => {
+    const result = generateDashboardSummary(
+      'prognostic_uncertainty',
+      'clinical_liaison',
+      [learnerMessage],
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scenarioTitle).toBe('Six Months Was Six Months Ago');
+  });
+
+  it("esrd_comfort_care resolves scenarioTitle to He's Choosing to Die", () => {
+    const result = generateDashboardSummary(
+      'esrd_comfort_care',
+      'social_worker',
+      [learnerMessage],
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scenarioTitle).toBe("He's Choosing to Die");
+  });
+
+  it("advanced_dementia_grief resolves scenarioTitle to She Doesn't Know Who I Am Anymore", () => {
+    const result = generateDashboardSummary(
+      'advanced_dementia_grief',
+      'clinical_liaison',
+      [learnerMessage],
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scenarioTitle).toBe("She Doesn't Know Who I Am Anymore");
+  });
+
+  it('prognostic_uncertainty safetyFlagsResolved is 0 when no safety events exist', () => {
+    const result = generateDashboardSummary(
+      'prognostic_uncertainty',
+      'clinical_liaison',
+      [learnerMessage],
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.safetyFlagsResolved).toBe(0);
+  });
+
+  it('prognostic_uncertainty safetyFlagsResolved is 1 when routing recovery follows medication event', () => {
+    const puMedEvent = {
+      id: 'evt-pu-1',
+      scenarioId: 'prognostic_uncertainty',
+      learnerMessageText: 'We can increase her morphine.',
+      violationCategory: 'medication_outside_role' as const,
+      severity: 'critical_simulation_stop' as const,
+      message: 'Training Pause',
+      feedbackHook: null,
+      createdAt: '2026-01-01T10:01:00.000Z',
+    };
+    const puRecoverySnapshot = {
+      id: 'snap-pu-1',
+      scenarioId: 'prognostic_uncertainty',
+      learnerMessageId: 'msg-2',
+      stateBefore: puBaseState,
+      stateAfter: puBaseState,
+      detectedBehaviors: ['safe_medication_routing'],
+      stateChangeSummary: 'Learner routed medication question safely.',
+      createdAt: '2026-01-01T10:02:00.000Z',
+    };
+    const result = generateDashboardSummary(
+      'prognostic_uncertainty',
+      'clinical_liaison',
+      [learnerMessage],
+      [puMedEvent],
+      [puRecoverySnapshot]
+    );
+    expect(result.safetyFlagsResolved).toBe(1);
+  });
+
+  it('esrd_comfort_care safetyFlagsResolved is 0 when no safety events exist', () => {
+    const result = generateDashboardSummary(
+      'esrd_comfort_care',
+      'social_worker',
+      [learnerMessage],
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.safetyFlagsResolved).toBe(0);
+  });
+
+  it('advanced_dementia_grief safetyFlagsResolved is 0 when no safety events exist', () => {
+    const result = generateDashboardSummary(
+      'advanced_dementia_grief',
+      'clinical_liaison',
+      [learnerMessage],
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.safetyFlagsResolved).toBe(0);
   });
 
   it('terminal_dyspnea_follow_up safetyFlagsResolved is 1 after RN dose event followed by routing recovery', () => {

@@ -1,8 +1,11 @@
 import type { ConversationMessage, PatientState, PatientStateUpdateResult } from '@/types/simulator';
+import { updateAdvancedDementiaGriefPatientState } from '@/services/advancedDementiaGriefPatientStateService';
 import { updateCopdPatientState } from '@/services/copdPatientStateService';
+import { updateEsrdComfortCarePatientState } from '@/services/esrdComfortCarePatientStateService';
 import { updateMedicationRefusalPatientState } from '@/services/medicationRefusalPatientStateService';
 import { updatePainManagementPatientState } from '@/services/painManagementPatientStateService';
 import { updatePatientState } from '@/services/patientStateService';
+import { updatePrognosticUncertaintyPatientState } from '@/services/prognosticUncertaintyPatientStateService';
 
 export function updateScenarioPatientState(
   scenarioId: string,
@@ -18,6 +21,15 @@ export function updateScenarioPatientState(
   }
   if (scenarioId === 'medication_refusal') {
     return updateMedicationRefusalPatientState(currentState, learnerMessageText, conversationMessages);
+  }
+  if (scenarioId === 'prognostic_uncertainty') {
+    return updatePrognosticUncertaintyPatientState(currentState, learnerMessageText, conversationMessages);
+  }
+  if (scenarioId === 'esrd_comfort_care') {
+    return updateEsrdComfortCarePatientState(currentState, learnerMessageText, conversationMessages);
+  }
+  if (scenarioId === 'advanced_dementia_grief') {
+    return updateAdvancedDementiaGriefPatientState(currentState, learnerMessageText, conversationMessages);
   }
   return updatePatientState(currentState, learnerMessageText, conversationMessages);
 }

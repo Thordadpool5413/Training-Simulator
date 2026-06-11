@@ -1,5 +1,8 @@
+import { generateAdvancedDementiaGriefSkillScoreReport } from '@/services/advancedDementiaGriefScoringService';
+import { generateEsrdComfortCareSkillScoreReport } from '@/services/esrdComfortCareScoringService';
 import { generateMedicationRefusalSkillScoreReport } from '@/services/medicationRefusalScoringService';
 import { generatePainManagementSkillScoreReport } from '@/services/painManagementScoringService';
+import { generatePrognosticUncertaintySkillScoreReport } from '@/services/prognosticUncertaintyScoringService';
 import { generateRnSkillScoreReport } from '@/services/rnScoringService';
 import type {
   ConversationMessage,
@@ -422,6 +425,15 @@ export function generateSkillScoreReport(
   }
   if (scenarioId === 'medication_refusal') {
     return generateMedicationRefusalSkillScoreReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+  }
+  if (scenarioId === 'prognostic_uncertainty') {
+    return generatePrognosticUncertaintySkillScoreReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+  }
+  if (scenarioId === 'esrd_comfort_care') {
+    return generateEsrdComfortCareSkillScoreReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
+  }
+  if (scenarioId === 'advanced_dementia_grief') {
+    return generateAdvancedDementiaGriefSkillScoreReport(scenarioId, conversationMessages, safetyEvents, patientStateSnapshots);
   }
 
   const hadEmotionalAck = hasBehavior(patientStateSnapshots, 'emotional_acknowledgment');

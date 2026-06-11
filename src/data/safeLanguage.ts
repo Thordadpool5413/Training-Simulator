@@ -101,4 +101,39 @@ export const safeLanguage: SafeLanguageEntry[] = [
     context: 'RN, explaining when and how to call the hospice on-call team',
     text: 'You should call the hospice on-call team if the medication does not seem to be helping after the time your care plan says to wait, if the breathing is getting more distressed, or if you are not sure what to do next. You do not have to figure this out alone. That is exactly what the on-call team is there for.',
   },
+  {
+    id: 'cl_prognosis_estimate_reframe',
+    context: 'Clinical Liaison — reframing prognosis as estimate, not a countdown deadline',
+    text: 'Six months is the best estimate the hospice team can offer based on what they know about this illness. It is not a countdown clock. Some people do not reach six months. Some live well beyond it. The honest answer is that no one can tell you exactly when.',
+  },
+  {
+    id: 'cl_prognosis_family_routing',
+    context: 'Clinical Liaison — routing family gathering and end-of-life signs questions to hospice team',
+    text: 'The question of what signs to watch for and when to call the family is one I want to make sure the hospice nurse or social worker answers with you directly. They can walk you through what to look for and how to think about timing. I do not want to give you a guess on something that important.',
+  },
+  {
+    id: 'sw_autonomy_plain_language',
+    context: 'Social Worker — explaining patient right to refuse treatment in plain language',
+    text: 'Your father has the legal and ethical right to refuse any medical treatment, including dialysis. That right belongs to any adult who is able to make decisions for themselves. It is not something we can override, and it is not our role to change his mind or take sides in this.',
+  },
+  {
+    id: 'sw_values_elicitation',
+    context: 'Social Worker — inviting discussion of patient values and goals',
+    text: "I want to understand this from your father's perspective. What has he told you about why he made this choice? What matters most to him about how he lives and what his days look like?",
+  },
+  {
+    id: 'sw_capacity_routing',
+    context: 'Social Worker — routing decision-making capacity questions to clinical team',
+    text: "Questions about whether your father has the ability to make this decision — what his care team calls decision-making capacity — are medical and clinical assessments. Those need to come from his physician and clinical team, not from me. What I can do is help your family talk through what this decision means and what your father has said about what he wants.",
+  },
+  {
+    id: 'cl_ambiguous_grief_acknowledgment',
+    context: 'Clinical Liaison — acknowledging anticipatory grief and ambiguous loss in advanced dementia',
+    text: "What you are describing — that she is still here but the person you knew is not — is something families in your situation often carry. It is a kind of grief that does not fit the usual categories. You are mourning someone who is still alive, and that is one of the hardest things there is.",
+  },
+  {
+    id: 'cl_dementia_hospice_reframe',
+    context: 'Clinical Liaison — framing hospice for advanced dementia as dignity and presence, not abandonment',
+    text: "Choosing hospice for your mother does not mean giving up on her. It means bringing in a team focused on her comfort, her dignity, and reducing any distress she might feel — while giving you more support so you can actually be present with her instead of managing everything alone.",
+  },
 ];

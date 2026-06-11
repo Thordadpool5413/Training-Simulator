@@ -149,6 +149,65 @@ export const diagnoses: DiagnosisModule[] = [
     ],
   },
   {
+    id: 'als_terminal',
+    name: 'ALS (Amyotrophic Lateral Sclerosis)',
+    everydayLanguage:
+      'He is living with a disease that progressively weakens the muscles that control movement, speech, swallowing, and eventually breathing — and there is currently no treatment that stops or reverses it.',
+    declinePattern:
+      'Gradual loss of function in specific muscle groups, with the rate and sequence of progression varying from person to person. Most people eventually lose the ability to swallow safely and to breathe without assistance.',
+    commonSymptoms: [
+      'Progressive muscle weakness.',
+      'Difficulty speaking or being understood.',
+      'Difficulty swallowing.',
+      'Shortness of breath or breathing difficulty.',
+      'Fatigue.',
+      'Emotional lability.',
+      'Deep grief about the loss of function and identity.',
+    ],
+    familyMisconceptions: [
+      'He is still mentally sharp, so he must be managing.',
+      'If he keeps his spirits up, the disease will slow down.',
+      'Hospice is for people who have already stopped fighting.',
+      'Ventilator support means the disease is being treated.',
+    ],
+    trainingObjectives: [
+      'Acknowledge the spiritual and existential weight of ALS.',
+      'Explain that hospice in ALS focuses on comfort and quality of life, not acceleration of death.',
+      'Validate the family\'s helplessness without minimizing what can still be done.',
+      'Avoid implying that spiritual distress has a simple resolution.',
+      'Route clinical questions about breathing support and swallowing to the appropriate team members.',
+    ],
+  },
+  {
+    id: 'esrd_comfort_transition',
+    name: 'End Stage Renal Disease — Comfort Transition',
+    everydayLanguage:
+      'His kidneys have stopped functioning and he has been receiving dialysis to do what his kidneys cannot. He has decided he no longer wants dialysis, which means his care focus will shift entirely to comfort and quality of life.',
+    declinePattern:
+      'Without dialysis, the body accumulates waste products and fluid. Most patients with ESRD who stop dialysis experience a gradual decline over one to three weeks, with increasing sleepiness and decreased awareness as the primary pattern. Per CMS LCD L34559, stopping dialysis with ESRD typically carries a prognosis of six months or less.',
+    commonSymptoms: [
+      'Fatigue and weakness.',
+      'Decreased alertness.',
+      'Reduced appetite and thirst.',
+      'Fluid retention.',
+      'Nausea.',
+      'Increasing sleepiness and restfulness as the body slows down.',
+    ],
+    familyMisconceptions: [
+      'Stopping dialysis is the same as choosing to die.',
+      'He must not be thinking clearly to make this choice.',
+      'If he really wanted to live, he would continue dialysis.',
+      'Comfort care means giving up on him.',
+    ],
+    trainingObjectives: [
+      'Explain the difference between refusing life-sustaining treatment and choosing death.',
+      'Clarify that stopping dialysis is a legally and ethically recognized autonomous choice.',
+      'Acknowledge the family\'s grief and fear without taking sides.',
+      'Avoid implying the patient lacks decision-making capacity.',
+      'Route clinical questions about the expected course to the hospice medical team.',
+    ],
+  },
+  {
     id: 'end_stage_copd',
     name: 'End stage COPD',
     everydayLanguage:

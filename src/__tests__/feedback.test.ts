@@ -102,6 +102,69 @@ describe('generateFeedbackReport — suggestedWording', () => {
     expect(result.suggestedWording[0]).toBe(expected);
   });
 
+  it('prognostic_uncertainty returns 2 suggested wording entries', () => {
+    const result = generateFeedbackReport(
+      'prognostic_uncertainty',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.suggestedWording).toHaveLength(2);
+  });
+
+  it('prognostic_uncertainty first entry matches cl_prognosis_estimate_reframe text', () => {
+    const result = generateFeedbackReport(
+      'prognostic_uncertainty',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    const expected = safeLanguage.find((e) => e.id === 'cl_prognosis_estimate_reframe')!.text;
+    expect(result.suggestedWording[0]).toBe(expected);
+  });
+
+  it('esrd_comfort_care returns 3 suggested wording entries', () => {
+    const result = generateFeedbackReport(
+      'esrd_comfort_care',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.suggestedWording).toHaveLength(3);
+  });
+
+  it('esrd_comfort_care first entry matches sw_autonomy_plain_language text', () => {
+    const result = generateFeedbackReport(
+      'esrd_comfort_care',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    const expected = safeLanguage.find((e) => e.id === 'sw_autonomy_plain_language')!.text;
+    expect(result.suggestedWording[0]).toBe(expected);
+  });
+
+  it('advanced_dementia_grief returns 3 suggested wording entries', () => {
+    const result = generateFeedbackReport(
+      'advanced_dementia_grief',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.suggestedWording).toHaveLength(3);
+  });
+
+  it('advanced_dementia_grief first entry matches cl_ambiguous_grief_acknowledgment text', () => {
+    const result = generateFeedbackReport(
+      'advanced_dementia_grief',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    const expected = safeLanguage.find((e) => e.id === 'cl_ambiguous_grief_acknowledgment')!.text;
+    expect(result.suggestedWording[0]).toBe(expected);
+  });
+
   it('terminal_dyspnea_follow_up suggestedWording does not include CL-only wording', () => {
     const result = generateFeedbackReport(
       'terminal_dyspnea_follow_up',

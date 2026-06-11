@@ -238,6 +238,124 @@ export const scenarioTemplates: ScenarioTemplate[] = [
     patientStateDefaultId: 'medication_refusal',
   },
   {
+    id: 'prognostic_uncertainty',
+    title: 'Six Months Was Six Months Ago',
+    allowedRoleId: 'clinical_liaison',
+    setting: 'Outpatient care coordination office',
+    patient: {
+      name: 'Rose Fitzgerald',
+      age: 74,
+    },
+    knownDiagnosisId: 'advanced_pancreatic_cancer',
+    recentClinicalChange:
+      "Rose's oncologist said approximately six months when hospice was discussed six months ago. She has stabilized somewhat and is still at home, alert, and having some good days. Her son David has been tracking the six-month mark obsessively and called this morning in a panic.",
+    whoIsPresent: ['David, her son'],
+    learnerObjective:
+      "Acknowledge David's fear and the catastrophic thinking that the prognosis countdown has expired. Explain what a prognosis estimate means — it is not a precise clock, it is a clinical estimate based on patterns. Avoid both false precision (giving a new number) and false hope (implying the prognosis no longer applies). Stay within Clinical Liaison role and route prognosis questions to the physician. Help David focus on what is present rather than what is expected.",
+    roleReminder:
+      'You are a Clinical Liaison. You may explain what a prognosis means in plain language. You should not state a prognosis, give a new time estimate, or suggest the prognosis has changed. Prognosis questions should go to the hospice physician or oncologist. Do not provide medication guidance.',
+    hiddenFamilyFear:
+      "David has been mentally treating the six-month mark as a countdown clock and now believes his mother should have died six months ago. He is catastrophizing — expecting her to die today or tomorrow — and is terrified that every phone call is the last. He does not understand that a prognosis is a statistical estimate, not a promise or a deadline.",
+    openingSpeakerName: 'David',
+    openingLine:
+      'The doctor said six months. It has been six months. That means she is going to die any day now, right? Should I be there? Should I have everyone come?',
+    successCriteria: [
+      "Acknowledges David's fear before explaining anything.",
+      'Explains that a prognosis is an estimate, not a countdown clock.',
+      'Avoids giving a new time estimate or suggesting the prognosis has passed.',
+      'Maintains honest uncertainty without giving false hope.',
+      'Routes the specific prognosis question to the physician.',
+      'Redirects David toward presence and quality time rather than countdown anxiety.',
+    ],
+    failureCriteria: [
+      'States a specific time estimate.',
+      'Implies or says her prognosis has changed or extended.',
+      'Fails to acknowledge the emotional weight of the question.',
+      'Dismisses the prognosis entirely.',
+      'Provides medication guidance outside the Clinical Liaison role.',
+    ],
+    patientStateDefaultId: 'prognostic_uncertainty',
+  },
+  {
+    id: 'esrd_comfort_care',
+    title: "He's Choosing to Die",
+    allowedRoleId: 'social_worker',
+    setting: 'Hospital family consultation room',
+    patient: {
+      name: 'Robert Hayes',
+      age: 74,
+    },
+    knownDiagnosisId: 'esrd_comfort_transition',
+    recentClinicalChange:
+      "Robert has ESRD and has been on dialysis three times a week for four years. Last week he told his care team he wants to stop. His physician has confirmed he has decision-making capacity. His son James flew in immediately and is demanding to speak with someone from the hospice social work team.",
+    whoIsPresent: ['James Hayes, his son'],
+    learnerObjective:
+      "Acknowledge James's grief and fear. Explain the difference between refusing life-sustaining treatment and choosing death. Explain what decision-making capacity means — without making a clinical determination. Offer to facilitate a family meeting with the clinical team. Stay neutral and do not take sides in the decision. Route clinical questions about prognosis and medical details to the physician.",
+    roleReminder:
+      'You are a Social Worker. You may acknowledge emotional distress, explain patient autonomy and the right to refuse life-sustaining treatment, and offer to facilitate a family meeting. You should not make clinical capacity determinations, take sides in the family conflict, provide medication guidance, or tell anyone what Robert should decide.',
+    hiddenFamilyFear:
+      "James believes his father either lacks capacity or is depressed. He cannot accept that his father, fully competent, is choosing to end dialysis. His anger is covering terror that he is about to lose his father and guilt that he was not present enough to prevent this decision.",
+    openingSpeakerName: 'James',
+    openingLine:
+      'He wants to stop dialysis. His doctor says he has the right. But that is just choosing to die. How can you sit there and let him do this? He is not in his right mind.',
+    successCriteria: [
+      "Acknowledges James's grief and the weight of what he is hearing.",
+      'Explains the difference between refusing life-sustaining treatment and suicide.',
+      "Explains what decision-making capacity means without overriding the physician's determination.",
+      'Stays neutral — does not side with the patient or with James.',
+      'Offers to facilitate a family meeting with Robert and the clinical team.',
+      'Avoids medication guidance outside Social Worker role.',
+    ],
+    failureCriteria: [
+      'Tells James his father is making the right choice.',
+      'Agrees with James that the decision suggests the father lacks capacity.',
+      'Takes a position on what Robert should decide.',
+      'Moves to paperwork or logistics before addressing the emotional reality.',
+      'Provides medication guidance outside Social Worker role.',
+    ],
+    patientStateDefaultId: 'esrd_comfort_care',
+  },
+  {
+    id: 'advanced_dementia_grief',
+    title: "She Doesn't Know Who I Am Anymore",
+    allowedRoleId: 'clinical_liaison',
+    setting: 'Outpatient care coordination office',
+    patient: {
+      name: 'Ruth Wheeler',
+      age: 87,
+    },
+    knownDiagnosisId: 'advanced_dementia',
+    recentClinicalChange:
+      "Ruth has advanced Alzheimer's. She no longer recognizes her daughter Anne on most visits, has stopped eating reliably, and requires full assistance with all daily activities. Her physician has recommended a goals of care conversation and noted she may meet hospice eligibility criteria. Anne called the Clinical Liaison after the appointment.",
+    whoIsPresent: ['Anne, her daughter'],
+    learnerObjective:
+      "Acknowledge Anne's grief — she has been losing her mother slowly for years and the pain of not being recognized is profound. Normalize anticipatory grief. Explain that dementia is a terminal illness and that hospice eligibility is not a punishment or a defeat. Explain the hospice revocation option. Avoid pressuring toward a decision. Stay within Clinical Liaison role boundaries.",
+    roleReminder:
+      'You are a Clinical Liaison. You may explain what hospice supports, how dementia qualifies, and that hospice can be elected and revoked. You should not determine eligibility, make prognosis statements, provide medication guidance, or pressure Anne toward or away from a decision.',
+    hiddenFamilyFear:
+      "Anne has been grieving her mother's dementia for years. She carries guilt about the relief she sometimes feels when she imagines the end. She fears that agreeing to hospice means she is choosing her own relief over her mother's life. She has also never been told that dementia is a terminal illness.",
+    openingSpeakerName: 'Anne',
+    openingLine:
+      'She looked right at me today and had no idea who I was. She is still breathing but the person I knew is already gone. How can I put her in hospice? It feels like I am burying her twice.',
+    successCriteria: [
+      "Acknowledges Anne's anticipatory grief before explaining anything.",
+      'Validates the grief of losing someone before they die.',
+      'Explains that dementia is a terminal illness in plain language.',
+      'Explains hospice as support rather than abandonment.',
+      'Mentions revocation as an option without leading with it.',
+      'Avoids pressuring Anne toward a hospice decision.',
+      'Avoids medication guidance outside the Clinical Liaison role.',
+    ],
+    failureCriteria: [
+      'Lists hospice services before addressing grief.',
+      'Tells Anne she should choose hospice.',
+      'Fails to acknowledge the long grief arc of dementia caregiving.',
+      'Makes a prognosis statement.',
+      'Provides medication guidance outside the Clinical Liaison role.',
+    ],
+    patientStateDefaultId: 'advanced_dementia_grief',
+  },
+  {
     id: 'can_change_minds',
     title: 'Can We Change Our Minds?',
     allowedRoleId: 'clinical_liaison',

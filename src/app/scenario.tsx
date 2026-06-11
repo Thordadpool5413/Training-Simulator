@@ -1,5 +1,6 @@
 import { router } from 'expo-router';
 import type { Href } from 'expo-router';
+import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -8,9 +9,26 @@ import { diagnoses } from '@/data/diagnoses';
 import { roles } from '@/data/roles';
 import { scenarioTemplates } from '@/data/scenarioTemplates';
 import { useSimulator } from '@/state/SimulatorContext';
+import type { ScenarioDifficulty } from '@/types/simulator';
+
+type DifficultyFilter = ScenarioDifficulty | 'all';
+
+const DIFFICULTY_FILTERS: { value: DifficultyFilter; label: string }[] = [
+  { value: 'all', label: 'All' },
+  { value: 'beginner', label: 'Beginner' },
+  { value: 'intermediate', label: 'Intermediate' },
+  { value: 'advanced', label: 'Advanced' },
+];
+
+const DIFFICULTY_COLORS: Record<ScenarioDifficulty, string> = {
+  beginner: SimulatorColors.scoreGreen,
+  intermediate: '#B45309',
+  advanced: SimulatorColors.scoreOrange,
+};
 
 export default function ScenarioScreen() {
-  const { selectedRoleId, setSelectedScenarioId } = useSimulator();
+  const { selectedRoleId, setSelectedScenarioId, completedSessions } = useSimulator();
+  const [difficultyFilter, setDifficultyFilter] = useState<DifficultyFilter>('all');
 
   if (!selectedRoleId) {
     return (
@@ -28,9 +46,12 @@ export default function ScenarioScreen() {
     );
   }
 
-  const availableScenarios = scenarioTemplates.filter((s) => s.allowedRoleId === selectedRoleId);
+  const roleScenarios = scenarioTemplates.filter((s) => s.allowedRoleId === selectedRoleId);
+  const availableScenarios = difficultyFilter === 'all'
+    ? roleScenarios
+    : roleScenarios.filter((s) => s.difficulty === difficultyFilter);
 
-  if (availableScenarios.length === 0) {
+  if (roleScenarios.length === 0) {
     return (
       <SafeAreaView style={styles.safe}>
         <View style={styles.errorContainer}>
@@ -52,8 +73,6 @@ export default function ScenarioScreen() {
   }
 
   const selectedRole = roles.find((r) => r.id === selectedRoleId);
-  const scenarioCount = availableScenarios.length;
-  const scenarioCountLabel = scenarioCount === 1 ? '1 scenario' : `${scenarioCount} scenarios`;
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -68,23 +87,60 @@ export default function ScenarioScreen() {
           </Pressable>
         </View>
         <Text style={styles.roleLabel}>Role: {selectedRole?.name ?? selectedRoleId}</Text>
-        <Text style={styles.subtitle}>
-          {scenarioCountLabel} — choose the scenario you will practice.
-        </Text>
+
+        <View style={styles.filterRow}>
+          {DIFFICULTY_FILTERS.map((f) => (
+            <Pressable
+              key={f.value}
+              style={[styles.filterChip, difficultyFilter === f.value && styles.filterChipActive]}
+              accessibilityRole="button"
+              onPress={() => setDifficultyFilter(f.value)}>
+              <Text style={[styles.filterText, difficultyFilter === f.value && styles.filterTextActive]}>
+                {f.label}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+
+        {availableScenarios.length === 0 && (
+          <Text style={styles.emptyFilter}>
+            No {difficultyFilter} scenarios for this role. Try a different filter.
+          </Text>
+        )}
 
         {availableScenarios.map((scenario) => {
           const diagnosis = diagnoses.find((d) => d.id === scenario.knownDiagnosisId);
+          const completed = completedSessions.find(
+            (s) => s.scenarioId === scenario.id && s.roleId === selectedRoleId
+          );
           return (
             <Pressable
               key={scenario.id}
               style={({ pressed }) => [
                 styles.card,
                 pressed && styles.cardPressed,
+                completed != null && styles.cardCompleted,
               ]}
               accessibilityRole="button"
               accessibilityLabel={`${scenario.title}, ${scenario.patient.name}, age ${scenario.patient.age}, ${scenario.setting}`}
               onPress={() => handleSelect(scenario.id)}>
-              <Text style={styles.scenarioTitle}>{scenario.title}</Text>
+              <View style={styles.cardHeader}>
+                <Text style={styles.scenarioTitle}>{scenario.title}</Text>
+                <View style={styles.badgeRow}>
+                  {scenario.difficulty != null && (
+                    <View style={[styles.diffBadge, { backgroundColor: diffBadgeBg(scenario.difficulty) }]}>
+                      <Text style={[styles.diffBadgeText, { color: DIFFICULTY_COLORS[scenario.difficulty] }]}>
+                        {scenario.difficulty}
+                      </Text>
+                    </View>
+                  )}
+                  {completed != null && (
+                    <View style={styles.doneBadge}>
+                      <Text style={styles.doneBadgeText}>✓ {completed.overallScore.toFixed(1)}</Text>
+                    </View>
+                  )}
+                </View>
+              </View>
               <Text style={styles.scenarioMeta}>
                 {scenario.patient.name}, age {scenario.patient.age} · {scenario.setting}
               </Text>
@@ -100,6 +156,14 @@ export default function ScenarioScreen() {
       </ScrollView>
     </SafeAreaView>
   );
+}
+
+function diffBadgeBg(difficulty: ScenarioDifficulty): string {
+  switch (difficulty) {
+    case 'beginner': return SimulatorColors.greenBackground;
+    case 'intermediate': return '#FEF3C7';
+    case 'advanced': return '#FEF2F2';
+  }
 }
 
 const styles = StyleSheet.create({
@@ -131,12 +195,40 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: SimulatorColors.textSecondary,
     lineHeight: 20,
-    marginBottom: 4,
+    marginBottom: 12,
   },
-  subtitle: {
+  filterRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 20,
+    flexWrap: 'wrap',
+  },
+  filterChip: {
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    borderRadius: Radius.lg,
+    borderWidth: 1,
+    borderColor: SimulatorColors.borderInput,
+    backgroundColor: SimulatorColors.surface,
+  },
+  filterChipActive: {
+    backgroundColor: SimulatorColors.brand,
+    borderColor: SimulatorColors.brand,
+  },
+  filterText: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: SimulatorColors.textBody,
+  },
+  filterTextActive: {
+    color: SimulatorColors.textOnBrand,
+    fontWeight: '700',
+  },
+  emptyFilter: {
     fontSize: 15,
     color: SimulatorColors.textSecondary,
-    marginBottom: 28,
+    textAlign: 'center',
+    paddingVertical: 32,
     lineHeight: 22,
   },
   card: {
@@ -151,11 +243,49 @@ const styles = StyleSheet.create({
     backgroundColor: SimulatorColors.brandTint,
     borderColor: SimulatorColors.brand,
   },
+  cardCompleted: {
+    borderLeftWidth: 3,
+    borderLeftColor: SimulatorColors.scoreGreen,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 6,
+    gap: 8,
+  },
   scenarioTitle: {
     fontSize: 17,
     fontWeight: '700',
     color: SimulatorColors.textPrimary,
-    marginBottom: 6,
+    flex: 1,
+  },
+  badgeRow: {
+    flexDirection: 'row',
+    gap: 6,
+    alignItems: 'center',
+    flexShrink: 0,
+  },
+  diffBadge: {
+    borderRadius: Radius.sm,
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+  },
+  diffBadgeText: {
+    fontSize: 11,
+    fontWeight: '600',
+    textTransform: 'capitalize',
+  },
+  doneBadge: {
+    backgroundColor: SimulatorColors.greenBackground,
+    borderRadius: Radius.sm,
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+  },
+  doneBadgeText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: SimulatorColors.scoreGreen,
   },
   scenarioMeta: {
     fontSize: 13,

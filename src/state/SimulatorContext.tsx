@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useRef, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import type {
   CompletedSession,
   ConversationMessage,
@@ -8,6 +8,14 @@ import type {
   SafetyEvent,
 } from '@/types/simulator';
 import type { QuizResult } from '@/types/quiz';
+import {
+  loadCompletedSessions,
+  loadLearnerProfile,
+  loadQuizResult,
+  saveCompletedSessions,
+  saveLearnerProfile,
+  saveQuizResult,
+} from '@/services/persistenceService';
 
 interface SimulatorState {
   selectedRoleId: string | null;
@@ -33,7 +41,7 @@ interface SimulatorState {
   setCurrentPatientState: (state: PatientState) => void;
   appendPatientStateSnapshot: (snapshot: PatientStateSnapshot) => void;
   setQuizResult: (result: QuizResult) => void;
-  recordCompletedSession: (session: Omit<CompletedSession, 'id' | 'completedAt'>) => void;
+  recordCompletedSession: (session: Omit<CompletedSession, 'id' | 'completedAt' | 'previousScore'>) => void;
   resetSimulationSession: () => void;
 }
 
@@ -41,7 +49,7 @@ const SimulatorContext = createContext<SimulatorState | null>(null);
 
 export function SimulatorProvider({ children }: { children: React.ReactNode }) {
   const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);
-  const [learnerProfile, setLearnerProfile] = useState<LearnerProfile | null>(null);
+  const [learnerProfile, setLearnerProfileState] = useState<LearnerProfile | null>(null);
   const [selectedScenarioId, setSelectedScenarioIdInternal] = useState<string | null>(null);
   const [activeScenarioId, setActiveScenarioId] = useState<string | null>(null);
   const [conversationMessages, setConversationMessages] = useState<ConversationMessage[]>([]);
@@ -50,8 +58,43 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
   const [patientStateSnapshots, setPatientStateSnapshots] = useState<PatientStateSnapshot[]>([]);
   const [quizResult, setQuizResultInternal] = useState<QuizResult | null>(null);
   const [completedSessions, setCompletedSessions] = useState<CompletedSession[]>([]);
+  const [hydrated, setHydrated] = useState(false);
 
   const sessionIdCounter = useRef(0);
+
+  // Load persisted state once on mount
+  useEffect(() => {
+    async function hydrate() {
+      const [profile, sessions, quiz] = await Promise.all([
+        loadLearnerProfile(),
+        loadCompletedSessions(),
+        loadQuizResult(),
+      ]);
+      if (profile) setLearnerProfileState(profile);
+      if (sessions.length > 0) setCompletedSessions(sessions);
+      if (quiz) setQuizResultInternal(quiz);
+      setHydrated(true);
+    }
+    void hydrate();
+  }, []);
+
+  // Persist learnerProfile changes after hydration
+  useEffect(() => {
+    if (!hydrated || !learnerProfile) return;
+    void saveLearnerProfile(learnerProfile);
+  }, [learnerProfile, hydrated]);
+
+  // Persist completedSessions changes after hydration
+  useEffect(() => {
+    if (!hydrated) return;
+    void saveCompletedSessions(completedSessions);
+  }, [completedSessions, hydrated]);
+
+  // Persist quizResult changes after hydration
+  useEffect(() => {
+    if (!hydrated || !quizResult) return;
+    void saveQuizResult(quizResult);
+  }, [quizResult, hydrated]);
 
   function startSimulationSession(
     scenarioId: string,
@@ -91,16 +134,26 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
     setQuizResultInternal(result);
   }, []);
 
+  const setLearnerProfile = useCallback((profile: LearnerProfile): void => {
+    setLearnerProfileState(profile);
+  }, []);
+
   const recordCompletedSession = useCallback(
-    (session: Omit<CompletedSession, 'id' | 'completedAt'>): void => {
+    (session: Omit<CompletedSession, 'id' | 'completedAt' | 'previousScore'>): void => {
       sessionIdCounter.current += 1;
-      const full: CompletedSession = {
-        ...session,
-        id: `session_${sessionIdCounter.current}_${Date.now()}`,
-        completedAt: new Date().toISOString(),
-      };
       setCompletedSessions((prev) => {
-        const withoutDuplicate = prev.filter((s) => s.scenarioId !== session.scenarioId || s.roleId !== session.roleId);
+        const existing = prev.find(
+          (s) => s.scenarioId === session.scenarioId && s.roleId === session.roleId
+        );
+        const full: CompletedSession = {
+          ...session,
+          id: `session_${sessionIdCounter.current}_${Date.now()}`,
+          completedAt: new Date().toISOString(),
+          previousScore: existing?.overallScore,
+        };
+        const withoutDuplicate = prev.filter(
+          (s) => s.scenarioId !== session.scenarioId || s.roleId !== session.roleId
+        );
         return [...withoutDuplicate, full];
       });
     },

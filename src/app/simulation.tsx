@@ -16,6 +16,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Radius, SimulatorColors } from '@/constants/theme';
 import { patientStateDefaults } from '@/data/patientStateDefaults';
 import { roles } from '@/data/roles';
+import { safeLanguage } from '@/data/safeLanguage';
+import { scenarioHints } from '@/data/scenarioHints';
 import { scenarioTemplates } from '@/data/scenarioTemplates';
 import { checkMedicationSafety } from '@/services/medicationSafetyService';
 import { updateScenarioPatientState } from '@/services/patientStateDispatcher';
@@ -53,7 +55,22 @@ export default function SimulationScreen() {
     : null;
 
   const [inputText, setInputText] = useState('');
+  const [hintIndex, setHintIndex] = useState(0);
+  const [hintVisible, setHintVisible] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
+
+  const hintIds = scenario ? (scenarioHints[scenario.id] ?? []) : [];
+  const currentHintText = hintIds.length > 0
+    ? (safeLanguage.find((e) => e.id === hintIds[hintIndex % hintIds.length])?.text ?? null)
+    : null;
+
+  function handleHint() {
+    if (!hintVisible) {
+      setHintVisible(true);
+    } else {
+      setHintIndex((i) => (i + 1) % Math.max(hintIds.length, 1));
+    }
+  }
 
   useEffect(() => {
     scrollViewRef.current?.scrollToEnd({ animated: true });
@@ -238,8 +255,38 @@ export default function SimulationScreen() {
           ))}
         </ScrollView>
 
+        {/* Hint banner */}
+        {hintVisible && currentHintText != null && (
+          <View style={styles.hintBanner}>
+            <View style={styles.hintHeader}>
+              <Text style={styles.hintLabel}>Suggested Language</Text>
+              <Pressable
+                onPress={() => setHintVisible(false)}
+                accessibilityRole="button"
+                accessibilityLabel="Dismiss hint">
+                <Text style={styles.hintDismiss}>✕</Text>
+              </Pressable>
+            </View>
+            <Text style={styles.hintText}>{currentHintText}</Text>
+            {hintIds.length > 1 && (
+              <Pressable onPress={handleHint} accessibilityRole="button">
+                <Text style={styles.hintNext}>Next hint ({hintIndex % hintIds.length + 1}/{hintIds.length})</Text>
+              </Pressable>
+            )}
+          </View>
+        )}
+
         {/* Input bar */}
         <View style={styles.inputBar}>
+          {currentHintText != null && (
+            <Pressable
+              style={styles.hintButton}
+              accessibilityRole="button"
+              accessibilityLabel="Show language hint"
+              onPress={handleHint}>
+              <Text style={styles.hintButtonText}>Hint</Text>
+            </Pressable>
+          )}
           <TextInput
             style={styles.textInput}
             value={inputText}
@@ -425,6 +472,56 @@ const styles = StyleSheet.create({
     color: SimulatorColors.textOnBrand,
     fontSize: 15,
     fontWeight: '600',
+  },
+  hintButton: {
+    backgroundColor: SimulatorColors.indigoBackground,
+    borderRadius: Radius.md,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderWidth: 1,
+    borderColor: SimulatorColors.indigoBorder,
+  },
+  hintButtonText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: SimulatorColors.indigoLabel,
+  },
+  hintBanner: {
+    backgroundColor: SimulatorColors.indigoBackground,
+    borderTopWidth: 1,
+    borderTopColor: SimulatorColors.indigoBorder,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    gap: 6,
+  },
+  hintHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  hintLabel: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: SimulatorColors.indigoLabel,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  hintDismiss: {
+    fontSize: 14,
+    color: SimulatorColors.textSecondary,
+    paddingHorizontal: 4,
+  },
+  hintText: {
+    fontSize: 14,
+    color: SimulatorColors.indigoText,
+    lineHeight: 20,
+    fontStyle: 'italic',
+  },
+  hintNext: {
+    fontSize: 12,
+    color: SimulatorColors.brand,
+    fontWeight: '600',
+    marginTop: 2,
   },
 });
 

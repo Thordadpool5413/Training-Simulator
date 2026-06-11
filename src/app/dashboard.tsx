@@ -20,6 +20,7 @@ export default function DashboardScreen() {
     patientStateSnapshots,
     quizResult,
     completedSessions,
+    setSelectedScenarioId,
   } = useSimulator();
 
   const hasSession =
@@ -128,11 +129,26 @@ export default function DashboardScreen() {
           </SectionCard>
         )}
 
+        {summary.nextRecommendedScenarioId != null && (
+          <Pressable
+            style={styles.practiceAgainButton}
+            accessibilityRole="button"
+            onPress={() => {
+              setSelectedScenarioId(summary.nextRecommendedScenarioId!);
+              router.push('/scenario-briefing' as Href);
+            }}>
+            <Text style={styles.practiceAgainButtonText}>
+              Practice: {scenarioTemplates.find((s) => s.id === summary.nextRecommendedScenarioId)?.title ?? 'Next Scenario'}
+            </Text>
+          </Pressable>
+        )}
         <Pressable
-          style={styles.practiceAgainButton}
+          style={[styles.practiceAgainButton, summary.nextRecommendedScenarioId != null && styles.secondaryButton]}
           accessibilityRole="button"
           onPress={() => router.push('/scenario' as Href)}>
-          <Text style={styles.practiceAgainButtonText}>Practice Again</Text>
+          <Text style={[styles.practiceAgainButtonText, summary.nextRecommendedScenarioId != null && styles.secondaryButtonText]}>
+            Browse All Scenarios
+          </Text>
         </Pressable>
         <Pressable
           style={[styles.button, styles.returnButton]}
@@ -147,6 +163,10 @@ export default function DashboardScreen() {
 
 function MasteryRow({ title, session }: { title: string; session: CompletedSession | undefined }) {
   const done = session != null;
+  const delta =
+    done && session.previousScore != null
+      ? session.overallScore - session.previousScore
+      : null;
   return (
     <View style={masteryStyles.row}>
       <View style={[masteryStyles.dot, done ? masteryStyles.dotDone : masteryStyles.dotEmpty]} />
@@ -154,7 +174,14 @@ function MasteryRow({ title, session }: { title: string; session: CompletedSessi
         {title}
       </Text>
       {done && (
-        <Text style={masteryStyles.score}>{session.overallScore.toFixed(1)}</Text>
+        <View style={masteryStyles.scoreCell}>
+          <Text style={masteryStyles.score}>{session.overallScore.toFixed(1)}</Text>
+          {delta != null && delta !== 0 && (
+            <Text style={[masteryStyles.delta, delta > 0 ? masteryStyles.deltaUp : masteryStyles.deltaDown]}>
+              {delta > 0 ? `+${delta.toFixed(1)}` : delta.toFixed(1)}
+            </Text>
+          )}
+        </View>
       )}
     </View>
   );
@@ -223,17 +250,25 @@ const styles = StyleSheet.create({
     color: SimulatorColors.textPrimary,
   },
   practiceAgainButton: {
-    backgroundColor: SimulatorColors.surface,
+    backgroundColor: SimulatorColors.brand,
     borderRadius: Radius.md,
     paddingVertical: 14,
     alignItems: 'center',
+    paddingHorizontal: 12,
+  },
+  practiceAgainButtonText: {
+    color: SimulatorColors.textOnBrand,
+    fontSize: 15,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  secondaryButton: {
+    backgroundColor: SimulatorColors.surface,
     borderWidth: 1,
     borderColor: SimulatorColors.brand,
   },
-  practiceAgainButtonText: {
+  secondaryButtonText: {
     color: SimulatorColors.brand,
-    fontSize: 16,
-    fontWeight: '600',
   },
   button: {
     backgroundColor: SimulatorColors.brand,
@@ -372,11 +407,25 @@ const masteryStyles = StyleSheet.create({
   titleMuted: {
     color: SimulatorColors.textSecondary,
   },
+  scoreCell: {
+    alignItems: 'flex-end',
+    minWidth: 48,
+  },
   score: {
     fontSize: 13,
     fontWeight: '700',
     color: SimulatorColors.brand,
-    width: 32,
     textAlign: 'right',
+  },
+  delta: {
+    fontSize: 11,
+    fontWeight: '600',
+    textAlign: 'right',
+  },
+  deltaUp: {
+    color: SimulatorColors.scoreGreen,
+  },
+  deltaDown: {
+    color: SimulatorColors.scoreOrange,
   },
 });

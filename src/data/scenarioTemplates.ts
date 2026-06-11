@@ -5,6 +5,7 @@ export const scenarioTemplates: ScenarioTemplate[] = [
     id: 'hospice_means_giving_up',
     title: 'Hospice Means Giving Up',
     allowedRoleId: 'clinical_liaison',
+    difficulty: 'beginner',
     setting: 'Hospital room',
     patient: {
       name: 'Robert Mason',
@@ -44,6 +45,7 @@ export const scenarioTemplates: ScenarioTemplate[] = [
     id: 'copd_air_hunger_at_home',
     title: 'COPD Air Hunger at Home',
     allowedRoleId: 'rn',
+    difficulty: 'intermediate',
     setting: 'Patient home',
     patient: {
       name: 'Harold Voss',
@@ -84,6 +86,7 @@ export const scenarioTemplates: ScenarioTemplate[] = [
     id: 'hospice_too_soon',
     title: 'Hospice Is Only for the Last Few Days',
     allowedRoleId: 'clinical_liaison',
+    difficulty: 'beginner',
     setting: 'Hospital room',
     patient: {
       name: 'Gloria Santos',
@@ -123,6 +126,7 @@ export const scenarioTemplates: ScenarioTemplate[] = [
     id: 'terminal_dyspnea_follow_up',
     title: 'Terminal Dyspnea Follow Up Conversation',
     allowedRoleId: 'rn',
+    difficulty: 'intermediate',
     setting: 'Patient home, follow-up visit',
     patient: {
       name: 'Eleanor Marsh',
@@ -162,6 +166,7 @@ export const scenarioTemplates: ScenarioTemplate[] = [
     id: 'pain_management_concern',
     title: 'Why Is He Still in Pain?',
     allowedRoleId: 'clinical_liaison',
+    difficulty: 'intermediate',
     setting: 'Hospital room',
     patient: {
       name: 'Arthur Williams',
@@ -201,6 +206,7 @@ export const scenarioTemplates: ScenarioTemplate[] = [
     id: 'medication_refusal',
     title: 'She Won\'t Take the Medicine',
     allowedRoleId: 'rn',
+    difficulty: 'advanced',
     setting: 'Patient home',
     patient: {
       name: 'Dorothy Chen',
@@ -241,6 +247,7 @@ export const scenarioTemplates: ScenarioTemplate[] = [
     id: 'prognostic_uncertainty',
     title: 'Six Months Was Six Months Ago',
     allowedRoleId: 'clinical_liaison',
+    difficulty: 'advanced',
     setting: 'Outpatient care coordination office',
     patient: {
       name: 'Rose Fitzgerald',
@@ -280,6 +287,7 @@ export const scenarioTemplates: ScenarioTemplate[] = [
     id: 'esrd_comfort_care',
     title: "He's Choosing to Die",
     allowedRoleId: 'social_worker',
+    difficulty: 'advanced',
     setting: 'Hospital family consultation room',
     patient: {
       name: 'Robert Hayes',
@@ -319,6 +327,7 @@ export const scenarioTemplates: ScenarioTemplate[] = [
     id: 'advanced_dementia_grief',
     title: "She Doesn't Know Who I Am Anymore",
     allowedRoleId: 'clinical_liaison',
+    difficulty: 'intermediate',
     setting: 'Outpatient care coordination office',
     patient: {
       name: 'Ruth Wheeler',
@@ -359,6 +368,7 @@ export const scenarioTemplates: ScenarioTemplate[] = [
     id: 'active_dying_recognition',
     title: 'Is She Dying Right Now?',
     allowedRoleId: 'rn',
+    difficulty: 'advanced',
     setting: 'Patient home, urgent home visit',
     patient: {
       name: 'Betty Collins',
@@ -398,6 +408,7 @@ export const scenarioTemplates: ScenarioTemplate[] = [
     id: 'terminal_secretion_distress',
     title: 'He Sounds Like He Is Drowning',
     allowedRoleId: 'rn',
+    difficulty: 'advanced',
     setting: 'Patient home',
     patient: {
       name: 'Earl Thompson',
@@ -437,6 +448,7 @@ export const scenarioTemplates: ScenarioTemplate[] = [
     id: 'breakthrough_pain_at_home',
     title: 'The Medicine Is Not Working',
     allowedRoleId: 'rn',
+    difficulty: 'intermediate',
     setting: 'Patient home',
     patient: {
       name: 'Frank Martinez',
@@ -477,6 +489,7 @@ export const scenarioTemplates: ScenarioTemplate[] = [
     id: 'advance_directive_conflict',
     title: 'She Never Said What She Wanted',
     allowedRoleId: 'social_worker',
+    difficulty: 'advanced',
     setting: 'Hospital family consultation room',
     patient: {
       name: 'Helen Morris',
@@ -516,6 +529,7 @@ export const scenarioTemplates: ScenarioTemplate[] = [
     id: 'caregiver_burnout',
     title: 'I Cannot Keep Doing This',
     allowedRoleId: 'social_worker',
+    difficulty: 'intermediate',
     setting: 'Patient home, social work visit',
     patient: {
       name: 'Walter Simmons',
@@ -556,6 +570,7 @@ export const scenarioTemplates: ScenarioTemplate[] = [
     id: 'bereavement_first_call',
     title: 'I Keep Forgetting He Is Gone',
     allowedRoleId: 'social_worker',
+    difficulty: 'advanced',
     setting: 'Bereavement follow-up call',
     patient: {
       name: 'Thomas Walsh',
@@ -595,6 +610,7 @@ export const scenarioTemplates: ScenarioTemplate[] = [
     id: 'can_change_minds',
     title: 'Can We Change Our Minds?',
     allowedRoleId: 'clinical_liaison',
+    difficulty: 'intermediate',
     setting: 'Hospital room',
     patient: {
       name: 'Ruth Calloway',

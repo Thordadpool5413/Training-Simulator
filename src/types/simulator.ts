@@ -61,6 +61,7 @@ export interface SafeLanguageEntry {
   id: string;
   context: string;
   text: string;
+  roleId?: string;
 }
 
 export interface PatientState {
@@ -178,6 +179,7 @@ export interface DashboardSummary {
   mainGrowthArea: string;
   safetyFlagsResolved: number;
   nextRecommendedScenario: string;
+  nextRecommendedScenarioId: string | null;
   nextPracticeFocus: string;
   summaryMessage: string;
 }
@@ -203,12 +205,16 @@ export interface CompletedSession {
   roleId: string;
   completedAt: string;
   overallScore: number;
+  previousScore?: number;
 }
+
+export type ScenarioDifficulty = 'beginner' | 'intermediate' | 'advanced';
 
 export interface ScenarioTemplate {
   id: string;
   title: string;
   allowedRoleId: string;
+  difficulty?: ScenarioDifficulty;
   setting: string;
   patient: {
     name: string;

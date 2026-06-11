@@ -50,6 +50,7 @@ export function generateDashboardSummary(
   const isBereavementFirstCall = activeScenarioId === 'bereavement_first_call';
 
   let nextRecommendedScenario: string;
+  let nextRecommendedScenarioId: string | null = null;
   if (activeScenarioId === 'medication_refusal') {
     const hadConsentEvent = safetyEvents.some(
       (e) => e.violationCategory === 'patient_consent_violation'
@@ -255,6 +256,11 @@ export function generateDashboardSummary(
     }
   }
 
+  // Pick the next playable scenario: first unplayed for this role, or current
+  const roleScenarios = scenarioTemplates.filter((s) => s.allowedRoleId === selectedRoleId);
+  const nextUnplayed = roleScenarios.find((s) => s.id !== activeScenarioId);
+  nextRecommendedScenarioId = nextUnplayed?.id ?? activeScenarioId;
+
   // Sequence-aware: only count resolved if a recovery snapshot is timestamped after the safety event
   let safetyFlagsResolved = 0;
   if (isRnScenario) {
@@ -303,6 +309,7 @@ export function generateDashboardSummary(
       mainGrowthArea: 'Not available yet',
       safetyFlagsResolved,
       nextRecommendedScenario,
+      nextRecommendedScenarioId,
       nextPracticeFocus: 'Complete a simulation to receive a practice focus.',
       summaryMessage:
         'You have not completed a simulation yet. Start with the Clinical Liaison scenario to generate dashboard results.',
@@ -335,6 +342,7 @@ export function generateDashboardSummary(
     mainGrowthArea,
     safetyFlagsResolved,
     nextRecommendedScenario,
+    nextRecommendedScenarioId,
     nextPracticeFocus: feedbackReport.nextPracticeFocus,
     summaryMessage: `You completed the ${scenarioTitle} scenario. Your strongest skill was ${strongestSkill}, and your main growth area is ${mainGrowthArea}.`,
   };

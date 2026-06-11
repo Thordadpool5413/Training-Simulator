@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import type { Href } from 'expo-router';
 import { useEffect, useMemo, useRef } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, Share, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Radius, SimulatorColors } from '@/constants/theme';
@@ -58,6 +58,27 @@ export default function FeedbackScreen() {
       });
     }
   }, [scoreReport, activeScenarioId, scenario, selectedRoleId, recordCompletedSession]);
+
+  function handleShareFeedback() {
+    if (!report) return;
+    const lines: string[] = [
+      `SIMULATION FEEDBACK — ${scenario?.title ?? activeScenarioId ?? 'Scenario'}`,
+      '',
+      '== Overall Summary ==',
+      report.overallCoachingSummary,
+    ];
+    if (report.whatWentWell.length > 0) {
+      lines.push('', '== What Went Well ==');
+      report.whatWentWell.forEach((item) => lines.push(`• ${item}`));
+    }
+    if (scoreReport) {
+      lines.push('', `== Skill Score: ${scoreReport.overallScore.toFixed(1)} / 4 ==`);
+      lines.push(`Strength: ${scoreReport.primaryStrength}`);
+      lines.push(`Growth area: ${scoreReport.primaryGrowthArea}`);
+    }
+    lines.push('', '== Next Practice Focus ==', report.nextPracticeFocus);
+    void Share.share({ message: lines.join('\n') });
+  }
 
   if (!report) {
     return (
@@ -187,6 +208,12 @@ export default function FeedbackScreen() {
           accessibilityRole="button"
           onPress={() => router.push('/clinical-debrief' as Href)}>
           <Text style={styles.buttonText}>Clinical Knowledge Check</Text>
+        </Pressable>
+        <Pressable
+          style={styles.shareButton}
+          accessibilityRole="button"
+          onPress={handleShareFeedback}>
+          <Text style={styles.shareButtonText}>Share / Export Feedback</Text>
         </Pressable>
         <Pressable
           style={styles.viewDashboardButton}
@@ -322,6 +349,19 @@ const styles = StyleSheet.create({
   },
   returnButton: {
     marginTop: 4,
+  },
+  shareButton: {
+    backgroundColor: SimulatorColors.surface,
+    borderRadius: Radius.md,
+    paddingVertical: 14,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: SimulatorColors.border,
+  },
+  shareButtonText: {
+    color: SimulatorColors.textSecondary,
+    fontSize: 15,
+    fontWeight: '600',
   },
   viewDashboardButton: {
     backgroundColor: SimulatorColors.surface,

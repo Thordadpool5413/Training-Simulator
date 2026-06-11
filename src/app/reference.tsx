@@ -11,14 +11,16 @@ import { Radius, SimulatorColors } from '@/constants/theme';
 import { clinicalDiagnoses } from '@/data/clinicalDiagnoses';
 import { hospiceMedications } from '@/data/hospiceMedications';
 import { lcdCriteria } from '@/data/lcdCriteria';
+import { safeLanguage } from '@/data/safeLanguage';
 import { useSimulator } from '@/state/SimulatorContext';
 
-type Tab = 'medications' | 'diagnoses' | 'lcds';
+type Tab = 'medications' | 'diagnoses' | 'lcds' | 'phrases';
 
 const TABS: { id: Tab; label: string }[] = [
   { id: 'medications', label: 'Medications' },
   { id: 'diagnoses', label: 'Diagnoses' },
   { id: 'lcds', label: 'LCDs' },
+  { id: 'phrases', label: 'Phrases' },
 ];
 
 export default function ReferenceScreen() {
@@ -61,6 +63,7 @@ export default function ReferenceScreen() {
         )}
         {activeTab === 'diagnoses' && <DiagnosesTab />}
         {activeTab === 'lcds' && <LCDsTab />}
+        {activeTab === 'phrases' && <PhrasesTab roleId={selectedRoleId ?? undefined} />}
       </ScrollView>
     </SafeAreaView>
   );
@@ -177,6 +180,109 @@ function LCDsTab() {
     </>
   );
 }
+
+function PhrasesTab({ roleId }: { roleId?: string }) {
+  const ROLE_ORDER = ['clinical_liaison', 'rn', 'social_worker'];
+  const ROLE_DISPLAY: Record<string, string> = {
+    clinical_liaison: 'Clinical Liaison',
+    rn: 'RN',
+    social_worker: 'Social Worker',
+  };
+
+  const filtered = roleId
+    ? safeLanguage.filter((e) => e.roleId === roleId)
+    : safeLanguage;
+
+  const grouped = ROLE_ORDER.reduce<Record<string, typeof safeLanguage>>((acc, role) => {
+    const entries = filtered.filter((e) => e.roleId === role);
+    if (entries.length > 0) acc[role] = entries;
+    return acc;
+  }, {});
+
+  const ungrouped = filtered.filter((e) => !e.roleId);
+
+  return (
+    <>
+      {roleId == null && (
+        <View style={phraseStyles.intro}>
+          <Text style={phraseStyles.introText}>
+            Approved hospice communication language, organized by role. Use these phrases as models — not scripts.
+          </Text>
+        </View>
+      )}
+      {Object.entries(grouped).map(([role, entries]) => (
+        <SectionCard key={role} title={ROLE_DISPLAY[role] ?? role}>
+          {entries.map((entry) => (
+            <View key={entry.id} style={phraseStyles.card}>
+              <Text style={phraseStyles.context}>{entry.context}</Text>
+              <Text style={phraseStyles.text}>{entry.text}</Text>
+            </View>
+          ))}
+        </SectionCard>
+      ))}
+      {ungrouped.length > 0 && (
+        <SectionCard title="General">
+          {ungrouped.map((entry) => (
+            <View key={entry.id} style={phraseStyles.card}>
+              <Text style={phraseStyles.context}>{entry.context}</Text>
+              <Text style={phraseStyles.text}>{entry.text}</Text>
+            </View>
+          ))}
+        </SectionCard>
+      )}
+      {filtered.length === 0 && (
+        <View style={phraseStyles.empty}>
+          <Text style={phraseStyles.emptyText}>No phrases available for this role.</Text>
+        </View>
+      )}
+    </>
+  );
+}
+
+const phraseStyles = StyleSheet.create({
+  intro: {
+    backgroundColor: SimulatorColors.surface,
+    borderRadius: Radius.md,
+    borderWidth: 1,
+    borderColor: SimulatorColors.border,
+    padding: 14,
+  },
+  introText: {
+    fontSize: 13,
+    color: SimulatorColors.textSecondary,
+    lineHeight: 19,
+  },
+  card: {
+    backgroundColor: SimulatorColors.brandTint,
+    borderLeftWidth: 3,
+    borderLeftColor: SimulatorColors.brand,
+    borderRadius: Radius.sm,
+    padding: 12,
+    marginBottom: 10,
+    gap: 6,
+  },
+  context: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: SimulatorColors.brandDeep,
+    textTransform: 'uppercase',
+    letterSpacing: 0.4,
+  },
+  text: {
+    fontSize: 14,
+    color: SimulatorColors.textBody,
+    lineHeight: 21,
+    fontStyle: 'italic',
+  },
+  empty: {
+    padding: 32,
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontSize: 15,
+    color: SimulatorColors.textSecondary,
+  },
+});
 
 const ROLE_LABELS: Record<string, string> = {
   clinical_liaison: 'Clinical Liaison',

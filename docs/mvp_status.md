@@ -168,6 +168,18 @@ UI polish baseline completed. No behavior, logic, or content was changed.
 
 Manual UI smoke test passed 36 of 36 items. Zero defects found.
 
+### Feedback Screen Polish (Packet 43, verified 2026-06-10)
+
+Feedback screen polish completed. One file modified: `src/app/feedback.tsx`.
+
+| Change | Detail |
+|---|---|
+| Scenario subtitle added | Scenario title displayed below "Simulation Feedback" heading — makes the feedback screen contextual |
+| Bullet consistency | `whatChangedTheRoom` items now use `• ` prefix matching `whatWentWell` style |
+| Empty-state guard | `whatChangedTheRoom` now shows "Nothing specific detected yet" when empty, matching `whatWentWell` |
+
+UI verification: 10 of 10 checks passed by code trace. Automated tests: 29 of 29 passing. TypeScript: zero errors. Commit: `41ed6c8`.
+
 ### Simulation Screen Polish (Packet 40, verified 2026-06-10)
 
 Simulation screen polish completed. One file modified: `src/app/simulation.tsx`.

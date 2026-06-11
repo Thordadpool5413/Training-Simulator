@@ -982,3 +982,37 @@ No services, data files, state files, type files, component files, theme files, 
 ### Files Modified in Packet 40
 
 - `src/app/simulation.tsx` — header meta fallback changed from `selectedRoleId` to `'Learner'`; `numberOfLines={4}` added to role reminder text; Finish button border and text color changed from `textBody` to `brand`
+
+---
+
+## Packet 43 — Feedback Screen Polish
+
+**Date:** 2026-06-10
+**Commit:** 41ed6c8
+**Scope:** Feedback UI polish only. One file modified: `src/app/feedback.tsx`. No service, data, state, type, component, theme, or package changes.
+
+### UI Verification — Feedback Screen
+
+**Method:** Deterministic code trace and clean TypeScript compile.
+
+| Check | Expected | Result |
+|---|---|---|
+| Scenario subtitle visible below "Simulation Feedback" | scenario.title displayed in subtitle style | Pass |
+| Subtitle resolves for all 5 scenarios | `scenarioTemplates.find(s => s.id === activeScenarioId)?.title` resolves for all 5 IDs | Pass |
+| What Changed the Room — bullet prefix | Items prefixed with `• ` matching What Went Well style | Pass |
+| What Changed the Room — empty state | "Nothing specific detected yet — keep practicing." shown when empty | Pass |
+| All ten sections render | SectionCards unchanged | Pass |
+| Suggested Wording scenario-specific | feedbackService routing unchanged | Pass |
+| RN score rows in correct order | scoringService unchanged | Pass |
+| CL score rows in correct order | scoringService unchanged | Pass |
+| No raw IDs visible | Scenario title resolved via scenarioTemplates lookup | Pass |
+| View Dashboard and Return buttons work | router.push calls unchanged | Pass |
+
+**Total checks:** 10 of 10 passed.
+
+**npm test result:** Passed 29 of 29. Zero failures.
+**npx tsc --noEmit result:** Zero errors.
+
+### Files Modified in Packet 43
+
+- `src/app/feedback.tsx` — `scenarioTemplates` import added; `scenario` derived from `activeScenarioId`; scenario title subtitle added below screen title; `whatChangedTheRoom` updated to use bullet prefix and empty-state guard matching `whatWentWell`; `screenTitle` margin reduced from 8 to 4; `screenSubtitle` style added

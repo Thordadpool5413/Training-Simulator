@@ -1,0 +1,21 @@
+src/components/animated-icon.tsx
+  s_4dd6ce9d67e608::t_f25cdda329de53 129
+app.json
+  s_4dd6ce9d67e608::t_084502849bd3ee 3-4,8-9,11-12,25,36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "d24cba96f2ec6e895806cef1e5f03aa83dcd70e0",
+  "prompts": {},
+  "sessions": {
+    "s_4dd6ce9d67e608": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55cc4203-2362-432c-9323-e9946683cd1f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

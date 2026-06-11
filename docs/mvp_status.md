@@ -1,6 +1,6 @@
 # MVP Status — Hospice Communication Training Simulator
 
-> **Updated:** 2026-06-09. This document reflects the stable four-scenario MVP state after Packet 30. It is maintained as a living status record updated at each stable checkpoint.
+> **Updated:** 2026-06-10. This document reflects the stable five-scenario MVP state after Packet 32. It is maintained as a living status record updated at each stable checkpoint.
 
 ---
 
@@ -8,11 +8,11 @@
 
 | Field | Value |
 |---|---|
-| Status | Stable MVP — four scenarios active |
-| Last Manual Test | 2026-06-09 |
+| Status | Stable MVP — five scenarios active |
+| Last Manual Test | 2026-06-10 |
 | Open Defects | 0 |
 | TypeScript | Passes with zero errors |
-| Automated Tests | 22 of 22 passing (Jest 29, npm test) |
+| Automated Tests | 29 of 29 passing (Jest 29, npm test) |
 | Backend Required | No |
 | AI Required | No |
 | External APIs Required | No |
@@ -77,6 +77,18 @@ Both learner paths — Clinical Liaison and RN — have been manually tested end
 | Opening line | The doctor says she might qualify for hospice, but I need to know, if we start this and I change my mind, or she gets better, can we undo it? Are we signing something we cannot take back? |
 | Core challenge | Frank fears hospice is permanent and irreversible. He wants to know whether the family can change course if goals change. |
 
+### Terminal Dyspnea Follow Up Conversation
+
+| Field | Value |
+|---|---|
+| Role | RN |
+| Patient | Eleanor Marsh, age 84 |
+| Caregiver | Carol |
+| Setting | Home visit |
+| Diagnosis | End-stage COPD |
+| Opening line | She keeps having these episodes where she looks like she cannot breathe. I have been sitting with her for two hours and I do not know what to do. Can we increase her medication? |
+| Core challenge | Follow-up visit after prior comfort-care education. Carol is frightened and asking about a dose increase. RN must route the dose question safely, explain air hunger, describe non-pharmacologic comfort tools, and clarify when to call. |
+
 ---
 
 ## 4. Passing Manual Test Paths
@@ -91,6 +103,7 @@ Both learner paths — Clinical Liaison and RN — have been manually tested end
 | Packet 28 UI polish baseline smoke test | — | SafeAreaView, SectionCard extraction, token fixes, margin standardization verified across all screens | — | Feedback and Dashboard section cards consistent, welcome screen safe area correct, training pause and all four opening lines confirmed | — | — | Manually tested 2026-06-09 — 36 of 36 items passed, zero defects |
 | RN COPD clean path | 6 | 6 exact matches | None | 10 sections | 7 RN categories | All 9 fields | Pass |
 | RN medication safety | 2 | Training Pause verbatim + Margaret response | Fires and recovers | — | — | Safety Corrections = 1 | Pass |
+| Terminal Dyspnea Follow Up — smoke test | 19 | Response rules 1–7, patient state detection, feedback, scoring, dashboard verified by code trace | Fires on dose-increase phrase; recovery confirmed | 10 sections, 3 RN follow-up wording entries, no CL wording | 7 RN categories | Safety Corrections = 1 | Tested 2026-06-10 — 19 of 19 passed after D-RN-002 fix |
 
 ### Resolved Defects
 
@@ -99,6 +112,7 @@ Both learner paths — Clinical Liaison and RN — have been manually tested end
 | D-001 | Clinical Liaison opening line mismatch | Fixed — `openingLine` in `scenarioTemplates.ts` updated |
 | D-002 | Clinical Liaison Safety Corrections counter showed 0 instead of 1 | Fixed — `'do not want to guess'` added to `MED_ROUTING_REFUSAL_TERMS` |
 | D-RN-001 | RN air hunger explanation behavior not emitted for Phrase 2 | Fixed 2026-06-06 — `'fear makes sense'` added to `FEAR_ACK_TERMS` in `copdPatientStateService.ts` |
+| D-RN-002 | Terminal Dyspnea Follow Up Safety Corrections counter showed 0 instead of 1 | Fixed 2026-06-10 — safe routing check moved to Rule 1 (before dose overstep); `'cannot change'` added to `MED_ROUTING_REFUSAL_TERMS` in `copdPatientStateService.ts` |
 
 ---
 
@@ -137,7 +151,8 @@ Clinical Liaison Suggested Wording entries are selected by scenario ID. RN COPD 
 | Hospice Means Giving Up | Hospice fear response, medication routing response, repair language |
 | Hospice Is Only for the Last Few Days | Too-soon validation, hospice timeline education, what hospice provides, medication routing response |
 | Can We Change Our Minds? | Revocation plain language, hospice as choice framing, revocation repair language, medication routing response |
-| COPD Air Hunger at Home | Unchanged — handled entirely by `rnFeedbackService` |
+| COPD Air Hunger at Home | Handled by `rnFeedbackService` — air hunger acknowledgment, comfort reassurance, when to call |
+| Terminal Dyspnea Follow Up Conversation | Handled by `terminalDyspneaFeedbackService` — air hunger acknowledgment, follow-up comfort reassurance, when to call |
 
 ### UI Polish Baseline (Packet 28, verified 2026-06-09)
 
@@ -153,18 +168,20 @@ UI polish baseline completed. No behavior, logic, or content was changed.
 
 Manual UI smoke test passed 36 of 36 items. Zero defects found.
 
-### Automated Service Tests (Packet 30, verified 2026-06-09)
+### Automated Service Tests (Packet 30, extended Packet 32)
 
-Automated service smoke test suite added in Packet 30. Jest service tests cover medication safety, scenario response routing, patient state behavior detection, feedback Suggested Wording, scoring reports, and dashboard summary behavior. Tests run in a Node.js environment and do not require Expo Go, a simulator, or a device.
+Automated service smoke test suite added in Packet 30 and extended in Packet 32 to cover the fifth scenario. Jest service tests cover medication safety, scenario response routing, patient state behavior detection, feedback Suggested Wording, scoring reports, and dashboard summary behavior. Tests run in a Node.js environment and do not require Expo Go, a simulator, or a device.
 
 | Field | Detail |
 |---|---|
-| Commit | a965ef8 |
+| Commit | aaf711f |
 | Test runner | Jest 29 + ts-jest |
-| npm test | Passed 22 of 22 |
+| npm test | Passed 29 of 29 |
 | TypeScript | Zero errors |
-| Production dependencies added | None — jest, ts-jest, @types/jest are devDependencies only |
+| Production dependencies added | None |
 | UI coverage | Not claimed — automated tests cover service logic only |
+
+Tests added in Packet 32: 7 total (1 scenarioResponse, 2 feedback, 1 scoring, 2 dashboard, 1 patientState).
 
 ---
 
@@ -206,7 +223,9 @@ Nine fields are rendered on the dashboard screen.
 
 **Clinical Liaison branch:** medication event → service first → missing hospice reframe → default (Hospital Discharge Planning Conversation).
 
-**RN COPD branch:** dose event or overstep → overpromise → missing fear acknowledgment → missing air hunger explanation → missing comfort education → missing caregiver empowerment → default (Terminal Dyspnea Follow Up Conversation).
+**RN COPD branch (copd_air_hunger_at_home):** dose event or overstep → overpromise → missing fear acknowledgment → missing air hunger explanation → missing comfort education → missing caregiver empowerment → default (Terminal Dyspnea Follow Up Conversation).
+
+**RN Terminal Dyspnea branch (terminal_dyspnea_follow_up):** happy path → default (Advanced Comfort Care Conversations).
 
 ---
 
@@ -228,7 +247,7 @@ The following limitations apply to the current MVP build and are expected behavi
 
 ## 9. Not Yet Implemented
 
-- Additional hospice and palliative care scenarios beyond the current four
+- Additional hospice and palliative care scenarios beyond the current five
 - Additional learner roles beyond Clinical Liaison and RN
 - Persistent session storage and learner history
 - User accounts and authentication
@@ -246,7 +265,7 @@ The following limitations apply to the current MVP build and are expected behavi
 Listed in suggested priority order. Some lanes can run in parallel once the scenario selector is in place.
 
 1. **UI and UX polish** — Refine visual design, typography, layout, and interaction patterns before expanding content. Establishes the design baseline for all future screens.
-2. **Scenario selector** *(complete — Packet 17)* — Learners can now choose from multiple scenarios per role. Clinical Liaison shows three scenarios. RN shows one scenario.
+2. **Scenario selector** *(complete — Packet 17)* — Learners can now choose from multiple scenarios per role. Clinical Liaison shows three scenarios. RN shows two scenarios.
 3. **Persistence and learner history** — Add local or backend session storage so learners can track progress across runs.
 4. **Additional hospice scenarios** — Expand the scenario library for both Clinical Liaison and RN. Each new scenario follows the established dispatcher pattern.
 5. **AI or MCP integration** — Replace or augment rule-based response generation with AI-powered responses for more naturalistic conversations. Requires backend.

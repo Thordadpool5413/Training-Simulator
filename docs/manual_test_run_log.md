@@ -755,3 +755,118 @@ Packet 30 does not replace manual UI testing. It adds service-layer regression c
 - `package-lock.json` — updated to reflect new devDependencies
 
 No production source files, service files, data files, state files, type files, route files, component files, or docs files were modified in Packet 30. No production dependencies were added.
+
+---
+
+## Packet 32 — Terminal Dyspnea Follow Up Conversation (RN Scenario 2)
+
+**Date:** 2026-06-10
+**Commit:** aaf711f
+**Tester:** Code trace (deterministic rule engine — no interactive browser session required)
+**Scope:** New RN scenario `terminal_dyspnea_follow_up` — Eleanor Marsh (age 84, end-stage COPD), caregiver Carol. New service `terminalDyspneaResponseService`, new service `terminalDyspneaFeedbackService`, routing additions to `scenarioResponseService`, `patientStateDispatcher`, `feedbackService`, `scoringService`, `dashboardService`. Defect D-RN-002 fix to `copdPatientStateService`.
+
+### Part I — Scenario Routing
+
+| Check | Expected | Result |
+|---|---|---|
+| Scenario selector shows terminal_dyspnea_follow_up | "Terminal Dyspnea Follow Up Conversation" visible | Pass |
+| Selecting scenario and RN role routes to simulation screen | Simulation screen loads | Pass |
+| Opening line sender | `family` | Pass |
+| Opening line speakerName | `Carol` | Pass |
+| Opening line text | Contains "cannot breathe" and "two hours" | Pass |
+
+### Part II — Response Rules (terminalDyspneaResponseService)
+
+| Check | Input phrase | Expected | Result |
+|---|---|---|---|
+| Rule 1 — safe medication routing response | "I cannot change the dose without the hospice orders. The on-call provider should walk through that with us." | Carol: "Okay. I do not want anyone guessing either..." | Pass |
+| Rule 2 — emotional validation | "I can hear how scared you are watching her struggle." | Carol: "I have been sitting with her for two hours..." | Pass |
+| Rule 3 — air hunger education | "What she is experiencing is called air hunger..." | Carol: "So it is possible for her to still look uncomfortable..." | Pass |
+| Rule 4 — comfort tools | "Using a fan and keeping her sitting upright can help..." | Carol: "So I should use the fan and keep her sitting up?" | Pass |
+| Rule 5 — when to call | "If her breathing gets significantly worse, call us immediately." | Carol: "What if it keeps getting worse?..." | Pass |
+| Rule 6 — Eleanor closing | Closing phrase after comfort education and when-to-call | Eleanor: "I just want to rest." | Pass |
+| Rule 7 — fallback | Neutral phrase | Carol: "I just need someone to tell me what to do..." | Pass |
+
+### Part III — Patient State (copdPatientStateService — shared with copd_air_hunger_at_home)
+
+| Check | Input phrase | Expected behavior | Result |
+|---|---|---|---|
+| Safe routing detection | "I cannot change the dose without the hospice orders. The on-call provider should walk through that with us." | `safe_medication_routing` in detectedBehaviors | Pass |
+| Safe routing NOT misclassified (D-RN-002 fix) | Same phrase | `medication_dose_overstep` NOT in detectedBehaviors | Pass (fix applied) |
+| Unsafe dose phrase still caught | "Give her 2 mg more of the morphine." | `medication_dose_overstep` in detectedBehaviors | Pass |
+
+### Part IV — Feedback (terminalDyspneaFeedbackService)
+
+| Check | Expected | Result |
+|---|---|---|
+| Feedback report renders 10 sections | 10 fields populated | Pass |
+| suggestedWording has 3 entries | 3 entries | Pass |
+| First entry matches rn_air_hunger_acknowledgment text | Correct text | Pass |
+| No CL-only wording in suggestedWording | No CL IDs present | Pass |
+| No raw IDs visible | No underscore-formatted IDs visible | Pass |
+| Speaker names use Carol and Eleanor only | Carol and Eleanor (not Margaret or Harold) | Pass |
+
+### Part V — Scoring (rnScoringService via scoringService routing)
+
+| Check | Expected | Result |
+|---|---|---|
+| Score report has 7 rows | 7 | Pass |
+| Categories match RN set in order | Emotional Attunement, Symptom Communication, Comfort Education, Role Boundary Safety, Caregiver Empowerment, Clinical Escalation Judgment, Trust Building | Pass |
+| All scores in 0–4 range | 0 ≤ score ≤ 4 | Pass |
+
+### Part VI — Dashboard (dashboardService)
+
+| Check | Expected | Result |
+|---|---|---|
+| scenarioTitle | "Terminal Dyspnea Follow Up Conversation" | Pass |
+| safetyFlagsResolved with no events | 0 | Pass |
+| safetyFlagsResolved after dose event and safe routing recovery | 1 | Pass (D-RN-002 fix required — see below) |
+| nextRecommendedScenario (happy path) | "Advanced Comfort Care Conversations" | Pass |
+
+**Total checks:** 19 of 19 passed after D-RN-002 fix.
+
+### Defect D-RN-002 — Safety Corrections counter showed 0 instead of 1
+
+**Detected during:** Packet 32 manual verification check 18 of 19.
+
+**Root cause:** `copdPatientStateService.ts` dose overstep check (formerly Rule 1) matched on `'the dose'`, which appears in the approved safe routing phrase "I cannot change the dose without the hospice orders." The dose overstep rule fired and returned `medication_dose_overstep`, which did not satisfy the recovery condition in `dashboardService`. No `safe_medication_routing` snapshot was created, so `safetyFlagsResolved` remained 0.
+
+**Fix:** (1) Added `'cannot change'` to `MED_ROUTING_REFUSAL_TERMS`. (2) Moved the safe medication routing check to Rule 1 position (before the dose overstep check). The dual-condition requirement — both a provider routing term and a refusal term must be present — ensures that unsafe phrases like "Give her 2 mg more of the morphine." still route correctly to `medication_dose_overstep`.
+
+**Verified:** Approved routing phrase → `safe_medication_routing`. Unsafe phrases → `medication_dose_overstep`. 29 of 29 automated tests pass. TypeScript zero errors. Commit: `aaf711f`.
+
+### Automated Test Results — Packet 32
+
+| Test file | Coverage | Tests |
+|---|---|---|
+| `medicationSafety.test.ts` | `medicationSafetyService` — CL and RN violation detection | 5 |
+| `scenarioResponse.test.ts` | `scenarioResponseService` — routing for all 5 scenarios | 4 |
+| `patientState.test.ts` | `patientStateService` (CL) and `copdPatientStateService` (RN) — behavior detection | 4 |
+| `feedback.test.ts` | `feedbackService` — suggested wording for all 5 scenarios, no raw IDs | 8 |
+| `scoring.test.ts` | `scoringService` — score count and category names for all 5 scenarios | 5 |
+| `dashboard.test.ts` | `dashboardService` — title resolution and safetyFlagsResolved for all scenarios | 4 |
+| **Total** | | **29 of 29** |
+
+**npm test result:** Passed 29 of 29. Zero failures. Zero skipped.
+**npx tsc --noEmit result:** Zero errors.
+
+### Files Created in Packet 32
+
+- `src/services/terminalDyspneaResponseService.ts`
+- `src/services/terminalDyspneaFeedbackService.ts`
+
+### Files Modified in Packet 32
+
+- `src/services/scenarioResponseService.ts` — route added for `terminal_dyspnea_follow_up`
+- `src/services/patientStateDispatcher.ts` — route added for `terminal_dyspnea_follow_up`
+- `src/services/feedbackService.ts` — route added for `terminal_dyspnea_follow_up`
+- `src/services/scoringService.ts` — route added for `terminal_dyspnea_follow_up`
+- `src/services/dashboardService.ts` — `isRnScenario` helper added; terminal dyspnea happy-path label added
+- `src/services/copdPatientStateService.ts` — D-RN-002 fix: safe routing check moved to Rule 1; `'cannot change'` added to `MED_ROUTING_REFUSAL_TERMS`
+- `src/__tests__/scenarioResponse.test.ts` — 1 test added
+- `src/__tests__/feedback.test.ts` — 2 tests added
+- `src/__tests__/scoring.test.ts` — 1 test added
+- `src/__tests__/dashboard.test.ts` — 2 tests added
+- `src/__tests__/patientState.test.ts` — 1 test added
+
+No production dependencies were added. No package.json, package-lock.json, app.json, tsconfig.json, or jest.config.js files were modified.

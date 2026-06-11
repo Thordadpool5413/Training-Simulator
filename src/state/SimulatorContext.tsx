@@ -6,16 +6,57 @@ import type {
   PatientState,
   PatientStateSnapshot,
   SafetyEvent,
+  StreakData,
 } from '@/types/simulator';
 import type { QuizResult } from '@/types/quiz';
 import {
   loadCompletedSessions,
   loadLearnerProfile,
   loadQuizResult,
+  loadStreakData,
   saveCompletedSessions,
   saveLearnerProfile,
   saveQuizResult,
+  saveStreakData,
 } from '@/services/persistenceService';
+
+const DEFAULT_STREAK: StreakData = {
+  currentStreak: 0,
+  lastPracticeDate: null,
+  weeklySessionCount: 0,
+  weeklyGoalStart: null,
+  weeklyGoal: 3,
+};
+
+function computeNewStreakData(prev: StreakData): StreakData {
+  const today = new Date().toISOString().slice(0, 10);
+  if (prev.lastPracticeDate === today) return prev;
+
+  let newStreak: number;
+  if (!prev.lastPracticeDate) {
+    newStreak = 1;
+  } else {
+    const diffMs = new Date(today).getTime() - new Date(prev.lastPracticeDate).getTime();
+    const diffDays = Math.round(diffMs / 86400000);
+    newStreak = diffDays === 1 ? prev.currentStreak + 1 : 1;
+  }
+
+  const d = new Date(today);
+  const diffToMon = (d.getDay() + 6) % 7;
+  d.setDate(d.getDate() - diffToMon);
+  const weekStart = d.toISOString().slice(0, 10);
+
+  const weeklyCount =
+    prev.weeklyGoalStart === weekStart ? prev.weeklySessionCount + 1 : 1;
+
+  return {
+    currentStreak: newStreak,
+    lastPracticeDate: today,
+    weeklySessionCount: weeklyCount,
+    weeklyGoalStart: weekStart,
+    weeklyGoal: prev.weeklyGoal,
+  };
+}
 
 interface SimulatorState {
   selectedRoleId: string | null;
@@ -28,9 +69,11 @@ interface SimulatorState {
   patientStateSnapshots: PatientStateSnapshot[];
   quizResult: QuizResult | null;
   completedSessions: CompletedSession[];
+  streakData: StreakData;
   setSelectedRoleId: (id: string) => void;
   setLearnerProfile: (profile: LearnerProfile) => void;
   setSelectedScenarioId: (id: string) => void;
+  setWeeklyGoal: (goal: number) => void;
   startSimulationSession: (
     scenarioId: string,
     openingMessage: ConversationMessage,
@@ -58,6 +101,7 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
   const [patientStateSnapshots, setPatientStateSnapshots] = useState<PatientStateSnapshot[]>([]);
   const [quizResult, setQuizResultInternal] = useState<QuizResult | null>(null);
   const [completedSessions, setCompletedSessions] = useState<CompletedSession[]>([]);
+  const [streakData, setStreakData] = useState<StreakData>(DEFAULT_STREAK);
   const [hydrated, setHydrated] = useState(false);
 
   const sessionIdCounter = useRef(0);
@@ -65,14 +109,16 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
   // Load persisted state once on mount
   useEffect(() => {
     async function hydrate() {
-      const [profile, sessions, quiz] = await Promise.all([
+      const [profile, sessions, quiz, streak] = await Promise.all([
         loadLearnerProfile(),
         loadCompletedSessions(),
         loadQuizResult(),
+        loadStreakData(),
       ]);
       if (profile) setLearnerProfileState(profile);
       if (sessions.length > 0) setCompletedSessions(sessions);
       if (quiz) setQuizResultInternal(quiz);
+      if (streak) setStreakData(streak);
       setHydrated(true);
     }
     void hydrate();
@@ -95,6 +141,12 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
     if (!hydrated || !quizResult) return;
     void saveQuizResult(quizResult);
   }, [quizResult, hydrated]);
+
+  // Persist streakData changes after hydration
+  useEffect(() => {
+    if (!hydrated) return;
+    void saveStreakData(streakData);
+  }, [streakData, hydrated]);
 
   function startSimulationSession(
     scenarioId: string,
@@ -138,6 +190,10 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
     setLearnerProfileState(profile);
   }, []);
 
+  const setWeeklyGoal = useCallback((goal: number): void => {
+    setStreakData((prev) => ({ ...prev, weeklyGoal: goal }));
+  }, []);
+
   const recordCompletedSession = useCallback(
     (session: Omit<CompletedSession, 'id' | 'completedAt' | 'previousScore'>): void => {
       sessionIdCounter.current += 1;
@@ -156,6 +212,7 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
         );
         return [...withoutDuplicate, full];
       });
+      setStreakData((prev) => computeNewStreakData(prev));
     },
     []
   );
@@ -183,9 +240,11 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
         patientStateSnapshots,
         quizResult,
         completedSessions,
+        streakData,
         setSelectedRoleId,
         setLearnerProfile,
         setSelectedScenarioId,
+        setWeeklyGoal,
         startSimulationSession,
         appendConversationMessages,
         appendSafetyEvent,

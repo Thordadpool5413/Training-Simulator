@@ -39,12 +39,21 @@
             "imageWidth": 76
           }
         }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/icon.png",
+          "color": "#2563EB",
+          "defaultChannel": "default"
+        }
       ]
     ],
     "experiments": {
       "typedRoutes": true
     },
     "extra": {
+      "backendUrl": "http://localhost:3000",
       "router": {},
       "eas": {
         "projectId": "e8fe2307-17f5-49dc-a59f-efe6cff67b1c"

@@ -20,6 +20,7 @@ export default function DashboardScreen() {
     patientStateSnapshots,
     quizResult,
     completedSessions,
+    streakData,
     setSelectedScenarioId,
   } = useSimulator();
 
@@ -54,6 +55,21 @@ export default function DashboardScreen() {
     <SafeAreaView style={styles.safe}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.screenTitle} accessibilityRole="header">Dashboard</Text>
+
+        {streakData.currentStreak > 0 && (
+          <View style={styles.streakRow}>
+            <View style={styles.streakPill}>
+              <Text style={styles.streakPillValue}>{streakData.currentStreak}</Text>
+              <Text style={styles.streakPillLabel}>day streak 🔥</Text>
+            </View>
+            <View style={styles.streakPill}>
+              <Text style={styles.streakPillValue}>
+                {`${streakData.weeklySessionCount}/${streakData.weeklyGoal}`}
+              </Text>
+              <Text style={styles.streakPillLabel}>this week</Text>
+            </View>
+          </View>
+        )}
 
         <View style={styles.summaryCard}>
           <Text style={styles.summaryText}>{summary.summaryMessage}</Text>
@@ -150,6 +166,14 @@ export default function DashboardScreen() {
             Browse All Scenarios
           </Text>
         </Pressable>
+        {completedSessions.length > 0 && (
+          <Pressable
+            style={styles.certificateButton}
+            accessibilityRole="button"
+            onPress={() => router.push('/certificate' as Href)}>
+            <Text style={styles.certificateButtonText}>Download Training Certificate</Text>
+          </Pressable>
+        )}
         <Pressable
           style={[styles.button, styles.returnButton]}
           accessibilityRole="button"
@@ -278,6 +302,43 @@ const styles = StyleSheet.create({
   },
   returnButton: {
     marginTop: 4,
+  },
+  streakRow: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  streakPill: {
+    flex: 1,
+    backgroundColor: SimulatorColors.amberBackground,
+    borderWidth: 1,
+    borderColor: SimulatorColors.amberBorder,
+    borderRadius: Radius.md,
+    paddingVertical: 12,
+    alignItems: 'center',
+    gap: 2,
+  },
+  streakPillValue: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: SimulatorColors.textPrimary,
+  },
+  streakPillLabel: {
+    fontSize: 12,
+    color: SimulatorColors.textSecondary,
+    fontWeight: '500',
+  },
+  certificateButton: {
+    backgroundColor: SimulatorColors.indigoBackground,
+    borderRadius: Radius.md,
+    paddingVertical: 14,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: SimulatorColors.indigoBorder,
+  },
+  certificateButtonText: {
+    color: SimulatorColors.indigoText,
+    fontSize: 15,
+    fontWeight: '600',
   },
   buttonText: {
     color: SimulatorColors.textOnBrand,

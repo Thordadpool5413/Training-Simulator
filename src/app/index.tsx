@@ -4,23 +4,54 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Radius, SimulatorColors } from '@/constants/theme';
+import { useSimulator } from '@/state/SimulatorContext';
 
 export default function IndexScreen() {
+  const { streakData, setSelectedRoleId, setSelectedScenarioId } = useSimulator();
+  const { currentStreak, weeklySessionCount, weeklyGoal } = streakData;
+
+  function handleStartDemo() {
+    setSelectedRoleId('clinical_liaison');
+    setSelectedScenarioId('hospice_means_giving_up');
+    router.push('/demo' as Href);
+  }
+
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
+        {currentStreak > 0 && (
+          <View style={styles.streakBanner}>
+            <Text style={styles.streakText}>
+              {`🔥 ${currentStreak}-day streak`}
+            </Text>
+            <View style={styles.streakDivider} />
+            <Text style={styles.streakText}>
+              {`📅 ${weeklySessionCount}/${weeklyGoal} this week`}
+            </Text>
+          </View>
+        )}
+
         <Text style={styles.appTitle} accessibilityRole="header">
           Hospice Communication Training Simulator
         </Text>
         <Text style={styles.disclaimer}>
           This is a fictional training simulator for hospice and palliative communication practice. Do not enter real patient information. This tool does not diagnose patients, determine hospice eligibility, prescribe medications, or replace clinical judgment.
         </Text>
+
         <Pressable
           style={styles.button}
           accessibilityRole="button"
           onPress={() => router.push('/role' as Href)}>
           <Text style={styles.buttonText}>Continue</Text>
         </Pressable>
+
+        <Pressable
+          style={styles.demoButton}
+          accessibilityRole="button"
+          onPress={handleStartDemo}>
+          <Text style={styles.demoButtonText}>Try a Free Demo Simulation</Text>
+        </Pressable>
+
         <Pressable
           style={styles.referenceButton}
           accessibilityRole="button"
@@ -42,6 +73,31 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 32,
+    gap: 0,
+  },
+  streakBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    backgroundColor: SimulatorColors.amberBackground,
+    borderWidth: 1,
+    borderColor: SimulatorColors.amberBorder,
+    borderRadius: Radius.md,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    marginBottom: 24,
+    alignSelf: 'stretch',
+    justifyContent: 'center',
+  },
+  streakDivider: {
+    width: 1,
+    height: 16,
+    backgroundColor: SimulatorColors.amberBorder,
+  },
+  streakText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: SimulatorColors.textBody,
   },
   appTitle: {
     fontSize: 22,
@@ -68,6 +124,21 @@ const styles = StyleSheet.create({
   buttonText: {
     color: SimulatorColors.textOnBrand,
     fontSize: 16,
+    fontWeight: '600',
+  },
+  demoButton: {
+    marginTop: 12,
+    paddingVertical: 14,
+    borderRadius: Radius.md,
+    alignSelf: 'stretch',
+    alignItems: 'center',
+    backgroundColor: SimulatorColors.greenBackground,
+    borderWidth: 1,
+    borderColor: SimulatorColors.greenBorder,
+  },
+  demoButtonText: {
+    color: SimulatorColors.greenText,
+    fontSize: 15,
     fontWeight: '600',
   },
   referenceButton: {

@@ -210,6 +210,24 @@ export interface CompletedSession {
 
 export type ScenarioDifficulty = 'beginner' | 'intermediate' | 'advanced';
 
+export interface StreakData {
+  currentStreak: number;
+  lastPracticeDate: string | null;
+  weeklySessionCount: number;
+  weeklyGoalStart: string | null;
+  weeklyGoal: number;
+}
+
+export interface AIEvaluation {
+  overallImpression: string;
+  empathyScore: number;
+  clarityScore: number;
+  professionalismScore: number;
+  topStrength: string;
+  topGrowthArea: string;
+  coachingNotes: string[];
+}
+
 export interface ScenarioTemplate {
   id: string;
   title: string;

@@ -1,15 +1,16 @@
 import { router } from 'expo-router';
 import type { Href } from 'expo-router';
-import { useEffect, useMemo, useRef } from 'react';
-import { Pressable, ScrollView, Share, StyleSheet, Text, View } from 'react-native';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { ActivityIndicator, Pressable, ScrollView, Share, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Radius, SimulatorColors } from '@/constants/theme';
 import { scenarioTemplates } from '@/data/scenarioTemplates';
 import { generateFeedbackReport } from '@/services/feedbackService';
 import { generateSkillScoreReport } from '@/services/scoringService';
+import { fetchAIEvaluation } from '@/services/aiEvaluationService';
 import { useSimulator } from '@/state/SimulatorContext';
-import type { FeedbackReport, SkillScore, SkillScoreReport } from '@/types/simulator';
+import type { AIEvaluation, FeedbackReport, SkillScore, SkillScoreReport } from '@/types/simulator';
 import { SectionCard } from '@/components/SectionCard';
 
 export default function FeedbackScreen() {
@@ -25,6 +26,8 @@ export default function FeedbackScreen() {
 
   const scenario = scenarioTemplates.find((s) => s.id === activeScenarioId);
   const sessionRecorded = useRef(false);
+  const [aiEval, setAiEval] = useState<AIEvaluation | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
 
   const report = useMemo<FeedbackReport | null>(() => {
     if (!activeScenarioId || conversationMessages.length === 0) return null;
@@ -58,6 +61,23 @@ export default function FeedbackScreen() {
       });
     }
   }, [scoreReport, activeScenarioId, scenario, selectedRoleId, recordCompletedSession]);
+
+  useEffect(() => {
+    if (!scoreReport || !activeScenarioId || aiLoading || aiEval) return;
+    setAiLoading(true);
+    fetchAIEvaluation({
+      scenarioId: activeScenarioId,
+      scenarioTitle: scenario?.title ?? activeScenarioId,
+      role: selectedRoleId ?? 'unknown',
+      messages: conversationMessages,
+      safetyEventCount: safetyEvents.length,
+      overallScore: scoreReport.overallScore,
+    }).then((result) => {
+      setAiEval(result);
+      setAiLoading(false);
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scoreReport, activeScenarioId]);
 
   function handleShareFeedback() {
     if (!report) return;
@@ -175,6 +195,37 @@ export default function FeedbackScreen() {
           </SectionCard>
         )}
 
+        {(aiLoading || aiEval != null) && (
+          <SectionCard title="AI Coach Insights">
+            {aiLoading && aiEval == null ? (
+              <View style={aiStyles.loadingRow}>
+                <ActivityIndicator size="small" color={SimulatorColors.brand} />
+                <Text style={aiStyles.loadingText}>Analyzing your session...</Text>
+              </View>
+            ) : aiEval != null ? (
+              <>
+                <Text style={styles.bodyText}>{aiEval.overallImpression}</Text>
+                <View style={aiStyles.scoreRow}>
+                  <AIScorePill label="Empathy" score={aiEval.empathyScore} />
+                  <AIScorePill label="Clarity" score={aiEval.clarityScore} />
+                  <AIScorePill label="Professional" score={aiEval.professionalismScore} />
+                </View>
+                <View style={aiStyles.callout}>
+                  <Text style={aiStyles.calloutLabel}>Top Strength</Text>
+                  <Text style={aiStyles.calloutText}>{aiEval.topStrength}</Text>
+                </View>
+                <View style={[aiStyles.callout, aiStyles.calloutAmber]}>
+                  <Text style={aiStyles.calloutLabel}>Growth Area</Text>
+                  <Text style={aiStyles.calloutText}>{aiEval.topGrowthArea}</Text>
+                </View>
+                {aiEval.coachingNotes.map((note, i) => (
+                  <Text key={i} style={styles.bulletItem}>{'• '}{note}</Text>
+                ))}
+              </>
+            ) : null}
+          </SectionCard>
+        )}
+
         {scenario != null && (
           <SectionCard title="Success Criteria">
             {scenario.successCriteria.map((criterion, i) => (
@@ -229,6 +280,21 @@ export default function FeedbackScreen() {
         </Pressable>
       </ScrollView>
     </SafeAreaView>
+  );
+}
+
+function AIScorePill({ label, score }: { label: string; score: number }) {
+  const pct = Math.round((score / 5) * 100);
+  const color =
+    score >= 4 ? SimulatorColors.scoreGreen :
+    score >= 3 ? SimulatorColors.brand :
+    score >= 2 ? SimulatorColors.scoreYellow :
+    SimulatorColors.scoreOrange;
+  return (
+    <View style={aiStyles.pill}>
+      <Text style={aiStyles.pillLabel}>{label}</Text>
+      <Text style={[aiStyles.pillScore, { color }]}>{pct}%</Text>
+    </View>
   );
 }
 
@@ -438,6 +504,71 @@ const scoreStyles = StyleSheet.create({
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     marginBottom: 3,
+  },
+  calloutText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: SimulatorColors.textPrimary,
+  },
+});
+
+const aiStyles = StyleSheet.create({
+  loadingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingVertical: 8,
+  },
+  loadingText: {
+    fontSize: 14,
+    color: SimulatorColors.textSecondary,
+  },
+  scoreRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginTop: 10,
+    marginBottom: 4,
+  },
+  pill: {
+    flex: 1,
+    backgroundColor: SimulatorColors.screenBackground,
+    borderRadius: Radius.md,
+    borderWidth: 1,
+    borderColor: SimulatorColors.border,
+    padding: 10,
+    alignItems: 'center',
+    gap: 2,
+  },
+  pillLabel: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: SimulatorColors.textSecondary,
+    textTransform: 'uppercase',
+    letterSpacing: 0.3,
+  },
+  pillScore: {
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  callout: {
+    backgroundColor: SimulatorColors.greenBackground,
+    borderWidth: 1,
+    borderColor: SimulatorColors.greenBorder,
+    borderRadius: Radius.md,
+    padding: 12,
+    marginTop: 8,
+    gap: 3,
+  },
+  calloutAmber: {
+    backgroundColor: SimulatorColors.amberBackground,
+    borderColor: SimulatorColors.amberBorder,
+  },
+  calloutLabel: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: SimulatorColors.textSecondary,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   calloutText: {
     fontSize: 14,

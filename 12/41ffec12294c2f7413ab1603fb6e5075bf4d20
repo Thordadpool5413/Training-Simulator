@@ -1,0 +1,46 @@
+src/app/simulation.tsx
+  s_4dd6ce9d67e608::t_951f42503d5a92 86
+  s_4dd6ce9d67e608::t_69bdc250d2de04 101
+  s_4dd6ce9d67e608::t_48f627e6ed47d1 249,255-257
+  s_4dd6ce9d67e608::t_749fe348d759fe 116
+  s_4dd6ce9d67e608::t_68255097039caf 218-219
+src/app/dashboard.tsx
+  s_4dd6ce9d67e608::t_0e58c24c83b4cd 52
+  s_4dd6ce9d67e608::t_fb3b8659ec03df 93,99
+  s_4dd6ce9d67e608::t_ba8f42571c8227 41
+src/app/scenario-briefing.tsx
+  s_4dd6ce9d67e608::t_77639f405e10e4 20
+  s_4dd6ce9d67e608::t_f289f41b205aed 62-66,69
+  s_4dd6ce9d67e608::t_e7bd9c46e228d2 33
+  s_4dd6ce9d67e608::t_1115335280a455 48
+  s_4dd6ce9d67e608::t_f4cf85222c73e5 96
+src/app/scenario.tsx
+  s_4dd6ce9d67e608::t_534ffae5050110 84-85
+  s_4dd6ce9d67e608::t_f6291cfa6b979d 38-41
+  s_4dd6ce9d67e608::t_e39ffb7be19791 20-23
+  s_4dd6ce9d67e608::t_6786a75061d522 63-66
+src/app/index.tsx
+  s_4dd6ce9d67e608::t_4393c4f5e5b9e4 18-21
+src/app/feedback.tsx
+  s_4dd6ce9d67e608::t_8af85a5c01635c 61
+  s_4dd6ce9d67e608::t_fb2a9448faef51 50
+  s_4dd6ce9d67e608::t_5d6c92fedae03b 148,154
+src/app/role.tsx
+  s_4dd6ce9d67e608::t_aa0f8e810c64a9 35-36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "1241ffec12294c2f7413ab1603fb6e5075bf4d20",
+  "prompts": {},
+  "sessions": {
+    "s_4dd6ce9d67e608": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55cc4203-2362-432c-9323-e9946683cd1f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

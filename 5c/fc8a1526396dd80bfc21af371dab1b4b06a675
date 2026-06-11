@@ -1,0 +1,48 @@
+src/app/dashboard.tsx
+  s_4dd6ce9d67e608::t_a61b9a1530f3f8 148-162
+  s_4dd6ce9d67e608::t_860b75566f4ab9 94-130
+  s_4dd6ce9d67e608::t_1209112c4b1ac6 298-382
+  s_4dd6ce9d67e608::t_db57c02201b4aa 7,9,21-22
+  s_4dd6ce9d67e608::t_2f7e2671e3f8b6 12
+src/app/feedback.tsx
+  s_4dd6ce9d67e608::t_bd6eed6d022ff7 3,18-19,23,27,35-36,38,50-61,157-178,266-289
+src/app/scenario-briefing.tsx
+  s_4dd6ce9d67e608::t_9ae7a601ad770b 6-7,9,61,82-94,107-143,182,204-269
+src/components/MedicationCard.tsx
+  s_4dd6ce9d67e608::t_f06dbfd0991b1f 1-202
+src/state/SimulatorContext.tsx
+  s_4dd6ce9d67e608::t_85a113f0cf419d 1,3,10,21-22,35-36,51-54,67,90-109,117,131-132,141-142
+src/services/feedbackService.ts
+  s_4dd6ce9d67e608::t_dbbf4b33eb86b6 102-104,106,109,112,115,118,121,124,127,130,133,136,139,142
+  s_4dd6ce9d67e608::t_786291e6c26c32 327,340
+  s_4dd6ce9d67e608::t_82f99964772c59 18
+  s_4dd6ce9d67e608::t_3114a865ef7371 55-94,99-100
+src/types/simulator.ts
+  s_4dd6ce9d67e608::t_655ec937d86c30 199-207
+src/app/reference.tsx
+  s_4dd6ce9d67e608::t_e35901e00f20b1 1-362
+src/app/index.tsx
+  s_4dd6ce9d67e608::t_b4c7fe61c4715c 24-29
+  s_4dd6ce9d67e608::t_f99cce7c44f8f8 73-86
+src/app/clinical-debrief.tsx
+  s_4dd6ce9d67e608::t_e5568aadfbe8d5 144-154
+  s_4dd6ce9d67e608::t_41679117e72b8a 31-33,50-60
+  s_4dd6ce9d67e608::t_ee5ba7eeddc3b3 207-212
+  s_4dd6ce9d67e608::t_c49caca53a66da 3,11,16,23
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "5cfc8a1526396dd80bfc21af371dab1b4b06a675",
+  "prompts": {},
+  "sessions": {
+    "s_4dd6ce9d67e608": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55cc4203-2362-432c-9323-e9946683cd1f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

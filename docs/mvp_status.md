@@ -1,6 +1,6 @@
 # MVP Status — Hospice Communication Training Simulator
 
-> **Updated:** 2026-06-10. This document reflects the stable five-scenario MVP state after Packet 51 app identity update. It is maintained as a living status record updated at each stable checkpoint.
+> **Updated:** 2026-06-10. This document reflects the stable five-scenario MVP state after Packet 54 accessibility pass. It is maintained as a living status record updated at each stable checkpoint.
 
 ---
 
@@ -8,7 +8,7 @@
 
 | Field | Value |
 |---|---|
-| Status | Stable MVP — five scenarios active |
+| Status | Release Candidate — five scenarios, accessibility pass complete |
 | Last Manual Test | 2026-06-10 (Packet 48 full regression — 50 of 50 checks passed) |
 | Open Defects | 0 |
 | TypeScript | Passes with zero errors |
@@ -185,6 +185,22 @@ App identity updated to production values. Two files modified: `app.json` and `s
 | Animated overlay color | `#208AEF` | `#2563EB` (matches splash) |
 
 Automated tests: 29 of 29 passing. TypeScript: zero errors. Commit: `d24cba9`.
+
+### Accessibility Pass (Packet 54, verified 2026-06-10)
+
+Accessibility attributes added to all six screen files. No service, data, state, type, component, theme, or package changes.
+
+| Screen | Changes |
+|---|---|
+| Welcome | `accessibilityRole="button"` on Continue |
+| Role Selection | `accessibilityRole="button"` + `accessibilityLabel` on role card Pressables |
+| Scenario Selector | `accessibilityRole="button"` + `accessibilityLabel` on Change Role and scenario card Pressables; `accessibilityRole="button"` on error state Pressables |
+| Scenario Briefing | `accessibilityRole="header"` on title; `accessibilityRole="button"` + labels on Back, Start Simulation, and error state Pressables |
+| Simulation | `accessibilityRole="button"` + `accessibilityLabel` on Finish and Send; `accessibilityLabel` on TextInput; `accessibilityState={{ disabled }}` on Send; `accessibilityRole="button"` on error state Pressables |
+| Feedback | `accessibilityRole="header"` on title; `accessibilityRole="button"` on all action Pressables |
+| Dashboard | `accessibilityRole="header"` on title; `accessibilityRole="button"` on all action Pressables |
+
+Automated tests: 29 of 29 passing. TypeScript: zero errors. Commit: `1241ffe`.
 
 ### Full Five Scenario Regression (Packet 48, verified 2026-06-10)
 

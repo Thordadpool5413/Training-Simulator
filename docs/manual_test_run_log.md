@@ -1160,3 +1160,42 @@ No services, data files, state files, type files, component files, theme files, 
 
 **npm test result:** Passed 29 of 29. Zero failures.
 **npx tsc --noEmit result:** Zero errors.
+
+---
+
+## Packet 54 — Accessibility Pass
+
+**Date:** 2026-06-10
+**Commit:** 1241ffe
+**Scope:** Accessibility attributes added across all six screen files. No service, data, state, type, component, theme, or package changes.
+
+### Changes Applied
+
+**Method:** Deterministic code trace and clean TypeScript compile.
+
+| File | Change |
+|---|---|
+| `src/app/index.tsx` | `accessibilityRole="button"` on Continue Pressable |
+| `src/app/role.tsx` | `accessibilityRole="button"` + `accessibilityLabel="Select {role.name}"` on role card Pressables |
+| `src/app/scenario.tsx` | `accessibilityRole="button"` + `accessibilityLabel="Change role"` on Change Role Pressable; `accessibilityRole="button"` + scenario-summary `accessibilityLabel` on scenario card Pressables; `accessibilityRole="button"` on error state Pressables |
+| `src/app/scenario-briefing.tsx` | `accessibilityRole="header"` on scenario title; `accessibilityRole="button"` + `accessibilityLabel="Back to scenarios"` on back link Pressable; `accessibilityRole="button"` on Start Simulation Pressable; `accessibilityRole="button"` on all error state Pressables |
+| `src/app/simulation.tsx` | `accessibilityRole="button"` + `accessibilityLabel="Finish simulation and view feedback"` on Finish Pressable; `accessibilityLabel="Type your response"` on TextInput; `accessibilityRole="button"` + `accessibilityLabel="Send response"` + `accessibilityState={{ disabled: ... }}` on Send Pressable; `accessibilityRole="button"` on all error state Pressables |
+| `src/app/feedback.tsx` | `accessibilityRole="header"` on screen title; `accessibilityRole="button"` on View Dashboard, Return to Role Selection, and empty-state Pressables |
+| `src/app/dashboard.tsx` | `accessibilityRole="header"` on screen title; `accessibilityRole="button"` on Practice Again, Return to Role Selection, and empty-state Pressables |
+
+### Verification
+
+| Check | Result |
+|---|---|
+| All Pressables have accessibilityRole="button" | Pass |
+| Screen titles have accessibilityRole="header" | Pass |
+| TextInput has accessibilityLabel | Pass |
+| Send button has accessibilityState disabled when input is empty | Pass |
+| Scenario card accessibilityLabel includes title, patient, and setting | Pass |
+| Role card accessibilityLabel includes role name | Pass |
+| No service, data, state, type, or component files modified | Pass |
+| npm test 29 of 29 passed | Pass |
+| npx tsc --noEmit zero errors | Pass |
+
+**npm test result:** Passed 29 of 29. Zero failures.
+**npx tsc --noEmit result:** Zero errors.

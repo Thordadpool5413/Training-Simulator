@@ -209,7 +209,7 @@ export default function SimulationScreen() {
               {scenario.title}
             </Text>
             <Text style={styles.headerMeta} numberOfLines={1}>
-              {role?.name ?? selectedRoleId} · {scenario.setting} ·{' '}
+              {role?.name ?? 'Learner'} · {scenario.setting} ·{' '}
               {scenario.patient.name}, age {scenario.patient.age}
             </Text>
           </View>
@@ -223,7 +223,7 @@ export default function SimulationScreen() {
         {/* Role reminder */}
         <View style={styles.reminder}>
           <Text style={styles.reminderLabel}>Role reminder</Text>
-          <Text style={styles.reminderText}>{scenario.roleReminder}</Text>
+          <Text style={styles.reminderText} numberOfLines={4}>{scenario.roleReminder}</Text>
         </View>
 
         {/* Chat area */}
@@ -349,12 +349,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     borderRadius: Radius.sm,
     borderWidth: 1,
-    borderColor: SimulatorColors.textBody,
+    borderColor: SimulatorColors.brand,
     backgroundColor: SimulatorColors.screenBackground,
   },
   finishButtonText: {
     fontSize: 14,
-    color: SimulatorColors.textBody,
+    color: SimulatorColors.brand,
     fontWeight: '600',
   },
   reminder: {

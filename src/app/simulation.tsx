@@ -2,6 +2,7 @@ import { router } from 'expo-router';
 import type { Href } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import {
+  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   Pressable,
@@ -19,6 +20,7 @@ import { roles } from '@/data/roles';
 import { safeLanguage } from '@/data/safeLanguage';
 import { scenarioHints } from '@/data/scenarioHints';
 import { scenarioTemplates } from '@/data/scenarioTemplates';
+import { fetchCoachHint } from '@/services/aiCoachService';
 import { checkMedicationSafety } from '@/services/medicationSafetyService';
 import { updateScenarioPatientState } from '@/services/patientStateDispatcher';
 import { generateScenarioResponse } from '@/services/scenarioResponseService';
@@ -55,20 +57,39 @@ export default function SimulationScreen() {
     : null;
 
   const [inputText, setInputText] = useState('');
-  const [hintIndex, setHintIndex] = useState(0);
   const [hintVisible, setHintVisible] = useState(false);
+  const [aiHint, setAiHint] = useState<string | null>(null);
+  const [hintLoading, setHintLoading] = useState(false);
+  const lastHintMsgCount = useRef(-1);
   const scrollViewRef = useRef<ScrollView>(null);
 
+  // Static fallback phrases
   const hintIds = scenario ? (scenarioHints[scenario.id] ?? []) : [];
-  const currentHintText = hintIds.length > 0
-    ? (safeLanguage.find((e) => e.id === hintIds[hintIndex % hintIds.length])?.text ?? null)
+  const staticFallback = hintIds.length > 0
+    ? (safeLanguage.find((e) => e.id === hintIds[0])?.text ?? null)
     : null;
 
   function handleHint() {
     if (!hintVisible) {
       setHintVisible(true);
+      const currentCount = conversationMessages.length;
+      if (currentCount !== lastHintMsgCount.current && scenario) {
+        setHintLoading(true);
+        setAiHint(null);
+        void fetchCoachHint({
+          scenarioId: scenario.id,
+          scenarioTitle: scenario.title,
+          role: role?.name ?? selectedRoleId ?? 'clinician',
+          learnerObjective: scenario.learnerObjective,
+          recentMessages: conversationMessages.slice(-4),
+        }).then((hint) => {
+          lastHintMsgCount.current = currentCount;
+          setAiHint(hint ?? staticFallback);
+          setHintLoading(false);
+        });
+      }
     } else {
-      setHintIndex((i) => (i + 1) % Math.max(hintIds.length, 1));
+      setHintVisible(false);
     }
   }
 
@@ -256,10 +277,10 @@ export default function SimulationScreen() {
         </ScrollView>
 
         {/* Hint banner */}
-        {hintVisible && currentHintText != null && (
+        {hintVisible && (
           <View style={styles.hintBanner}>
             <View style={styles.hintHeader}>
-              <Text style={styles.hintLabel}>Suggested Language</Text>
+              <Text style={styles.hintLabel}>AI Coach</Text>
               <Pressable
                 onPress={() => setHintVisible(false)}
                 accessibilityRole="button"
@@ -267,22 +288,24 @@ export default function SimulationScreen() {
                 <Text style={styles.hintDismiss}>✕</Text>
               </Pressable>
             </View>
-            <Text style={styles.hintText}>{currentHintText}</Text>
-            {hintIds.length > 1 && (
-              <Pressable onPress={handleHint} accessibilityRole="button">
-                <Text style={styles.hintNext}>Next hint ({hintIndex % hintIds.length + 1}/{hintIds.length})</Text>
-              </Pressable>
+            {hintLoading && aiHint == null ? (
+              <View style={styles.hintLoadingRow}>
+                <ActivityIndicator size="small" color={SimulatorColors.indigoLabel} />
+                <Text style={styles.hintLoadingText}>Getting coaching tip...</Text>
+              </View>
+            ) : (
+              <Text style={styles.hintText}>{aiHint ?? 'Try acknowledging the concern before explaining.'}</Text>
             )}
           </View>
         )}
 
         {/* Input bar */}
         <View style={styles.inputBar}>
-          {currentHintText != null && (
+          {scenario != null && (
             <Pressable
-              style={styles.hintButton}
+              style={[styles.hintButton, hintLoading && styles.hintButtonLoading]}
               accessibilityRole="button"
-              accessibilityLabel="Show language hint"
+              accessibilityLabel="Get AI coaching hint"
               onPress={handleHint}>
               <Text style={styles.hintButtonText}>Hint</Text>
             </Pressable>
@@ -517,11 +540,19 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     fontStyle: 'italic',
   },
-  hintNext: {
-    fontSize: 12,
-    color: SimulatorColors.brand,
-    fontWeight: '600',
-    marginTop: 2,
+  hintLoadingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: 4,
+  },
+  hintLoadingText: {
+    fontSize: 13,
+    color: SimulatorColors.indigoLabel,
+    fontStyle: 'italic',
+  },
+  hintButtonLoading: {
+    opacity: 0.6,
   },
 });
 

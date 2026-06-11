@@ -210,6 +210,12 @@ export interface CompletedSession {
 
 export type ScenarioDifficulty = 'beginner' | 'intermediate' | 'advanced';
 
+export interface AppSettings {
+  notificationHour: number;
+  notificationMinute: number;
+  notificationsEnabled: boolean;
+}
+
 export interface StreakData {
   currentStreak: number;
   lastPracticeDate: string | null;

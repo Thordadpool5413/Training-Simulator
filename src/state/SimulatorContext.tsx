@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import type {
+  AppSettings,
   CompletedSession,
   ConversationMessage,
   LearnerProfile,
@@ -10,15 +11,24 @@ import type {
 } from '@/types/simulator';
 import type { QuizResult } from '@/types/quiz';
 import {
+  clearAllProgress,
+  loadAppSettings,
   loadCompletedSessions,
   loadLearnerProfile,
   loadQuizResult,
   loadStreakData,
+  saveAppSettings,
   saveCompletedSessions,
   saveLearnerProfile,
   saveQuizResult,
   saveStreakData,
 } from '@/services/persistenceService';
+
+const DEFAULT_APP_SETTINGS: AppSettings = {
+  notificationHour: 18,
+  notificationMinute: 0,
+  notificationsEnabled: true,
+};
 
 const DEFAULT_STREAK: StreakData = {
   currentStreak: 0,
@@ -70,10 +80,13 @@ interface SimulatorState {
   quizResult: QuizResult | null;
   completedSessions: CompletedSession[];
   streakData: StreakData;
+  appSettings: AppSettings;
   setSelectedRoleId: (id: string) => void;
   setLearnerProfile: (profile: LearnerProfile) => void;
   setSelectedScenarioId: (id: string) => void;
   setWeeklyGoal: (goal: number) => void;
+  updateAppSettings: (patch: Partial<AppSettings>) => void;
+  resetAllProgress: () => void;
   startSimulationSession: (
     scenarioId: string,
     openingMessage: ConversationMessage,
@@ -102,6 +115,7 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
   const [quizResult, setQuizResultInternal] = useState<QuizResult | null>(null);
   const [completedSessions, setCompletedSessions] = useState<CompletedSession[]>([]);
   const [streakData, setStreakData] = useState<StreakData>(DEFAULT_STREAK);
+  const [appSettings, setAppSettings] = useState<AppSettings>(DEFAULT_APP_SETTINGS);
   const [hydrated, setHydrated] = useState(false);
 
   const sessionIdCounter = useRef(0);
@@ -109,16 +123,18 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
   // Load persisted state once on mount
   useEffect(() => {
     async function hydrate() {
-      const [profile, sessions, quiz, streak] = await Promise.all([
+      const [profile, sessions, quiz, streak, settings] = await Promise.all([
         loadLearnerProfile(),
         loadCompletedSessions(),
         loadQuizResult(),
         loadStreakData(),
+        loadAppSettings(),
       ]);
       if (profile) setLearnerProfileState(profile);
       if (sessions.length > 0) setCompletedSessions(sessions);
       if (quiz) setQuizResultInternal(quiz);
       if (streak) setStreakData(streak);
+      if (settings) setAppSettings(settings);
       setHydrated(true);
     }
     void hydrate();
@@ -147,6 +163,12 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
     if (!hydrated) return;
     void saveStreakData(streakData);
   }, [streakData, hydrated]);
+
+  // Persist appSettings changes after hydration
+  useEffect(() => {
+    if (!hydrated) return;
+    void saveAppSettings(appSettings);
+  }, [appSettings, hydrated]);
 
   function startSimulationSession(
     scenarioId: string,
@@ -192,6 +214,17 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
 
   const setWeeklyGoal = useCallback((goal: number): void => {
     setStreakData((prev) => ({ ...prev, weeklyGoal: goal }));
+  }, []);
+
+  const updateAppSettings = useCallback((patch: Partial<AppSettings>): void => {
+    setAppSettings((prev) => ({ ...prev, ...patch }));
+  }, []);
+
+  const resetAllProgress = useCallback((): void => {
+    setCompletedSessions([]);
+    setQuizResultInternal(null);
+    setStreakData(DEFAULT_STREAK);
+    void clearAllProgress();
   }, []);
 
   const recordCompletedSession = useCallback(
@@ -241,10 +274,13 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
         quizResult,
         completedSessions,
         streakData,
+        appSettings,
         setSelectedRoleId,
         setLearnerProfile,
         setSelectedScenarioId,
         setWeeklyGoal,
+        updateAppSettings,
+        resetAllProgress,
         startSimulationSession,
         appendConversationMessages,
         appendSafetyEvent,

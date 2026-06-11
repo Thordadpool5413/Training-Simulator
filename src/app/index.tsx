@@ -7,7 +7,7 @@ import { Radius, SimulatorColors } from '@/constants/theme';
 import { useSimulator } from '@/state/SimulatorContext';
 
 export default function IndexScreen() {
-  const { streakData, setSelectedRoleId, setSelectedScenarioId } = useSimulator();
+  const { streakData, learnerProfile, setSelectedRoleId, setSelectedScenarioId } = useSimulator();
   const { currentStreak, weeklySessionCount, weeklyGoal } = streakData;
 
   function handleStartDemo() {
@@ -57,6 +57,24 @@ export default function IndexScreen() {
           accessibilityRole="button"
           onPress={() => router.push('/reference' as Href)}>
           <Text style={styles.referenceButtonText}>Clinical Reference Library</Text>
+        </Pressable>
+
+        {learnerProfile == null && (
+          <Pressable
+            style={styles.profilePrompt}
+            accessibilityRole="button"
+            onPress={() => router.push('/profile-setup' as Href)}>
+            <Text style={styles.profilePromptText}>
+              Set up your profile for personalized AI coaching →
+            </Text>
+          </Pressable>
+        )}
+
+        <Pressable
+          style={styles.settingsLink}
+          accessibilityRole="button"
+          onPress={() => router.push('/settings' as Href)}>
+          <Text style={styles.settingsLinkText}>⚙ Settings</Text>
         </Pressable>
       </View>
     </SafeAreaView>
@@ -154,5 +172,28 @@ const styles = StyleSheet.create({
     color: SimulatorColors.brand,
     fontSize: 14,
     fontWeight: '600',
+  },
+  profilePrompt: {
+    marginTop: 16,
+    paddingVertical: 10,
+    alignSelf: 'stretch',
+    alignItems: 'center',
+  },
+  profilePromptText: {
+    fontSize: 13,
+    color: SimulatorColors.brand,
+    fontWeight: '500',
+    textDecorationLine: 'underline',
+  },
+  settingsLink: {
+    marginTop: 4,
+    paddingVertical: 8,
+    alignSelf: 'stretch',
+    alignItems: 'center',
+  },
+  settingsLinkText: {
+    fontSize: 13,
+    color: SimulatorColors.textSecondary,
+    fontWeight: '500',
   },
 });

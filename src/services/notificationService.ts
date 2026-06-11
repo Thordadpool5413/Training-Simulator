@@ -24,19 +24,36 @@ export async function requestNotificationPermissions(): Promise<void> {
     }
     const { status: existing } = await Notifications.getPermissionsAsync();
     if (existing === 'granted') {
-      await scheduleDailyReminder();
+      await _schedule(18, 0);
       return;
     }
     const { status } = await Notifications.requestPermissionsAsync();
     if (status === 'granted') {
-      await scheduleDailyReminder();
+      await _schedule(18, 0);
     }
   } catch {
     // silently ignore — notifications are optional
   }
 }
 
-async function scheduleDailyReminder(): Promise<void> {
+export async function rescheduleDailyReminder(
+  hour: number,
+  minute: number,
+  enabled: boolean
+): Promise<void> {
+  if (Platform.OS === 'web') return;
+  try {
+    if (!enabled) {
+      await Notifications.cancelAllScheduledNotificationsAsync();
+      return;
+    }
+    const { status } = await Notifications.getPermissionsAsync();
+    if (status !== 'granted') return;
+    await _schedule(hour, minute);
+  } catch {}
+}
+
+async function _schedule(hour: number, minute: number): Promise<void> {
   await Notifications.cancelAllScheduledNotificationsAsync();
   await Notifications.scheduleNotificationAsync({
     identifier: REMINDER_IDENTIFIER,
@@ -46,8 +63,8 @@ async function scheduleDailyReminder(): Promise<void> {
     },
     trigger: {
       type: Notifications.SchedulableTriggerInputTypes.DAILY,
-      hour: 18,
-      minute: 0,
+      hour,
+      minute,
     },
   });
 }

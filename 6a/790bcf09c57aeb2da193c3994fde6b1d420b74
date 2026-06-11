@@ -1,0 +1,60 @@
+src/services/aiEvaluationService.ts
+  s_4dd6ce9d67e608::t_f2c3e9d1662a7c 1-39
+src/constants/api.ts
+  s_4dd6ce9d67e608::t_f0e7a5f04bf779 1-6
+src/services/notificationService.ts
+  s_4dd6ce9d67e608::t_1769cc659106e4 1-8,11-47,49-60
+  s_4dd6ce9d67e608::t_ed8406753b6a04 9-10,48
+app.json
+  s_4dd6ce9d67e608::t_33f8d4518f67e2 56
+  s_4dd6ce9d67e608::t_8ff21a89b692dd 42-49
+src/app/_layout.tsx
+  s_4dd6ce9d67e608::t_8f66ad744f0b48 3,7-14,20
+src/app/certificate.tsx
+  s_4dd6ce9d67e608::t_917d322f75af23 1-370
+src/types/simulator.ts
+  s_4dd6ce9d67e608::t_f7b2b2e69bda8a 213-230
+src/services/persistenceService.ts
+  s_4dd6ce9d67e608::t_ca1e0aea828014 2,9
+  s_4dd6ce9d67e608::t_95f2f1a4e79b29 58-72
+src/state/SimulatorContext.tsx
+  s_4dd6ce9d67e608::t_1a7cf1125c3c57 104
+  s_4dd6ce9d67e608::t_695772c32b6cfd 72,76
+  s_4dd6ce9d67e608::t_e0a3fd96128175 9,16,20,23-59
+  s_4dd6ce9d67e608::t_5e88694214c468 112,116,121
+  s_4dd6ce9d67e608::t_37471f363242d2 145-150
+  s_4dd6ce9d67e608::t_d84c959b00d8e1 193-196,215
+  s_4dd6ce9d67e608::t_48bd6eaa30ea1d 243,247
+src/app/index.tsx
+  s_4dd6ce9d67e608::t_2a7ab2e6252f8b 7,10-18,22-33,40,47-54,76-100,129-141
+src/app/dashboard.tsx
+  s_4dd6ce9d67e608::t_4da2628ade56e7 59-73
+  s_4dd6ce9d67e608::t_caf433837795c4 169-176
+  s_4dd6ce9d67e608::t_882e05cbad4354 306-342
+  s_4dd6ce9d67e608::t_7d85753fd3d986 23
+src/app/feedback.tsx
+  s_4dd6ce9d67e608::t_9af005215e2ca8 3-4,11,13
+  s_4dd6ce9d67e608::t_bc06821cb8646a 198-228
+  s_4dd6ce9d67e608::t_94e0031bb06029 29-30
+  s_4dd6ce9d67e608::t_ab77d3e52dab66 286-300
+  s_4dd6ce9d67e608::t_d0a4119d9ab90a 515-579
+  s_4dd6ce9d67e608::t_5ae550675282a6 65-81
+src/app/demo.tsx
+  s_4dd6ce9d67e608::t_3a7b63841d687b 1-218
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "6a790bcf09c57aeb2da193c3994fde6b1d420b74",
+  "prompts": {},
+  "sessions": {
+    "s_4dd6ce9d67e608": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55cc4203-2362-432c-9323-e9946683cd1f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

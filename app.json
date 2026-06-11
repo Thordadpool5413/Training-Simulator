@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "my-first-app",
-    "slug": "my-first-app",
+    "name": "Hospice Training Simulator",
+    "slug": "hospice-training-simulator",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myfirstapp",
-    "userInterfaceStyle": "automatic",
+    "scheme": "hospicetraining",
+    "userInterfaceStyle": "light",
     "ios": {
-      "icon": "./assets/expo.icon",
-      "bundleIdentifier": "com.thordadpool.myfirstapp",
+      "icon": "./assets/images/icon.png",
+      "bundleIdentifier": "com.thordadpool.hospicetraining",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -22,7 +22,7 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.thordadpool.myfirstapp"
+      "package": "com.thordadpool.hospicetraining"
     },
     "web": {
       "output": "static",
@@ -33,7 +33,7 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#208AEF",
+          "backgroundColor": "#2563EB",
           "android": {
             "image": "./assets/images/splash-icon.png",
             "imageWidth": 76

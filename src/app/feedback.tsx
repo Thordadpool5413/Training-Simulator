@@ -5,6 +5,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Radius, SimulatorColors } from '@/constants/theme';
+import { scenarioTemplates } from '@/data/scenarioTemplates';
 import { generateFeedbackReport } from '@/services/feedbackService';
 import { generateSkillScoreReport } from '@/services/scoringService';
 import { useSimulator } from '@/state/SimulatorContext';
@@ -18,6 +19,8 @@ export default function FeedbackScreen() {
     safetyEvents,
     patientStateSnapshots,
   } = useSimulator();
+
+  const scenario = scenarioTemplates.find((s) => s.id === activeScenarioId);
 
   const report = useMemo<FeedbackReport | null>(() => {
     if (!activeScenarioId || conversationMessages.length === 0) return null;
@@ -56,6 +59,9 @@ export default function FeedbackScreen() {
     <SafeAreaView style={styles.safe}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.screenTitle}>Simulation Feedback</Text>
+        {scenario != null && (
+          <Text style={styles.screenSubtitle}>{scenario.title}</Text>
+        )}
 
         <SectionCard title="Overall Coaching Summary">
           <Text style={styles.bodyText}>{report.overallCoachingSummary}</Text>
@@ -72,9 +78,13 @@ export default function FeedbackScreen() {
         </SectionCard>
 
         <SectionCard title="What Changed the Room">
-          {report.whatChangedTheRoom.map((item, i) => (
-            <Text key={i} style={styles.bodyText}>{item}</Text>
-          ))}
+          {report.whatChangedTheRoom.length > 0 ? (
+            report.whatChangedTheRoom.map((item, i) => (
+              <Text key={i} style={styles.bulletItem}>{'• '}{item}</Text>
+            ))
+          ) : (
+            <Text style={styles.bodyText}>Nothing specific detected yet — keep practicing.</Text>
+          )}
         </SectionCard>
 
         <SectionCard title="Missed Emotional Cues">
@@ -187,6 +197,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '700',
     color: SimulatorColors.textPrimary,
+    marginBottom: 4,
+  },
+  screenSubtitle: {
+    fontSize: 14,
+    color: SimulatorColors.textSecondary,
+    lineHeight: 20,
     marginBottom: 8,
   },
   bodyText: {

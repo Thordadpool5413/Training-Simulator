@@ -1,0 +1,37 @@
+src/app/feedback.tsx
+  s_4dd6ce9d67e608::t_1f6948b27b128b 61
+src/types/simulator.ts
+  s_4dd6ce9d67e608::t_6a29187c98f4aa 209
+src/app/dashboard.tsx
+  s_4dd6ce9d67e608::t_d4187c4f83e03d 169-176
+  s_4dd6ce9d67e608::t_3bda44a9498284 338-350
+src/services/voiceService.ts
+  s_4dd6ce9d67e608::t_2d21b60f44e9d0 1-82,85-91
+  s_4dd6ce9d67e608::t_c7dd9a21b20f22 83-84
+src/app/analytics.tsx
+  s_4dd6ce9d67e608::t_e6f75cf4bb95a1 1-302
+src/app/simulation.tsx
+  s_4dd6ce9d67e608::t_78b2cc7c4b6079 1,24,29,69-81,112-255,258,354-362,371,408-440,442,444-455,457-475,483-546,698-699,767-877
+src/services/aiPatientService.ts
+  s_4dd6ce9d67e608::t_ca5042ed7988b1 1-39
+src/services/analyticsService.ts
+  s_4dd6ce9d67e608::t_965049f2409120 1-77
+app.json
+  s_4dd6ce9d67e608::t_7060707a1f5e34 14-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "9417120342fc657fd56c0a7137f1bf4330621545",
+  "prompts": {},
+  "sessions": {
+    "s_4dd6ce9d67e608": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55cc4203-2362-432c-9323-e9946683cd1f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

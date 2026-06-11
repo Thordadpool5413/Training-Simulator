@@ -1,0 +1,76 @@
+src/services/esrdComfortCareResponseService.ts
+  s_4dd6ce9d67e608::t_e5d01b9bde3bae 1-146
+src/data/roles.ts
+  s_4dd6ce9d67e608::t_ef9887480fa952 74-112
+src/__tests__/feedback.test.ts
+  s_4dd6ce9d67e608::t_d4377dfc7c8fdb 105-167
+src/services/advancedDementiaGriefResponseService.ts
+  s_4dd6ce9d67e608::t_acc49415c65a30 1-141
+src/__tests__/scoring.test.ts
+  s_4dd6ce9d67e608::t_14dfa4cd70500c 143-175,201-214,219-220
+  s_4dd6ce9d67e608::t_5e1797c1c833d6 48-77,215-218
+src/services/advancedDementiaGriefPatientStateService.ts
+  s_4dd6ce9d67e608::t_d0981d3e8318ee 1-259
+src/data/diagnoses.ts
+  s_4dd6ce9d67e608::t_527e45f45ed47d 151-209
+src/services/esrdComfortCareFeedbackService.ts
+  s_4dd6ce9d67e608::t_5dfacbdef7d238 1-208
+src/services/scenarioResponseService.ts
+  s_4dd6ce9d67e608::t_66de2345bf2c83 2,5,9
+  s_4dd6ce9d67e608::t_d48245405fa17c 36-44
+src/services/patientStateDispatcher.ts
+  s_4dd6ce9d67e608::t_08925d73fabeaa 2,4,8
+  s_4dd6ce9d67e608::t_a32511e5a6666f 25-33
+src/services/scoringService.ts
+  s_4dd6ce9d67e608::t_522e61195ec325 1-2,5
+  s_4dd6ce9d67e608::t_e6b7605f7884f8 429-437
+src/services/prognosticUncertaintyScoringService.ts
+  s_4dd6ce9d67e608::t_dca057afd4473d 1-430
+src/services/feedbackService.ts
+  s_4dd6ce9d67e608::t_8c2072456868f9 2-3,6
+  s_4dd6ce9d67e608::t_2e495bdbca0771 66-74
+src/data/scenarioTemplates.ts
+  s_4dd6ce9d67e608::t_65a615decaf7fe 240-357
+src/services/prognosticUncertaintyResponseService.ts
+  s_4dd6ce9d67e608::t_4ea910cf491df8 1-129
+src/services/advancedDementiaGriefScoringService.ts
+  s_4dd6ce9d67e608::t_b8a180998f2c8c 1-380
+src/__tests__/dashboard.test.ts
+  s_4dd6ce9d67e608::t_381e99bf24fd7c 13
+  s_4dd6ce9d67e608::t_69c4261eeea484 185-281
+src/data/safeLanguage.ts
+  s_4dd6ce9d67e608::t_e5b892035e57fe 104-138
+src/services/prognosticUncertaintyFeedbackService.ts
+  s_4dd6ce9d67e608::t_7a36b3df8dea38 1-188
+src/services/prognosticUncertaintyPatientStateService.ts
+  s_4dd6ce9d67e608::t_7682b6612bd10f 1-225
+src/services/advancedDementiaGriefFeedbackService.ts
+  s_4dd6ce9d67e608::t_76be69c7f274a7 1-189
+src/services/esrdComfortCareScoringService.ts
+  s_4dd6ce9d67e608::t_6e5b4a25fbf8b8 1-415
+src/__tests__/scenarioResponse.test.ts
+  s_4dd6ce9d67e608::t_87c67e8ab0c884 48-65
+src/services/dashboardService.ts
+  s_4dd6ce9d67e608::t_02700b8d90392f 87-142
+  s_4dd6ce9d67e608::t_8c7f16e0356b06 42-44
+src/data/patientStateDefaults.ts
+  s_4dd6ce9d67e608::t_190ac70519a436 116-163
+src/services/esrdComfortCarePatientStateService.ts
+  s_4dd6ce9d67e608::t_d08003099917dc 1-273
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "a3e155a8cc997a569babe52cd9221f3e7cd1ab89",
+  "prompts": {},
+  "sessions": {
+    "s_4dd6ce9d67e608": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55cc4203-2362-432c-9323-e9946683cd1f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

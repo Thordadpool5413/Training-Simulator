@@ -89,6 +89,11 @@ export default function DashboardScreen() {
         </SectionCard>
 
         <Pressable
+          style={styles.practiceAgainButton}
+          onPress={() => router.push('/scenario' as Href)}>
+          <Text style={styles.practiceAgainButtonText}>Practice Again</Text>
+        </Pressable>
+        <Pressable
           style={[styles.button, styles.returnButton]}
           onPress={() => router.push('/role' as Href)}>
           <Text style={styles.buttonText}>Return to Role Selection</Text>
@@ -159,6 +164,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
     color: SimulatorColors.textPrimary,
+  },
+  practiceAgainButton: {
+    backgroundColor: SimulatorColors.surface,
+    borderRadius: Radius.md,
+    paddingVertical: 14,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: SimulatorColors.brand,
+  },
+  practiceAgainButtonText: {
+    color: SimulatorColors.brand,
+    fontSize: 16,
+    fontWeight: '600',
   },
   button: {
     backgroundColor: SimulatorColors.brand,

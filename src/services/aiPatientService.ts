@@ -2,6 +2,8 @@ import { BACKEND_URL, CLIENT_ID } from '@/constants/api';
 import type { ConversationMessage, PatientState } from '@/types/simulator';
 
 export async function fetchPatientResponse(params: {
+  scenarioId: string;
+  diagnosisId?: string;
   scenarioTitle: string;
   openingSpeakerName: string;
   role: string;
@@ -17,6 +19,8 @@ export async function fetchPatientResponse(params: {
         x_client_id: CLIENT_ID,
       },
       body: JSON.stringify({
+        scenarioId: params.scenarioId,
+        diagnosisId: params.diagnosisId,
         scenarioTitle: params.scenarioTitle,
         openingSpeakerName: params.openingSpeakerName,
         role: params.role,

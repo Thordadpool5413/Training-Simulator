@@ -186,6 +186,8 @@ export default function SimulationScreen() {
     try {
       const historyWithLearner = [...conversationMessages, newMessage];
       const aiText = await fetchPatientResponse({
+        scenarioId: scenario.id,
+        diagnosisId: scenario.knownDiagnosisId,
         scenarioTitle: scenario.title,
         openingSpeakerName: scenario.openingSpeakerName,
         role: role?.name ?? selectedRoleId ?? 'clinician',

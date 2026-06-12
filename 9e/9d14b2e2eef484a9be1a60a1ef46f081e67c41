@@ -1,0 +1,31 @@
+src/app/feedback.tsx
+  s_4dd6ce9d67e608::t_57ff691a3b8a4a 236-268
+  s_4dd6ce9d67e608::t_9653a83454eee8 601-627
+src/types/simulator.ts
+  s_4dd6ce9d67e608::t_d7277b1c5bb4fd 236
+src/services/patientStateService.ts
+  s_4dd6ce9d67e608::t_ca9b6a2aa28477 148-150,154-163,165-167,170-181,184,186-188,191-195,198,200-202,205-217,219-221,226-228
+  s_4dd6ce9d67e608::t_03f429d1cd00e7 25-37
+src/data/scenarioTemplates.ts
+  s_4dd6ce9d67e608::t_a0763df9078fa9 650-768
+src/data/patientStateDefaults.ts
+  s_4dd6ce9d67e608::t_f3ee9abd75a350 260-307
+src/data/scenarioHints.ts
+  s_4dd6ce9d67e608::t_6330e5bafafd81 82-96
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "9e9d14b2e2eef484a9be1a60a1ef46f081e67c41",
+  "prompts": {},
+  "sessions": {
+    "s_4dd6ce9d67e608": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55cc4203-2362-432c-9323-e9946683cd1f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

@@ -1,0 +1,25 @@
+src/app/feedback.tsx
+  s_4dd6ce9d67e608::t_cbb57c8b504356 73-77
+src/services/aiPatientService.ts
+  s_4dd6ce9d67e608::t_4e95fef836a817 8,12-14,29,33-35
+src/app/simulation.tsx
+  s_4dd6ce9d67e608::t_0870975a938c03 192,196-198
+src/services/aiEvaluationService.ts
+  s_4dd6ce9d67e608::t_37d4b201761d29 8-12,33-37
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "70cf0360967ca96271a7873f74364571058f968b",
+  "prompts": {},
+  "sessions": {
+    "s_4dd6ce9d67e608": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55cc4203-2362-432c-9323-e9946683cd1f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

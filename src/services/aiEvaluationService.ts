@@ -5,6 +5,11 @@ export async function fetchAIEvaluation(params: {
   scenarioId: string;
   scenarioTitle: string;
   role: string;
+  learnerObjective?: string;
+  roleReminder?: string;
+  hiddenFamilyFear?: string;
+  successCriteria?: string[];
+  failureCriteria?: string[];
   messages: ConversationMessage[];
   safetyEventCount: number;
   overallScore: number;
@@ -25,6 +30,11 @@ export async function fetchAIEvaluation(params: {
         scenarioId: params.scenarioId,
         scenarioTitle: params.scenarioTitle,
         role: params.role,
+        learnerObjective: params.learnerObjective,
+        roleReminder: params.roleReminder,
+        hiddenFamilyFear: params.hiddenFamilyFear,
+        successCriteria: params.successCriteria,
+        failureCriteria: params.failureCriteria,
         transcript,
         safetyEventCount: params.safetyEventCount,
         overallScore: params.overallScore,

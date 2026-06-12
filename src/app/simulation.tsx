@@ -189,9 +189,13 @@ export default function SimulationScreen() {
         scenarioId: scenario.id,
         diagnosisId: scenario.knownDiagnosisId,
         scenarioTitle: scenario.title,
+        setting: scenario.setting,
         openingSpeakerName: scenario.openingSpeakerName,
         role: role?.name ?? selectedRoleId ?? 'clinician',
         learnerObjective: scenario.learnerObjective,
+        hiddenFamilyFear: scenario.hiddenFamilyFear,
+        recentClinicalChange: scenario.recentClinicalChange,
+        whoIsPresent: scenario.whoIsPresent,
         patientState: result.updatedState,
         conversationHistory: historyWithLearner,
       });

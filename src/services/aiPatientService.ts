@@ -5,9 +5,13 @@ export async function fetchPatientResponse(params: {
   scenarioId: string;
   diagnosisId?: string;
   scenarioTitle: string;
+  setting?: string;
   openingSpeakerName: string;
   role: string;
   learnerObjective: string;
+  hiddenFamilyFear?: string;
+  recentClinicalChange?: string;
+  whoIsPresent?: string[];
   patientState: PatientState | null;
   conversationHistory: ConversationMessage[];
 }): Promise<string | null> {
@@ -22,9 +26,13 @@ export async function fetchPatientResponse(params: {
         scenarioId: params.scenarioId,
         diagnosisId: params.diagnosisId,
         scenarioTitle: params.scenarioTitle,
+        setting: params.setting,
         openingSpeakerName: params.openingSpeakerName,
         role: params.role,
         learnerObjective: params.learnerObjective,
+        hiddenFamilyFear: params.hiddenFamilyFear,
+        recentClinicalChange: params.recentClinicalChange,
+        whoIsPresent: params.whoIsPresent,
         patientState: params.patientState,
         conversationHistory: params.conversationHistory.map((m) => ({
           sender: m.sender,

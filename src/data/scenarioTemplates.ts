@@ -647,4 +647,123 @@ export const scenarioTemplates: ScenarioTemplate[] = [
     ],
     patientStateDefaultId: 'can_change_minds',
   },
+  {
+    id: 'patient_direct_prognosis',
+    title: 'How Long Do I Have?',
+    allowedRoleId: 'rn',
+    difficulty: 'advanced',
+    setting: 'Patient home, routine nursing visit',
+    patient: {
+      name: 'George Holloway',
+      age: 68,
+    },
+    knownDiagnosisId: 'advanced_pancreatic_cancer',
+    recentClinicalChange:
+      'George has advanced pancreatic cancer diagnosed four months ago. He is alert, fully oriented, and has been asking the hospice team increasingly direct questions. Today he stopped the routine assessment and asked the nurse directly how long he has left. He has an estranged adult daughter he has not spoken to in three years.',
+    whoIsPresent: ['George'],
+    learnerObjective:
+      "Acknowledge George's right to ask directly. Do not give a specific time estimate. Hold space for the emotion behind the question. Connect him to the hospice physician for an honest prognosis conversation. If he mentions unfinished relationship business, gently acknowledge that without redirecting away from it.",
+    roleReminder:
+      "You are an RN. You may acknowledge the question, provide honest general information about hospice prognosis discussions, and offer to connect George with the hospice physician for that conversation. You should not give a specific time estimate, make prognosis statements, or give medication guidance unrelated to this conversation.",
+    hiddenFamilyFear:
+      "George is not afraid of dying. He is afraid of running out of time to reconcile with his daughter before he goes. The prognosis question is really a question about whether he has time to fix what he broke. He needs someone to see through the medical question to the human one.",
+    openingSpeakerName: 'George',
+    openingLine:
+      "You can stop with the blood pressure for a minute. I want to ask you something. How long do I actually have? I need someone to be straight with me.",
+    successCriteria: [
+      "Acknowledges that George deserves a straight answer and takes the question seriously.",
+      'Does not give a specific time estimate.',
+      'Explains that the hospice physician is the right person for an honest prognosis conversation and offers to arrange it.',
+      'Creates space for what is behind the question — does not rush to close the topic.',
+      'Does not deflect or minimize the question with false reassurance.',
+    ],
+    failureCriteria: [
+      'Gives a specific time estimate or implies a number.',
+      'Deflects the question without offering a path to a real answer.',
+      'Responds only with clinical information without acknowledging the emotional weight.',
+      'Gives medication guidance unrelated to the conversation.',
+    ],
+    patientStateDefaultId: 'patient_direct_prognosis',
+  },
+  {
+    id: 'family_spiritual_conflict',
+    title: 'God Is Going to Heal Her',
+    allowedRoleId: 'social_worker',
+    difficulty: 'advanced',
+    setting: 'Patient home, living room',
+    patient: {
+      name: 'Rosalie Carter',
+      age: 71,
+    },
+    knownDiagnosisId: 'advanced_cancer',
+    recentClinicalChange:
+      "Rosalie has advanced ovarian cancer and elected hospice three weeks ago after a candid goals-of-care conversation with her oncologist. She told the social work team she is at peace with comfort-focused care. Her brother Raymond arrived from out of state yesterday and is insisting the family revoke hospice, stating that God will heal Rosalie if the family does not give up faith. Rosalie is too weak to advocate for herself today.",
+    whoIsPresent: ['Raymond Carter, her brother'],
+    learnerObjective:
+      "Acknowledge Raymond's faith without challenging it. Clarify that Rosalie made this decision while fully capable, and that it reflects her own values and expressed wishes. Explain that revocation is a right but that the decision belongs to Rosalie, not to family members. Do not take sides on the theological question. Offer to facilitate a family meeting that includes Rosalie when she is able.",
+    roleReminder:
+      'You are a Social Worker. You may acknowledge Raymond\'s faith and distress, explain patient self-determination, and offer to facilitate a family meeting. You should not challenge his religious beliefs, tell him his faith is misplaced, take Carol\'s side, or make clinical prognosis statements. You should not provide medication guidance.',
+    hiddenFamilyFear:
+      "Raymond believes that agreeing to hospice means the family has stopped praying and stopped believing God can heal Rosalie. In his view, accepting comfort care is an act of faithlessness, and he carries the terror that his sister will die because her family didn't fight hard enough spiritually. He is not malicious — he is terrified and acting from love.",
+    openingSpeakerName: 'Raymond',
+    openingLine:
+      "I just got here yesterday and I am telling you, we are revoking this hospice. God is going to heal my sister. You people have given up on her and we have not. I need you to undo whatever papers she signed.",
+    successCriteria: [
+      "Acknowledges Raymond's faith and love for his sister without arguing with his beliefs.",
+      "Explains that Rosalie made this decision herself, while fully capable, and that it reflects her values.",
+      "Clarifies that revocation is Rosalie's right — not a family member's right to invoke on her behalf.",
+      "Stays neutral on the theological question.",
+      "Offers to facilitate a family meeting that includes Rosalie when she is able.",
+      "Does not use dismissive or clinical language that would shut Raymond down.",
+    ],
+    failureCriteria: [
+      "Challenges or dismisses Raymond's religious beliefs.",
+      "Agrees to revoke hospice based on Raymond's demand alone.",
+      "Takes Rosalie's side in a way that frames Raymond as the problem.",
+      "Makes a clinical prognosis statement.",
+      "Provides medication guidance outside Social Worker role.",
+    ],
+    patientStateDefaultId: 'family_spiritual_conflict',
+  },
+  {
+    id: 'icu_transfer_to_hospice',
+    title: 'They Said She Won\'t Make It',
+    allowedRoleId: 'clinical_liaison',
+    difficulty: 'intermediate',
+    setting: 'Hospital ICU family waiting room',
+    patient: {
+      name: 'Sandra Keller',
+      age: 64,
+    },
+    knownDiagnosisId: 'advanced_heart_failure',
+    recentClinicalChange:
+      "Sandra Keller had an acute cardiac event eight days ago and underwent emergency cardiac surgery. The surgical team determined that her heart is not recovering and that further intervention carries high mortality with no expectation of meaningful recovery. The attending physician spoke with her husband Richard this morning and recommended a transition to comfort-focused care. Richard requested to speak with the hospice liaison.",
+    whoIsPresent: ['Richard Keller, her husband'],
+    learnerObjective:
+      "Acknowledge Richard's shock and grief. Explain what a hospice transition from ICU means in plain language — what stays the same, what changes, what he can expect. Do not minimize the severity of what is happening or offer false hope. Do not pressure him toward a decision. Give him time and a clear next step.",
+    roleReminder:
+      'You are a Clinical Liaison. You may explain the hospice transition process, what comfort-focused care in an ICU transfer looks like, and what support the hospice team provides. You should not confirm or contradict the medical prognosis, determine hospice eligibility, prescribe, or tell Richard what decision he should make.',
+    hiddenFamilyFear:
+      "Richard has not accepted what the surgeon told him this morning. He is still in shock. Part of him believes that if he agrees to hospice, Sandra will die faster — that stopping curative care is what kills her, not the underlying condition. He came to this meeting hoping someone would give him a reason to hold on.",
+    openingSpeakerName: 'Richard',
+    openingLine:
+      "The doctor said she won't make it. He wants us to think about hospice. We've been married 45 years. I don't understand what that means. Are they just going to stop helping her?",
+    successCriteria: [
+      "Acknowledges Richard's shock and the weight of what he was just told before explaining anything.",
+      "Explains what a hospice transition means — what stays the same (comfort, pain management, presence) and what changes.",
+      "Does not minimize the severity or offer false hope.",
+      "Does not pressure Richard toward a decision.",
+      "Corrects the misconception that hospice means stopping help — reframes as a change in the kind of help.",
+      "Gives Richard a clear next step and does not leave him without support.",
+    ],
+    failureCriteria: [
+      "Jumps to explaining hospice services before acknowledging the emotional reality.",
+      "Confirms or contradicts the medical prognosis.",
+      "Implies that choosing hospice will cause Sandra to die sooner.",
+      "Pressures Richard toward a decision.",
+      "Provides medication guidance outside Clinical Liaison role.",
+      "Leaves Richard without a next step.",
+    ],
+    patientStateDefaultId: 'icu_transfer_to_hospice',
+  },
 ];

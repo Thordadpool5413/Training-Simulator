@@ -79,4 +79,19 @@ export const scenarioHints: Record<string, string[]> = {
     'cl_hospice_as_choice',
     'cl_revocation_repair',
   ],
+  patient_direct_prognosis: [
+    'rn_dying_process_explanation',
+    'rn_provider_routing',
+    'rn_when_to_call',
+  ],
+  family_spiritual_conflict: [
+    'sw_autonomy_plain_language',
+    'sw_values_elicitation',
+    'sw_surrogate_decision_explained',
+  ],
+  icu_transfer_to_hospice: [
+    'cl_hospice_as_choice',
+    'hospice_fear_response',
+    'cl_what_hospice_provides',
+  ],
 };

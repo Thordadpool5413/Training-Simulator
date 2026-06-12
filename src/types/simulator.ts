@@ -233,6 +233,7 @@ export interface AIEvaluation {
   topStrength: string;
   topGrowthArea: string;
   coachingNotes: string[];
+  criteriaResults?: { criterion: string; met: boolean }[];
 }
 
 export interface ScenarioTemplate {

@@ -233,24 +233,39 @@ export default function FeedbackScreen() {
         )}
 
         {scenario != null && (
-          <SectionCard title="Success Criteria">
-            {scenario.successCriteria.map((criterion, i) => (
-              <View key={i} style={styles.criterionRow}>
-                <Text style={styles.successBullet}>✓</Text>
-                <Text style={styles.criterionText}>{criterion}</Text>
-              </View>
-            ))}
-          </SectionCard>
-        )}
-
-        {scenario != null && (
-          <SectionCard title="Watch-Out Criteria">
-            {scenario.failureCriteria.map((criterion, i) => (
-              <View key={i} style={styles.criterionRow}>
-                <Text style={styles.failBullet}>✗</Text>
-                <Text style={styles.criterionText}>{criterion}</Text>
-              </View>
-            ))}
+          <SectionCard title="Scenario Criteria">
+            {aiEval?.criteriaResults && aiEval.criteriaResults.length > 0 ? (
+              <>
+                <Text style={criteriaStyles.aiLabel}>Evaluated by AI coach</Text>
+                {aiEval.criteriaResults.map((r, i) => (
+                  <View key={i} style={styles.criterionRow}>
+                    <Text style={r.met ? styles.successBullet : styles.failBullet}>
+                      {r.met ? '✓' : '✗'}
+                    </Text>
+                    <Text style={[styles.criterionText, !r.met && criteriaStyles.missedText]}>
+                      {r.criterion}
+                    </Text>
+                  </View>
+                ))}
+              </>
+            ) : (
+              <>
+                <Text style={criteriaStyles.sectionLabel}>What to aim for</Text>
+                {scenario.successCriteria.map((criterion, i) => (
+                  <View key={i} style={styles.criterionRow}>
+                    <Text style={styles.successBullet}>✓</Text>
+                    <Text style={styles.criterionText}>{criterion}</Text>
+                  </View>
+                ))}
+                <Text style={[criteriaStyles.sectionLabel, criteriaStyles.watchLabel]}>Watch out for</Text>
+                {scenario.failureCriteria.map((criterion, i) => (
+                  <View key={i} style={styles.criterionRow}>
+                    <Text style={styles.failBullet}>✗</Text>
+                    <Text style={styles.criterionText}>{criterion}</Text>
+                  </View>
+                ))}
+              </>
+            )}
           </SectionCard>
         )}
 
@@ -580,6 +595,33 @@ const aiStyles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: SimulatorColors.textPrimary,
+  },
+});
+
+const criteriaStyles = StyleSheet.create({
+  aiLabel: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: SimulatorColors.brand,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    marginBottom: 8,
+  },
+  sectionLabel: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: SimulatorColors.textSecondary,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    marginBottom: 4,
+    marginTop: 4,
+  },
+  watchLabel: {
+    marginTop: 12,
+  },
+  missedText: {
+    color: SimulatorColors.scoreOrange,
+    fontWeight: '500',
   },
 });
 

@@ -22,6 +22,19 @@ function applyDelta(
   return result;
 }
 
+// Merge multiple deltas so all matching rules accumulate in one turn.
+function mergeDeltas(
+  deltas: Partial<Record<keyof PatientState, number>>[]
+): Partial<Record<keyof PatientState, number>> {
+  const merged: Partial<Record<keyof PatientState, number>> = {};
+  for (const delta of deltas) {
+    for (const [key, value] of Object.entries(delta) as [keyof PatientState, number][]) {
+      merged[key] = (merged[key] ?? 0) + value;
+    }
+  }
+  return merged;
+}
+
 const ABANDONMENT_TERMS = [
   'there is nothing else we can do',
   'treatment is over',
@@ -132,141 +145,86 @@ export function updatePatientState(
   void conversationMessages;
   const lower = learnerMessageText.toLowerCase();
 
-  // Rule 1 — Abandonment language
-  if (containsAny(lower, ABANDONMENT_TERMS)) {
-    return {
-      updatedState: applyDelta(currentState, {
-        trust: -15,
-        fear: 15,
-        resistance: 12,
-        hospiceMisconception: 15,
-        perceivedCompassion: -12,
-        perceivedHonesty: -10,
-      }),
-      detectedBehaviors: ['abandonment_language'],
-      stateChangeSummary:
-        'The learner used wording that could make the family hear abandonment rather than continued care.',
-    };
-  }
+  const matchedDeltas: Partial<Record<keyof PatientState, number>>[] = [];
+  const matchedBehaviors: string[] = [];
+  const matchedSummaries: string[] = [];
 
-  // Rule 2 — Strong fear acknowledgment and hospice reframe
   const hasEmotionalAck = containsAny(lower, EMOTIONAL_ACK_TERMS);
   const hasReframe = containsAny(lower, REFRAME_TERMS);
+  const hasService = containsAny(lower, SERVICE_TERMS);
+
+  // Rule 1 — Abandonment language (negative — accumulates with positives to net out)
+  if (containsAny(lower, ABANDONMENT_TERMS)) {
+    matchedDeltas.push({ trust: -15, fear: 15, resistance: 12, hospiceMisconception: 15, perceivedCompassion: -12, perceivedHonesty: -10 });
+    matchedBehaviors.push('abandonment_language');
+    matchedSummaries.push('Used wording the family heard as abandonment rather than continued care.');
+  }
+
+  // Rule 2 — Emotional acknowledgment + hospice reframe (full credit)
   if (hasEmotionalAck && hasReframe) {
-    return {
-      updatedState: applyDelta(currentState, {
-        trust: 12,
-        fear: -15,
-        resistance: -12,
-        hospiceMisconception: -15,
-        readiness: 10,
-        perceivedCompassion: 12,
-        perceivedHonesty: 8,
-      }),
-      detectedBehaviors: ['emotional_acknowledgment', 'hospice_reframe', 'care_continuity_language'],
-      stateChangeSummary:
-        "The learner acknowledged the daughter's fear and reframed hospice as continued support rather than abandonment.",
-    };
+    matchedDeltas.push({ trust: 12, fear: -15, resistance: -12, hospiceMisconception: -15, readiness: 10, perceivedCompassion: 12, perceivedHonesty: 8 });
+    matchedBehaviors.push('emotional_acknowledgment', 'hospice_reframe', 'care_continuity_language');
+    matchedSummaries.push('Acknowledged fear and reframed hospice as continued support.');
   }
 
-  // Rule 3 — Safe medication routing
-  if (
-    containsAny(lower, MED_ROUTING_PROVIDER_TERMS) &&
-    containsAny(lower, MED_ROUTING_REFUSAL_TERMS)
-  ) {
-    return {
-      updatedState: applyDelta(currentState, {
-        trust: 8,
-        perceivedHonesty: 8,
-        medicationFear: -8,
-        confusion: -5,
-      }),
-      detectedBehaviors: ['safe_medication_routing', 'role_boundary_respected'],
-      stateChangeSummary:
-        'The learner avoided guessing about medication and routed the question to the nurse or provider.',
-    };
+  // Rule 3 — Emotional acknowledgment alone (partial credit, exclusive of Rule 2)
+  if (hasEmotionalAck && !hasReframe) {
+    matchedDeltas.push({ trust: 6, fear: -8, perceivedCompassion: 8 });
+    matchedBehaviors.push('emotional_acknowledgment');
+    matchedSummaries.push('Acknowledged emotion without following through with a hospice reframe.');
   }
 
-  // Rule 4 — Repair language
+  // Rule 4 — Safe medication routing
+  if (containsAny(lower, MED_ROUTING_PROVIDER_TERMS) && containsAny(lower, MED_ROUTING_REFUSAL_TERMS)) {
+    matchedDeltas.push({ trust: 8, perceivedHonesty: 8, medicationFear: -8, confusion: -5 });
+    matchedBehaviors.push('safe_medication_routing', 'role_boundary_respected');
+    matchedSummaries.push('Routed medication question to nurse or provider.');
+  }
+
+  // Rule 5 — Repair language
   if (containsAny(lower, REPAIR_TERMS)) {
-    return {
-      updatedState: applyDelta(currentState, {
-        trust: 10,
-        perceivedHonesty: 10,
-        resistance: -8,
-        perceivedCompassion: 8,
-      }),
-      detectedBehaviors: ['repair_language'],
-      stateChangeSummary:
-        'The learner repaired prior wording and clarified that the care is not stopping.',
-    };
+    matchedDeltas.push({ trust: 10, perceivedHonesty: 10, resistance: -8, perceivedCompassion: 8 });
+    matchedBehaviors.push('repair_language');
+    matchedSummaries.push('Repaired prior wording — clarified that care is not stopping.');
   }
 
-  // Rule 5 — Hospice timeline education with reframe or service language
-  if (
-    containsAny(lower, TIMELINE_TERMS) &&
-    (containsAny(lower, REFRAME_TERMS) || containsAny(lower, SERVICE_TERMS))
-  ) {
-    return {
-      updatedState: applyDelta(currentState, {
-        trust: 10,
-        fear: -8,
-        resistance: -10,
-        hospiceMisconception: -18,
-        understanding: 15,
-        readiness: 8,
-        perceivedCompassion: 8,
-        perceivedHonesty: 10,
-      }),
-      detectedBehaviors: ['hospice_reframe', 'care_continuity_language', 'timeline_addressed'],
-      stateChangeSummary:
-        'The learner addressed the hospice timing misconception and explained that hospice support begins before the final days.',
-    };
+  // Rule 6 — Hospice timeline education
+  if (containsAny(lower, TIMELINE_TERMS) && (hasReframe || hasService)) {
+    matchedDeltas.push({ trust: 10, fear: -8, resistance: -10, hospiceMisconception: -18, understanding: 15, readiness: 8, perceivedCompassion: 8, perceivedHonesty: 10 });
+    matchedBehaviors.push('timeline_addressed');
+    matchedSummaries.push('Explained hospice timing — support begins before the final days.');
   }
 
-  // Rule 6 — Revocation and hospice choice education
+  // Rule 7 — Revocation education
   if (containsAny(lower, REVOCATION_TERMS)) {
-    return {
-      updatedState: applyDelta(currentState, {
-        trust: 10,
-        fear: -10,
-        resistance: -12,
-        hospiceMisconception: -20,
-        understanding: 15,
-        readiness: 10,
-        perceivedHonesty: 10,
-        perceivedCompassion: 5,
-      }),
-      detectedBehaviors: ['revocation_education', 'hospice_reframe', 'care_continuity_language'],
-      stateChangeSummary:
-        'The learner explained that hospice is a choice and can be revoked, addressing the core fear about irreversibility.',
-    };
+    matchedDeltas.push({ trust: 10, fear: -10, resistance: -12, hospiceMisconception: -20, understanding: 15, readiness: 10, perceivedHonesty: 10, perceivedCompassion: 5 });
+    matchedBehaviors.push('revocation_education', 'hospice_reframe');
+    matchedSummaries.push('Explained hospice can be revoked, addressing the irreversibility fear.');
   }
 
-  // Rule 7 — Service list before emotional acknowledgment
-  if (containsAny(lower, SERVICE_TERMS) && !hasEmotionalAck && !hasReframe) {
-    return {
-      updatedState: applyDelta(currentState, {
-        understanding: 5,
-        resistance: 8,
-        perceivedCompassion: -5,
-      }),
-      detectedBehaviors: ['service_explanation_before_emotion'],
-      stateChangeSummary:
-        "The learner provided factual hospice information before addressing the daughter's fear that hospice means giving up.",
-    };
+  // Rule 8 — Service info before any emotional acknowledgment (mild negative)
+  if (hasService && !hasEmotionalAck && !hasReframe) {
+    matchedDeltas.push({ understanding: 5, resistance: 8, perceivedCompassion: -5 });
+    matchedBehaviors.push('service_explanation_before_emotion');
+    matchedSummaries.push('Provided service information before addressing the emotional concern.');
   }
 
-  // Rule 8 — Fallback
-  const updatedState: PatientState =
-    learnerMessageText.trim().length < 30
-      ? applyDelta(currentState, { confusion: 3 })
-      : { ...currentState };
+  // Nothing matched — neutral or short response
+  if (matchedDeltas.length === 0) {
+    const updatedState: PatientState =
+      learnerMessageText.trim().length < 30
+        ? applyDelta(currentState, { confusion: 3 })
+        : { ...currentState };
+    return {
+      updatedState,
+      detectedBehaviors: ['neutral_response'],
+      stateChangeSummary: 'The learner response did not strongly change the emotional direction of the conversation.',
+    };
+  }
 
   return {
-    updatedState,
-    detectedBehaviors: ['neutral_response'],
-    stateChangeSummary:
-      'The learner response did not strongly change the emotional direction of the conversation.',
+    updatedState: applyDelta(currentState, mergeDeltas(matchedDeltas)),
+    detectedBehaviors: [...new Set(matchedBehaviors)],
+    stateChangeSummary: matchedSummaries.join(' '),
   };
 }

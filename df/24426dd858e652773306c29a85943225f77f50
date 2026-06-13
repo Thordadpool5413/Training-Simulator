@@ -1,0 +1,23 @@
+src/data/scenarioTemplates.ts
+  s_4dd6ce9d67e608::t_1a12e5a1fd46a9 769-1394
+src/data/patientStateDefaults.ts
+  s_4dd6ce9d67e608::t_1f39e54e370177 308-547
+src/data/scenarioHints.ts
+  s_4dd6ce9d67e608::t_b41c3f891edc76 97-171
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "df24426dd858e652773306c29a85943225f77f50",
+  "prompts": {},
+  "sessions": {
+    "s_4dd6ce9d67e608": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55cc4203-2362-432c-9323-e9946683cd1f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

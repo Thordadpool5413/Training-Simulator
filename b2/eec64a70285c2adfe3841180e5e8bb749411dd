@@ -1,0 +1,35 @@
+src/app/analytics.tsx
+  s_4dd6ce9d67e608::t_e5b5238986577f 2,9-10,14-21,24,27-60,68-77,97-105,115,122-125,128-131,133-140,143-150,156-239,241-242,244,252,257,259,297,310,315,331-357,362,364,369-379,381-383,385-390,394-402,405,417,422,482-549
+package.json
+  s_4dd6ce9d67e608::t_8623a50bf7e308 9
+src/app/feedback.tsx
+  s_4dd6ce9d67e608::t_9a74191b5eb82c 12,17
+  s_4dd6ce9d67e608::t_ffdd6d396c8122 327-344
+  s_4dd6ce9d67e608::t_57c4b14fcaa90f 144-167
+  s_4dd6ce9d67e608::t_469c70beab3b75 719-814
+  s_4dd6ce9d67e608::t_3665081fb4fe2a 27,30
+  s_4dd6ce9d67e608::t_a760e771dea9ee 58-66
+src/app/sign-up.tsx
+  s_4dd6ce9d67e608::t_c767ec0d34f0ce 40
+src/app/scenario.tsx
+  s_4dd6ce9d67e608::t_6d7a9defb54567 235-243
+  s_4dd6ce9d67e608::t_e0b54f503c6436 443-458
+src/app/onboarding.tsx
+  s_4dd6ce9d67e608::t_ec8b4a5e236c13 1-538
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "b2eec64a70285c2adfe3841180e5e8bb749411dd",
+  "prompts": {},
+  "sessions": {
+    "s_4dd6ce9d67e608": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55cc4203-2362-432c-9323-e9946683cd1f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

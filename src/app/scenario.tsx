@@ -9,8 +9,12 @@ import { diagnoses } from '@/data/diagnoses';
 import { roles } from '@/data/roles';
 import { scenarioTemplates } from '@/data/scenarioTemplates';
 import { SCENARIO_TOPICS, TOPIC_LABELS } from '@/data/scenarioTopics';
+import { useAuth } from '@/state/AuthContext';
 import { useSimulator } from '@/state/SimulatorContext';
 import type { ScenarioDifficulty, ScenarioTopic } from '@/types/simulator';
+
+const AUTH_CONFIGURED = !!(process.env.EXPO_PUBLIC_SUPABASE_URL);
+const FREE_SCENARIO_ID = 'hospice_means_giving_up';
 
 type DifficultyFilter = ScenarioDifficulty | 'all';
 type TopicFilter = ScenarioTopic | 'all';
@@ -38,6 +42,7 @@ const DIFFICULTY_COLORS: Record<ScenarioDifficulty, string> = {
 
 export default function ScenarioScreen() {
   const { selectedRoleId, setSelectedScenarioId, completedSessions } = useSimulator();
+  const { isSubscribed } = useAuth();
   const [difficultyFilter, setDifficultyFilter] = useState<DifficultyFilter>('all');
   const [topicFilter, setTopicFilter] = useState<TopicFilter>('all');
   const [searchText, setSearchText] = useState('');
@@ -94,6 +99,11 @@ export default function ScenarioScreen() {
   }
 
   function handleSelect(scenarioId: string) {
+    const isLocked = AUTH_CONFIGURED && !isSubscribed && scenarioId !== FREE_SCENARIO_ID;
+    if (isLocked) {
+      router.push('/paywall' as Href);
+      return;
+    }
     setSelectedScenarioId(scenarioId);
     router.push('/scenario-briefing' as Href);
   }
@@ -176,6 +186,7 @@ export default function ScenarioScreen() {
           const completed = completedSessions.find(
             (s) => s.scenarioId === scenario.id && s.roleId === selectedRoleId
           );
+          const isLocked = AUTH_CONFIGURED && !isSubscribed && scenario.id !== FREE_SCENARIO_ID;
           return (
             <Pressable
               key={scenario.id}
@@ -183,14 +194,22 @@ export default function ScenarioScreen() {
                 styles.card,
                 pressed && styles.cardPressed,
                 completed != null && styles.cardCompleted,
+                isLocked && styles.cardLocked,
               ]}
               accessibilityRole="button"
-              accessibilityLabel={`${scenario.title}, ${scenario.patient.name}, age ${scenario.patient.age}, ${scenario.setting}`}
+              accessibilityLabel={`${scenario.title}, ${scenario.patient.name}, age ${scenario.patient.age}, ${scenario.setting}${isLocked ? ', locked — requires subscription' : ''}`}
               onPress={() => handleSelect(scenario.id)}>
               <View style={styles.cardHeader}>
-                <Text style={styles.scenarioTitle}>{scenario.title}</Text>
+                <Text style={[styles.scenarioTitle, isLocked && styles.scenarioTitleLocked]}>
+                  {scenario.title}
+                </Text>
                 <View style={styles.badgeRow}>
-                  {scenario.difficulty != null && (
+                  {isLocked && (
+                    <View style={styles.lockBadge}>
+                      <Text style={styles.lockBadgeText}>🔒</Text>
+                    </View>
+                  )}
+                  {scenario.difficulty != null && !isLocked && (
                     <View style={[styles.diffBadge, { backgroundColor: diffBadgeBg(scenario.difficulty) }]}>
                       <Text style={[styles.diffBadgeText, { color: DIFFICULTY_COLORS[scenario.difficulty] }]}>
                         {scenario.difficulty}
@@ -346,6 +365,19 @@ const styles = StyleSheet.create({
   cardCompleted: {
     borderLeftWidth: 3,
     borderLeftColor: SimulatorColors.scoreGreen,
+  },
+  cardLocked: {
+    opacity: 0.65,
+  },
+  lockBadge: {
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+  },
+  lockBadgeText: {
+    fontSize: 14,
+  },
+  scenarioTitleLocked: {
+    color: SimulatorColors.textSecondary,
   },
   cardHeader: {
     flexDirection: 'row',

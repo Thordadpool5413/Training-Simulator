@@ -7,6 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { SectionCard } from '@/components/SectionCard';
 import { Radius, SimulatorColors } from '@/constants/theme';
 import { rescheduleDailyReminder } from '@/services/notificationService';
+import { useAuth } from '@/state/AuthContext';
 import { useSimulator } from '@/state/SimulatorContext';
 
 const WEEKLY_GOAL_OPTIONS = [1, 2, 3, 4, 5, 6, 7];
@@ -18,6 +19,8 @@ const NOTIFICATION_TIMES: { label: string; hour: number; minute: number }[] = [
   { label: '9:00 PM', hour: 21, minute: 0 },
 ];
 
+const AUTH_CONFIGURED = !!(process.env.EXPO_PUBLIC_SUPABASE_URL);
+
 export default function SettingsScreen() {
   const {
     streakData,
@@ -28,7 +31,9 @@ export default function SettingsScreen() {
     resetAllProgress,
   } = useSimulator();
 
+  const { isSignedIn, email, subscription, isSubscribed, signOut } = useAuth();
   const [savingNotif, setSavingNotif] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
 
   async function handleToggleNotifications(value: boolean) {
     setSavingNotif(true);
@@ -46,6 +51,27 @@ export default function SettingsScreen() {
     updateAppSettings({ notificationHour: hour, notificationMinute: minute });
     await rescheduleDailyReminder(hour, minute, appSettings.notificationsEnabled);
     setSavingNotif(false);
+  }
+
+  function handleSignOut() {
+    Alert.alert(
+      'Sign Out?',
+      'Your progress is saved. You can sign back in anytime.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Sign Out',
+          style: 'destructive',
+          onPress: () => {
+            setSigningOut(true);
+            void signOut().finally(() => {
+              setSigningOut(false);
+              router.replace('/welcome');
+            });
+          },
+        },
+      ]
+    );
   }
 
   function handleResetProgress() {
@@ -80,6 +106,55 @@ export default function SettingsScreen() {
         </Pressable>
 
         <Text style={styles.title} accessibilityRole="header">Settings</Text>
+
+        {AUTH_CONFIGURED && isSignedIn && (
+          <SectionCard title="Account">
+            <Text style={styles.accountEmail}>{email}</Text>
+            <View style={styles.subscriptionRow}>
+              <View>
+                <Text style={styles.subPlanLabel}>
+                  {isSubscribed
+                    ? subscription.plan === 'team' ? 'Team Plan' : 'Pro'
+                    : 'Free — No active subscription'}
+                </Text>
+                {subscription.expiresAt && (
+                  <Text style={styles.subExpiry}>
+                    Renews {new Date(subscription.expiresAt).toLocaleDateString()}
+                  </Text>
+                )}
+              </View>
+              <Pressable
+                style={isSubscribed ? styles.manageButton : styles.upgradeButton}
+                accessibilityRole="button"
+                onPress={() => router.push('/paywall' as Href)}>
+                <Text style={isSubscribed ? styles.manageButtonText : styles.upgradeButtonText}>
+                  {isSubscribed ? 'Manage' : 'Upgrade'}
+                </Text>
+              </Pressable>
+            </View>
+            <Pressable
+              style={[styles.signOutButton, signingOut && styles.signOutButtonDisabled]}
+              accessibilityRole="button"
+              onPress={handleSignOut}
+              disabled={signingOut}>
+              <Text style={styles.signOutButtonText}>
+                {signingOut ? 'Signing out...' : 'Sign Out'}
+              </Text>
+            </Pressable>
+          </SectionCard>
+        )}
+
+        {AUTH_CONFIGURED && !isSignedIn && (
+          <SectionCard title="Account">
+            <Text style={styles.noAccountText}>Sign in to sync your progress and unlock team features.</Text>
+            <Pressable
+              style={styles.signInPromptButton}
+              accessibilityRole="button"
+              onPress={() => router.push('/sign-in' as Href)}>
+              <Text style={styles.signInPromptButtonText}>Sign In</Text>
+            </Pressable>
+          </SectionCard>
+        )}
 
         <SectionCard title="Weekly Practice Goal">
           <Text style={styles.sectionDesc}>
@@ -337,5 +412,82 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: SimulatorColors.textSecondary,
     lineHeight: 18,
+  },
+  accountEmail: {
+    fontSize: 14,
+    color: SimulatorColors.textBody,
+    marginBottom: 10,
+  },
+  subscriptionRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+    gap: 8,
+  },
+  subPlanLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: SimulatorColors.textPrimary,
+  },
+  subExpiry: {
+    fontSize: 12,
+    color: SimulatorColors.textSecondary,
+    marginTop: 2,
+  },
+  manageButton: {
+    borderWidth: 1,
+    borderColor: SimulatorColors.borderInput,
+    borderRadius: Radius.sm,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+  },
+  manageButtonText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: SimulatorColors.textBody,
+  },
+  upgradeButton: {
+    backgroundColor: SimulatorColors.brand,
+    borderRadius: Radius.sm,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+  },
+  upgradeButtonText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: SimulatorColors.textOnBrand,
+  },
+  signOutButton: {
+    borderWidth: 1,
+    borderColor: SimulatorColors.borderInput,
+    borderRadius: Radius.md,
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+  signOutButtonDisabled: {
+    opacity: 0.5,
+  },
+  signOutButtonText: {
+    fontSize: 14,
+    color: SimulatorColors.textSecondary,
+    fontWeight: '600',
+  },
+  noAccountText: {
+    fontSize: 14,
+    color: SimulatorColors.textSecondary,
+    lineHeight: 20,
+    marginBottom: 12,
+  },
+  signInPromptButton: {
+    backgroundColor: SimulatorColors.brand,
+    borderRadius: Radius.md,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+  signInPromptButtonText: {
+    color: SimulatorColors.textOnBrand,
+    fontSize: 15,
+    fontWeight: '700',
   },
 });

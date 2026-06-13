@@ -4,11 +4,15 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Radius, SimulatorColors } from '@/constants/theme';
+import { useAuth } from '@/state/AuthContext';
 import { useSimulator } from '@/state/SimulatorContext';
+
+const AUTH_CONFIGURED = !!(process.env.EXPO_PUBLIC_SUPABASE_URL);
 
 export default function IndexScreen() {
   const { streakData, learnerProfile, setSelectedRoleId, setSelectedScenarioId } = useSimulator();
   const { currentStreak, weeklySessionCount, weeklyGoal } = streakData;
+  const { isSignedIn, email, subscription, isSubscribed } = useAuth();
 
   function handleStartDemo() {
     setSelectedRoleId('clinical_liaison');
@@ -16,9 +20,30 @@ export default function IndexScreen() {
     router.push('/demo' as Href);
   }
 
+  const subscriptionLabel = !AUTH_CONFIGURED || !isSignedIn
+    ? null
+    : isSubscribed
+    ? subscription.plan === 'team' ? 'Team Plan' : 'Pro'
+    : 'Free Trial';
+
+  const showUpgradeBanner = AUTH_CONFIGURED && isSignedIn && !isSubscribed;
+
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
+        {AUTH_CONFIGURED && isSignedIn && (
+          <View style={styles.accountBar}>
+            <Text style={styles.accountEmail} numberOfLines={1}>{email}</Text>
+            {subscriptionLabel && (
+              <View style={[styles.planPill, isSubscribed ? styles.planPillPro : styles.planPillFree]}>
+                <Text style={[styles.planPillText, isSubscribed ? styles.planPillTextPro : styles.planPillTextFree]}>
+                  {subscriptionLabel}
+                </Text>
+              </View>
+            )}
+          </View>
+        )}
+
         {currentStreak > 0 && (
           <View style={styles.streakBanner}>
             <Text style={styles.streakText}>
@@ -37,6 +62,17 @@ export default function IndexScreen() {
         <Text style={styles.disclaimer}>
           This is a fictional training simulator for hospice and palliative communication practice. Do not enter real patient information. This tool does not diagnose patients, determine hospice eligibility, prescribe medications, or replace clinical judgment.
         </Text>
+
+        {showUpgradeBanner && (
+          <Pressable
+            style={styles.upgradeBanner}
+            accessibilityRole="button"
+            onPress={() => router.push('/paywall' as Href)}>
+            <Text style={styles.upgradeBannerText}>
+              Unlock all 34 scenarios — Start free trial →
+            </Text>
+          </Pressable>
+        )}
 
         <Pressable
           style={styles.button}
@@ -70,12 +106,18 @@ export default function IndexScreen() {
           </Pressable>
         )}
 
-        <Pressable
-          style={styles.settingsLink}
-          accessibilityRole="button"
-          onPress={() => router.push('/settings' as Href)}>
-          <Text style={styles.settingsLinkText}>⚙ Settings</Text>
-        </Pressable>
+        <View style={styles.bottomLinks}>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => router.push('/team' as Href)}>
+            <Text style={styles.bottomLinkText}>👥 Team</Text>
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => router.push('/settings' as Href)}>
+            <Text style={styles.bottomLinkText}>⚙ Settings</Text>
+          </Pressable>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -185,13 +227,63 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     textDecorationLine: 'underline',
   },
-  settingsLink: {
-    marginTop: 4,
-    paddingVertical: 8,
+  accountBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    marginBottom: 12,
+    gap: 8,
+  },
+  accountEmail: {
+    fontSize: 12,
+    color: SimulatorColors.textSecondary,
+    flex: 1,
+  },
+  planPill: {
+    borderRadius: Radius.lg,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderWidth: 1,
+  },
+  planPillPro: {
+    backgroundColor: SimulatorColors.brandTint,
+    borderColor: SimulatorColors.brand,
+  },
+  planPillFree: {
+    backgroundColor: SimulatorColors.warningBackground,
+    borderColor: SimulatorColors.warningBorder,
+  },
+  planPillText: {
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  planPillTextPro: {
+    color: SimulatorColors.brandDeep,
+  },
+  planPillTextFree: {
+    color: SimulatorColors.warningLabelText,
+  },
+  upgradeBanner: {
+    backgroundColor: SimulatorColors.brandDeep,
+    borderRadius: Radius.md,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
     alignSelf: 'stretch',
     alignItems: 'center',
+    marginBottom: 12,
   },
-  settingsLinkText: {
+  upgradeBannerText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontWeight: '700',
+  },
+  bottomLinks: {
+    flexDirection: 'row',
+    gap: 24,
+    marginTop: 8,
+  },
+  bottomLinkText: {
     fontSize: 13,
     color: SimulatorColors.textSecondary,
     fontWeight: '500',

@@ -37,9 +37,7 @@ export default function SignUpScreen() {
       return;
     }
 
-    // Success — Supabase may require email confirmation depending on your settings
-    // If email confirmation is disabled, the auth state change fires immediately
-    router.replace('/' as Href);
+    router.replace('/onboarding' as Href);
   }
 
   return (

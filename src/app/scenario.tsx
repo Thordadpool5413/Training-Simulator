@@ -232,6 +232,15 @@ export default function ScenarioScreen() {
               <Text style={styles.scenarioObjective} numberOfLines={2}>
                 {scenario.learnerObjective}
               </Text>
+              {SCENARIO_TOPICS[scenario.id] != null && (
+                <View style={styles.topicTagRow}>
+                  <View style={styles.topicTag}>
+                    <Text style={styles.topicTagText}>
+                      {TOPIC_LABELS[SCENARIO_TOPICS[scenario.id] as ScenarioTopic]}
+                    </Text>
+                  </View>
+                </View>
+              )}
             </Pressable>
           );
         })}
@@ -430,6 +439,22 @@ const styles = StyleSheet.create({
     color: SimulatorColors.textBody,
     lineHeight: 20,
     marginTop: 8,
+  },
+  topicTagRow: {
+    flexDirection: 'row',
+    marginTop: 8,
+  },
+  topicTag: {
+    backgroundColor: SimulatorColors.indigoBackground,
+    borderRadius: Radius.sm,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+  },
+  topicTagText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: SimulatorColors.indigoLabel,
+    letterSpacing: 0.2,
   },
   errorContainer: {
     flex: 1,

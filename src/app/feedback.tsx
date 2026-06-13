@@ -9,9 +9,12 @@ import { scenarioTemplates } from '@/data/scenarioTemplates';
 import { generateFeedbackReport } from '@/services/feedbackService';
 import { generateSkillScoreReport } from '@/services/scoringService';
 import { fetchAIEvaluation } from '@/services/aiEvaluationService';
+import { useAuth } from '@/state/AuthContext';
 import { useSimulator } from '@/state/SimulatorContext';
 import type { AIEvaluation, FeedbackReport, SkillScore, SkillScoreReport } from '@/types/simulator';
 import { SectionCard } from '@/components/SectionCard';
+
+const AUTH_CONFIGURED = !!(process.env.EXPO_PUBLIC_SUPABASE_URL);
 
 export default function FeedbackScreen() {
   const {
@@ -21,8 +24,10 @@ export default function FeedbackScreen() {
     conversationMessages,
     safetyEvents,
     patientStateSnapshots,
+    completedSessions,
     recordCompletedSession,
   } = useSimulator();
+  const { isSubscribed } = useAuth();
 
   const scenario = scenarioTemplates.find((s) => s.id === activeScenarioId);
   const sessionRecorded = useRef(false);
@@ -49,6 +54,15 @@ export default function FeedbackScreen() {
       patientStateSnapshots
     );
   }, [activeScenarioId, conversationMessages, safetyEvents, patientStateSnapshots]);
+
+  // Capture previous score at mount, before the current session is recorded
+  const previousScore = useMemo<number | null>(() => {
+    const prev = completedSessions
+      .filter((s) => s.scenarioId === activeScenarioId)
+      .at(-1);
+    return prev?.overallScore ?? null;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (scoreReport && activeScenarioId && !sessionRecorded.current) {
@@ -125,6 +139,30 @@ export default function FeedbackScreen() {
         <Text style={styles.screenTitle} accessibilityRole="header">Simulation Feedback</Text>
         {scenario != null && (
           <Text style={styles.screenSubtitle}>{scenario.title}</Text>
+        )}
+
+        {scoreReport !== null && (
+          <View style={heroStyles.container}>
+            <View style={[heroStyles.scoreBox, { borderColor: heroScoreColor(scoreReport.overallScore) }]}>
+              <Text style={[heroStyles.scoreNumber, { color: heroScoreColor(scoreReport.overallScore) }]}>
+                {scoreReport.overallScore.toFixed(1)}
+              </Text>
+              <Text style={heroStyles.scoreDenom}> / 4.0</Text>
+            </View>
+            <View style={heroStyles.meta}>
+              <Text style={heroStyles.scoreLabel}>Overall Score</Text>
+              {previousScore !== null && (() => {
+                const delta = scoreReport.overallScore - previousScore;
+                const sign = delta > 0 ? '↑ +' : delta < 0 ? '↓ ' : '→ ';
+                const color = delta > 0 ? SimulatorColors.scoreGreen : delta < 0 ? SimulatorColors.scoreOrange : SimulatorColors.textSecondary;
+                return (
+                  <Text style={[heroStyles.trendText, { color }]}>
+                    {sign}{Math.abs(delta).toFixed(1)} vs last attempt
+                  </Text>
+                );
+              })()}
+            </View>
+          </View>
         )}
 
         <SectionCard title="Overall Coaching Summary">
@@ -285,6 +323,24 @@ export default function FeedbackScreen() {
             <Text style={styles.focusText}>{report.nextPracticeFocus}</Text>
           </View>
         </SectionCard>
+
+        {AUTH_CONFIGURED && !isSubscribed && activeScenarioId === 'hospice_means_giving_up' && scoreReport !== null && (
+          <View style={demoCtaStyles.container}>
+            <Text style={demoCtaStyles.headline}>
+              You scored {scoreReport.overallScore.toFixed(1)}/4.0 on your first scenario
+            </Text>
+            <Text style={demoCtaStyles.body}>
+              Unlock 33 more clinical scenarios, AI coaching, and voice practice with a free trial.
+            </Text>
+            <Pressable
+              style={demoCtaStyles.button}
+              accessibilityRole="button"
+              onPress={() => router.push('/paywall' as Href)}>
+              <Text style={demoCtaStyles.buttonText}>Start 7-Day Free Trial</Text>
+            </Pressable>
+            <Text style={demoCtaStyles.sub}>No credit card required to start</Text>
+          </View>
+        )}
 
         <Pressable
           style={styles.button}
@@ -657,6 +713,102 @@ const criteriaStyles = StyleSheet.create({
   missedText: {
     color: SimulatorColors.scoreOrange,
     fontWeight: '500',
+  },
+});
+
+function heroScoreColor(score: number): string {
+  if (score >= 3.5) return SimulatorColors.scoreGreen;
+  if (score >= 2.5) return SimulatorColors.brand;
+  if (score >= 1.5) return SimulatorColors.scoreYellow;
+  return SimulatorColors.scoreOrange;
+}
+
+const heroStyles = StyleSheet.create({
+  container: {
+    backgroundColor: SimulatorColors.surface,
+    borderRadius: Radius.lg,
+    borderWidth: 1.5,
+    borderColor: SimulatorColors.border,
+    padding: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+  },
+  scoreBox: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    borderWidth: 2,
+    borderRadius: Radius.md,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    flexShrink: 0,
+  },
+  scoreNumber: {
+    fontSize: 40,
+    fontWeight: '800',
+    lineHeight: 46,
+  },
+  scoreDenom: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: SimulatorColors.textSecondary,
+    paddingBottom: 4,
+  },
+  meta: {
+    flex: 1,
+    gap: 4,
+  },
+  scoreLabel: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: SimulatorColors.textSecondary,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  trendText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+});
+
+const demoCtaStyles = StyleSheet.create({
+  container: {
+    backgroundColor: SimulatorColors.brandDeep,
+    borderRadius: Radius.lg,
+    padding: 20,
+    gap: 10,
+    alignItems: 'center',
+  },
+  headline: {
+    fontSize: 17,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    textAlign: 'center',
+    lineHeight: 24,
+  },
+  body: {
+    fontSize: 14,
+    color: 'rgba(255,255,255,0.80)',
+    textAlign: 'center',
+    lineHeight: 21,
+  },
+  button: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: Radius.md,
+    paddingVertical: 14,
+    paddingHorizontal: 28,
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  buttonText: {
+    color: SimulatorColors.brandDeep,
+    fontSize: 15,
+    fontWeight: '800',
+    letterSpacing: 0.2,
+  },
+  sub: {
+    fontSize: 12,
+    color: 'rgba(255,255,255,0.55)',
   },
 });
 

@@ -75,3 +75,34 @@ export async function cancelDailyReminder(): Promise<void> {
     await Notifications.cancelScheduledNotificationAsync(REMINDER_IDENTIFIER);
   } catch {}
 }
+
+const POST_SESSION_IDENTIFIER = 'post_session_reminder';
+
+const POST_SESSION_MESSAGES = [
+  { title: 'Keep the streak going 🔥', body: 'One more scenario today keeps your skills sharp.' },
+  { title: 'Nice work today', body: 'Come back tomorrow to keep building your hospice communication skills.' },
+  { title: 'Practice makes perfect', body: "You're getting better. Try another scenario when you're ready." },
+];
+
+export async function schedulePostSessionReminder(streakDays: number): Promise<void> {
+  if (Platform.OS === 'web') return;
+  try {
+    const { status } = await Notifications.getPermissionsAsync();
+    if (status !== 'granted') return;
+
+    await Notifications.cancelScheduledNotificationAsync(POST_SESSION_IDENTIFIER);
+
+    const msgIndex = Math.min(streakDays, POST_SESSION_MESSAGES.length - 1);
+    const msg = POST_SESSION_MESSAGES[msgIndex] ?? POST_SESSION_MESSAGES[0]!;
+
+    await Notifications.scheduleNotificationAsync({
+      identifier: POST_SESSION_IDENTIFIER,
+      content: { title: msg.title, body: msg.body },
+      trigger: {
+        type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+        seconds: 20 * 60 * 60, // 20 hours
+        repeats: false,
+      },
+    });
+  } catch {}
+}

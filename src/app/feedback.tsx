@@ -9,6 +9,7 @@ import { scenarioTemplates } from '@/data/scenarioTemplates';
 import { generateFeedbackReport } from '@/services/feedbackService';
 import { generateSkillScoreReport } from '@/services/scoringService';
 import { fetchAIEvaluation } from '@/services/aiEvaluationService';
+import { schedulePostSessionReminder } from '@/services/notificationService';
 import { useAuth } from '@/state/AuthContext';
 import { useSimulator } from '@/state/SimulatorContext';
 import type { AIEvaluation, FeedbackReport, SkillScore, SkillScoreReport } from '@/types/simulator';
@@ -25,6 +26,7 @@ export default function FeedbackScreen() {
     safetyEvents,
     patientStateSnapshots,
     completedSessions,
+    streakData,
     recordCompletedSession,
   } = useSimulator();
   const { isSubscribed } = useAuth();
@@ -74,8 +76,9 @@ export default function FeedbackScreen() {
         overallScore: scoreReport.overallScore,
         skillScores: scoreReport.scores.map((s) => ({ category: s.category, score: s.score })),
       });
+      void schedulePostSessionReminder(streakData.currentStreak);
     }
-  }, [scoreReport, activeScenarioId, scenario, selectedRoleId, recordCompletedSession]);
+  }, [scoreReport, activeScenarioId, scenario, selectedRoleId, recordCompletedSession, streakData.currentStreak]);
 
   useEffect(() => {
     if (!scoreReport || !activeScenarioId || aiLoading || aiEval) return;

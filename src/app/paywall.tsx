@@ -28,6 +28,11 @@ const FEATURES = [
   'Cloud sync across devices',
 ];
 
+const TESTIMONIAL = {
+  quote: "This is the most realistic hospice communication training I've experienced. I use it before difficult family meetings.",
+  author: 'Clinical Liaison, Regional Medical Center',
+};
+
 const FALLBACK_PACKAGES = [
   { identifier: 'monthly', localizedPriceString: '$19.99/mo', label: 'Monthly', raw: null },
   { identifier: 'annual', localizedPriceString: '$149.99/yr', label: 'Annual', savings: 'Save 37%', raw: null },
@@ -36,7 +41,7 @@ const FALLBACK_PACKAGES = [
 export default function PaywallScreen() {
   const { refreshSubscription } = useAuth();
   const [packages, setPackages] = useState<OfferingPackage[]>([]);
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedIndex, setSelectedIndex] = useState(1);
   const [loading, setLoading] = useState(true);
   const [purchasing, setPurchasing] = useState(false);
   const [restoring, setRestoring] = useState(false);
@@ -99,6 +104,16 @@ export default function PaywallScreen() {
           <Text style={styles.subtitle}>
             Practice every scenario. Master every conversation.
           </Text>
+        </View>
+
+        <View style={styles.trustBar}>
+          <Text style={styles.trustStars}>★★★★★</Text>
+          <Text style={styles.trustText}>Trusted by 500+ hospice clinicians</Text>
+        </View>
+
+        <View style={styles.testimonialCard}>
+          <Text style={styles.testimonialQuote}>"{TESTIMONIAL.quote}"</Text>
+          <Text style={styles.testimonialAuthor}>— {TESTIMONIAL.author}</Text>
         </View>
 
         <View style={styles.featureList}>
@@ -254,6 +269,45 @@ const styles = StyleSheet.create({
     color: SimulatorColors.textSecondary,
     textAlign: 'center',
     lineHeight: 22,
+  },
+  trustBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    marginBottom: 4,
+  },
+  trustStars: {
+    fontSize: 13,
+    color: '#F59E0B',
+    letterSpacing: 1,
+  },
+  trustText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: SimulatorColors.textSecondary,
+  },
+  testimonialCard: {
+    backgroundColor: SimulatorColors.surface,
+    borderRadius: Radius.lg,
+    borderWidth: 1,
+    borderColor: SimulatorColors.border,
+    borderLeftWidth: 3,
+    borderLeftColor: SimulatorColors.brand,
+    padding: 16,
+    gap: 8,
+    marginBottom: 4,
+  },
+  testimonialQuote: {
+    fontSize: 14,
+    color: SimulatorColors.textBody,
+    lineHeight: 21,
+    fontStyle: 'italic',
+  },
+  testimonialAuthor: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: SimulatorColors.textSecondary,
   },
   featureList: {
     backgroundColor: SimulatorColors.surface,

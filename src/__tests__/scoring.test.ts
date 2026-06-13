@@ -1,0 +1,359 @@
+import { generateSkillScoreReport } from '@/services/scoringService';
+import type { ConversationMessage, PatientStateSnapshot, SafetyEvent } from '@/types/simulator';
+
+const emptyMessages: ConversationMessage[] = [];
+const emptyEvents: SafetyEvent[] = [];
+const emptySnapshots: PatientStateSnapshot[] = [];
+
+const CL_CATEGORIES = [
+  'Emotional Attunement',
+  'Hospice Education',
+  'Objection Handling',
+  'Compliance Safe Language',
+  'Clinical Escalation Judgment',
+  'Trust Building',
+  'Role Boundary Safety',
+];
+
+const RN_CATEGORIES = [
+  'Emotional Attunement',
+  'Symptom Communication',
+  'Comfort Education',
+  'Role Boundary Safety',
+  'Caregiver Empowerment',
+  'Clinical Escalation Judgment',
+  'Trust Building',
+];
+
+const PM_CATEGORIES = [
+  'Emotional Attunement',
+  'Pain Concern Validation',
+  'Nurse Routing',
+  'Role Boundary Safety',
+  'Clinical Escalation Judgment',
+  'Trust Building',
+  'Hospice Partnership',
+];
+
+const MR_CATEGORIES = [
+  'Emotional Attunement',
+  'Patient Autonomy Education',
+  'Communication Strategy',
+  'Role Boundary Safety',
+  'Caregiver Support',
+  'Clinical Escalation Judgment',
+  'Trust Building',
+];
+
+const PU_CATEGORIES = [
+  'Emotional Attunement',
+  'Prognosis Education',
+  'Objection Handling',
+  'Compliance Safe Language',
+  'Clinical Escalation Judgment',
+  'Trust Building',
+  'Role Boundary Safety',
+];
+
+const ESRD_CATEGORIES = [
+  'Emotional Attunement',
+  'Autonomy Advocacy',
+  'Values Elicitation',
+  'Conflict Mediation',
+  'Role Boundary Safety',
+  'Clinical Escalation Judgment',
+  'Trust Building',
+];
+
+const ADG_CATEGORIES = [
+  'Emotional Attunement',
+  'Grief Acknowledgment',
+  'Hospice Education',
+  'Role Boundary Safety',
+  'Clinical Escalation Judgment',
+  'Trust Building',
+  'Revocation Education',
+];
+
+const ADC_CATEGORIES = [
+  'Emotional Attunement',
+  'Autonomy Advocacy',
+  'Values Elicitation',
+  'Conflict Mediation',
+  'Role Boundary Safety',
+  'Clinical Escalation Judgment',
+  'Trust Building',
+];
+
+const CB_CATEGORIES = [
+  'Emotional Attunement',
+  'Burden Validation',
+  'Resource Navigation',
+  'Role Boundary Safety',
+  'Caregiver Assessment',
+  'Clinical Escalation Judgment',
+  'Trust Building',
+];
+
+const BFC_CATEGORIES = [
+  'Emotional Attunement',
+  'Grief Normalization',
+  'Bereavement Education',
+  'Role Boundary Safety',
+  'Complicated Grief Assessment',
+  'Clinical Escalation Judgment',
+  'Trust Building',
+];
+
+describe('generateSkillScoreReport', () => {
+  it('clinical liaison scenario returns 7 skill scores', () => {
+    const result = generateSkillScoreReport(
+      'hospice_means_giving_up',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scores).toHaveLength(7);
+  });
+
+  it('clinical liaison scores use canonical CL category names in order', () => {
+    const result = generateSkillScoreReport(
+      'hospice_means_giving_up',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scores.map((s) => s.category)).toEqual(CL_CATEGORIES);
+  });
+
+  it('RN scenario returns 7 skill scores with RN category names', () => {
+    const result = generateSkillScoreReport(
+      'copd_air_hunger_at_home',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scores).toHaveLength(7);
+    expect(result.scores.map((s) => s.category)).toEqual(RN_CATEGORIES);
+  });
+
+  it('terminal_dyspnea_follow_up returns 7 RN score rows', () => {
+    const result = generateSkillScoreReport(
+      'terminal_dyspnea_follow_up',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scores).toHaveLength(7);
+    expect(result.scores.map((s) => s.category)).toEqual(RN_CATEGORIES);
+  });
+
+  it('pain_management_concern returns 7 skill scores with PM category names', () => {
+    const result = generateSkillScoreReport(
+      'pain_management_concern',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scores).toHaveLength(7);
+    expect(result.scores.map((s) => s.category)).toEqual(PM_CATEGORIES);
+  });
+
+  it('medication_refusal returns 7 skill scores with MR category names', () => {
+    const result = generateSkillScoreReport(
+      'medication_refusal',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scores).toHaveLength(7);
+    expect(result.scores.map((s) => s.category)).toEqual(MR_CATEGORIES);
+  });
+
+  it('prognostic_uncertainty returns 7 skill scores with PU category names', () => {
+    const result = generateSkillScoreReport(
+      'prognostic_uncertainty',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scores).toHaveLength(7);
+    expect(result.scores.map((s) => s.category)).toEqual(PU_CATEGORIES);
+  });
+
+  it('esrd_comfort_care returns 7 skill scores with ESRD category names', () => {
+    const result = generateSkillScoreReport(
+      'esrd_comfort_care',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scores).toHaveLength(7);
+    expect(result.scores.map((s) => s.category)).toEqual(ESRD_CATEGORIES);
+  });
+
+  it('advanced_dementia_grief returns 7 skill scores with ADG category names', () => {
+    const result = generateSkillScoreReport(
+      'advanced_dementia_grief',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scores).toHaveLength(7);
+    expect(result.scores.map((s) => s.category)).toEqual(ADG_CATEGORIES);
+  });
+
+  it('active_dying_recognition returns 7 skill scores with RN category names', () => {
+    const result = generateSkillScoreReport(
+      'active_dying_recognition',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scores).toHaveLength(7);
+    expect(result.scores.map((s) => s.category)).toEqual(RN_CATEGORIES);
+  });
+
+  it('terminal_secretion_distress returns 7 skill scores with RN category names', () => {
+    const result = generateSkillScoreReport(
+      'terminal_secretion_distress',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scores).toHaveLength(7);
+    expect(result.scores.map((s) => s.category)).toEqual(RN_CATEGORIES);
+  });
+
+  it('breakthrough_pain_at_home returns 7 skill scores with RN category names', () => {
+    const result = generateSkillScoreReport(
+      'breakthrough_pain_at_home',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scores).toHaveLength(7);
+    expect(result.scores.map((s) => s.category)).toEqual(RN_CATEGORIES);
+  });
+
+  it('advance_directive_conflict returns 7 skill scores with ADC category names', () => {
+    const result = generateSkillScoreReport(
+      'advance_directive_conflict',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scores).toHaveLength(7);
+    expect(result.scores.map((s) => s.category)).toEqual(ADC_CATEGORIES);
+  });
+
+  it('caregiver_burnout returns 7 skill scores with CB category names', () => {
+    const result = generateSkillScoreReport(
+      'caregiver_burnout',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scores).toHaveLength(7);
+    expect(result.scores.map((s) => s.category)).toEqual(CB_CATEGORIES);
+  });
+
+  it('bereavement_first_call returns 7 skill scores with BFC category names', () => {
+    const result = generateSkillScoreReport(
+      'bereavement_first_call',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    expect(result.scores).toHaveLength(7);
+    expect(result.scores.map((s) => s.category)).toEqual(BFC_CATEGORIES);
+  });
+
+  it('all scores from all scenario paths are within the 0–4 range', () => {
+    const clResult = generateSkillScoreReport(
+      'hospice_means_giving_up',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    const rnResult = generateSkillScoreReport(
+      'copd_air_hunger_at_home',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    const pmResult = generateSkillScoreReport(
+      'pain_management_concern',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    const mrResult = generateSkillScoreReport(
+      'medication_refusal',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    const puResult = generateSkillScoreReport(
+      'prognostic_uncertainty',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    const esrdResult = generateSkillScoreReport(
+      'esrd_comfort_care',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    const adgResult = generateSkillScoreReport(
+      'advanced_dementia_grief',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    const adResult = generateSkillScoreReport(
+      'active_dying_recognition',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    const tsResult = generateSkillScoreReport(
+      'terminal_secretion_distress',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    const bpResult = generateSkillScoreReport(
+      'breakthrough_pain_at_home',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    const adcResult = generateSkillScoreReport(
+      'advance_directive_conflict',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    const cbResult = generateSkillScoreReport(
+      'caregiver_burnout',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    const bfcResult = generateSkillScoreReport(
+      'bereavement_first_call',
+      emptyMessages,
+      emptyEvents,
+      emptySnapshots
+    );
+    [...clResult.scores, ...rnResult.scores, ...pmResult.scores, ...mrResult.scores,
+     ...puResult.scores, ...esrdResult.scores, ...adgResult.scores,
+     ...adResult.scores, ...tsResult.scores, ...bpResult.scores,
+     ...adcResult.scores, ...cbResult.scores, ...bfcResult.scores].forEach((s) => {
+      expect(s.score).toBeGreaterThanOrEqual(0);
+      expect(s.score).toBeLessThanOrEqual(4);
+    });
+  });
+});

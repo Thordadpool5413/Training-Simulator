@@ -275,6 +275,13 @@ export default function IndexScreen() {
           <Pressable
             style={styles.quickNavCell}
             accessibilityRole="button"
+            onPress={() => router.push('/certificate' as Href)}>
+            <Text style={styles.quickNavIcon}>🎓</Text>
+            <Text style={styles.quickNavLabel}>Certificates</Text>
+          </Pressable>
+          <Pressable
+            style={styles.quickNavCell}
+            accessibilityRole="button"
             onPress={() => router.push('/settings' as Href)}>
             <Text style={styles.quickNavIcon}>⚙️</Text>
             <Text style={styles.quickNavLabel}>Settings</Text>
@@ -612,6 +619,7 @@ const styles = StyleSheet.create({
   },
   quickNavGrid: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 10,
   },
   quickNavCell: {

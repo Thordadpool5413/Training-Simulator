@@ -766,4 +766,630 @@ export const scenarioTemplates: ScenarioTemplate[] = [
     ],
     patientStateDefaultId: 'icu_transfer_to_hospice',
   },
+
+  // ── RN: 5 new scenarios ────────────────────────────────────────────────
+
+  {
+    id: 'comfort_kit_first_use',
+    title: 'The Kit Is Just Sitting There',
+    allowedRoleId: 'rn',
+    difficulty: 'intermediate',
+    setting: 'Patient home',
+    patient: {
+      name: 'Vincent Holden',
+      age: 76,
+    },
+    knownDiagnosisId: 'advanced_prostate_cancer',
+    recentClinicalChange:
+      'Vincent has advanced prostate cancer with bone metastases and was enrolled in hospice two weeks ago. The hospice nurse provided a comfort kit with morphine and lorazepam and left written instructions. This morning Vincent is in significant pain and his wife Patricia called the hospice line. She has not opened the kit.',
+    whoIsPresent: ['Vincent', 'his wife Patricia'],
+    learnerObjective:
+      "Acknowledge Patricia's fear about the comfort medications. Dispel the misconception that morphine causes death rather than relieves pain. Empower Patricia to use the kit as instructed. Stay within RN scope — reference the hospice orders rather than stating specific doses. Give Patricia a clear, specific next step.",
+    roleReminder:
+      "You are an RN. You may explain what comfort kit medications are for, reassure the caregiver about safe use, and confirm what the hospice orders provide. You should not state specific medication doses or modify orders. Reference the written instructions in the kit and the hospice orders. Route dose questions to the on-call provider.",
+    hiddenFamilyFear:
+      "Patricia believes that giving Vincent morphine will cause him to die faster — that the medication is there to hasten death, not relieve pain. She is afraid that opening the kit and using it means she is giving up on him and helping end his life. She would rather watch him suffer than give him something she believes will kill him.",
+    openingSpeakerName: 'Patricia',
+    openingLine:
+      "The nurse left us this kit two weeks ago. Vincent is hurting. But I am scared to open it. What if I give too much morphine and it hurts him? I don't want to be the one who... I just can't.",
+    successCriteria: [
+      "Acknowledges Patricia's fear about the morphine before explaining anything.",
+      "Addresses the misconception that morphine hastens death — explains it relieves suffering.",
+      "Empowers Patricia to use the kit by following the written hospice orders.",
+      "Does not state a specific dose — references the kit instructions and hospice orders.",
+      "Routes dose questions to the on-call provider.",
+      "Gives Patricia a specific, clear next step she can take right now.",
+    ],
+    failureCriteria: [
+      "States a specific medication dose without referencing hospice orders.",
+      "Dismisses or minimizes Patricia's fear about the morphine.",
+      "Overpromises that the medication will eliminate all pain immediately.",
+      "Leaves Patricia without a concrete next step.",
+      "Fails to address the 'morphine hastens death' misconception.",
+    ],
+    patientStateDefaultId: 'comfort_kit_first_use',
+  },
+
+  {
+    id: 'nausea_vomiting_home',
+    title: 'She Can\'t Keep Anything Down',
+    allowedRoleId: 'rn',
+    difficulty: 'intermediate',
+    setting: 'Patient home, phone call to hospice line',
+    patient: {
+      name: 'Maria Rivera',
+      age: 70,
+    },
+    knownDiagnosisId: 'advanced_pancreatic_cancer',
+    recentClinicalChange:
+      "Maria has advanced pancreatic cancer and has been on hospice for six weeks. She has been managing with moderate nausea but this morning she has been vomiting repeatedly for two hours and cannot keep water down. Her son Carlos called the hospice line in a panic, worried she needs to go to the emergency room.",
+    whoIsPresent: ['Maria', 'her son Carlos'],
+    learnerObjective:
+      "Acknowledge Carlos's fear. Assess the clinical picture through his description — what she is vomiting, how frequently, whether she is in pain, what she has eaten. Explain what nausea and vomiting can mean in advanced cancer. Provide non-medication comfort measures Carlos can use now. Route the medication question to the on-call provider. Give Carlos clear criteria for when the situation requires a different response.",
+    roleReminder:
+      "You are an RN on the hospice phone line. You may assess symptoms through the caregiver's description, educate on nausea comfort measures, and describe what the hospice plan provides. You should not recommend going to the ER, state specific antiemetic doses, or suggest IV fluids. Route medication decisions to the on-call provider.",
+    hiddenFamilyFear:
+      "Carlos believes the vomiting means his mother is deteriorating faster than expected and that the hospice team is not going to help her because they have 'given up on curative treatment.' He is on the edge of taking her to the ER himself because doing something feels better than doing nothing.",
+    openingSpeakerName: 'Carlos',
+    openingLine:
+      "She has been throwing up for two hours. She can't keep anything down — not even water. Should I take her to the emergency room? I don't know what to do and I'm scared something is really wrong.",
+    successCriteria: [
+      "Acknowledges Carlos's fear before starting the assessment.",
+      "Asks assessment questions — what, how often, whether she is in pain, what she has had to eat.",
+      "Explains that nausea and vomiting are manageable symptoms, not necessarily a sign of rapid decline.",
+      "Provides comfort measures Carlos can use right now — positioning, small sips, cool cloth.",
+      "Does not recommend the ER without clinical justification.",
+      "Routes antiemetic medication decisions to the on-call provider.",
+      "Gives Carlos clear criteria for when to call back or escalate.",
+    ],
+    failureCriteria: [
+      "Recommends going to the ER without clinical justification.",
+      "States a specific antiemetic dose.",
+      "Jumps to comfort measures without acknowledging Carlos's fear.",
+      "Leaves Carlos without a next step or escalation criteria.",
+      "Overpromises that the nausea will resolve completely.",
+    ],
+    patientStateDefaultId: 'nausea_vomiting_home',
+  },
+
+  {
+    id: 'dehydration_education',
+    title: 'She Needs to Drink Something',
+    allowedRoleId: 'rn',
+    difficulty: 'intermediate',
+    setting: 'Patient home, routine nursing visit',
+    patient: {
+      name: 'Eleanor Carter',
+      age: 88,
+    },
+    knownDiagnosisId: 'advanced_dementia',
+    recentClinicalChange:
+      "Eleanor has advanced dementia and has been on hospice for two months. Over the past week she has stopped drinking reliably, accepting only small sips when her daughter Joyce offers them. Eleanor does not appear to be in distress. Joyce has been trying to get fluids into her and called the hospice team asking whether Eleanor needs IV fluids or a feeding tube.",
+    whoIsPresent: ['Eleanor', 'her daughter Joyce'],
+    learnerObjective:
+      "Acknowledge Joyce's fear that Eleanor is dying from dehydration. Explain the natural dying process — that reduced intake is a result of the dying process, not the cause of it. Explain why IV fluids in advanced dementia often cause more suffering rather than comfort. Provide mouth care and comfort measures Joyce can use. Do not order IV fluids. Route the clinical question to the hospice provider if needed.",
+    roleReminder:
+      "You are an RN. You may educate on the natural dying process, explain why IV hydration is often not appropriate in advanced dementia, and teach mouth care and comfort measures. You should not order IV fluids or a feeding tube. Route clinical orders to the hospice provider. Do not give prognosis estimates.",
+    hiddenFamilyFear:
+      "Joyce believes she is causing her mother's death by not forcing fluids into her. She thinks the dying is happening because Eleanor stopped drinking, not that Eleanor stopped drinking because she is dying. She also carries guilt about every moment her mother looks uncomfortable and interprets reduced intake as her failure to provide care.",
+    openingSpeakerName: 'Joyce',
+    openingLine:
+      "She has not had anything to drink in two days. I have been trying to get water in her but she keeps pushing it away or it just runs out of her mouth. I know people die without water. Can we get her an IV? I feel like I am letting her starve.",
+    successCriteria: [
+      "Acknowledges Joyce's fear and the guilt behind the question before explaining anything.",
+      "Explains that reduced intake is part of the natural dying process — the body stops because it is dying, not the other way around.",
+      "Explains why IV fluids in advanced dementia can cause more discomfort — fluid overload, edema.",
+      "Provides mouth care and comfort measures Joyce can use to feel like she is caring for her mother.",
+      "Does not order IV fluids.",
+      "Routes any clinical order question to the hospice provider.",
+    ],
+    failureCriteria: [
+      "Orders or implies IV fluids are appropriate.",
+      "Jumps to medical explanation without acknowledging Joyce's guilt.",
+      "Implies Joyce has done something wrong by not forcing fluids.",
+      "Uses clinical jargon without plain language.",
+      "Leaves Joyce feeling helpless without a comfort role.",
+    ],
+    patientStateDefaultId: 'dehydration_education',
+  },
+
+  {
+    id: 'terminal_agitation_home',
+    title: 'He Is Not Himself',
+    allowedRoleId: 'rn',
+    difficulty: 'advanced',
+    setting: 'Patient home, urgent call',
+    patient: {
+      name: 'Charles Wheeler',
+      age: 71,
+    },
+    knownDiagnosisId: 'als_terminal',
+    recentClinicalChange:
+      "Charles has ALS and has been largely bedbound for three weeks. This morning he became suddenly confused, restless, and agitated — he is moving in bed despite significant motor impairment, said something about 'people in the room,' and will not be calmed by his wife Diane. This is the first time Diane has seen terminal agitation. She called the hospice line in distress.",
+    whoIsPresent: ['Charles', 'his wife Diane'],
+    learnerObjective:
+      "Acknowledge Diane's fear. Explain terminal agitation and delirium in plain language — what it is, why it happens, what it does and does not mean about suffering. Distinguish agitation from pain. Provide immediate comfort measures. Route medication management to the on-call provider. Do not leave Diane alone in her fear.",
+    roleReminder:
+      "You are an RN. You may explain terminal agitation, provide comfort education, and describe what the hospice plan provides for symptom management. You should not state specific medication doses or modify orders. Route medication management to the on-call hospice provider.",
+    hiddenFamilyFear:
+      "Diane believes Charles is in severe pain and that the confusion and restlessness mean he is suffering in a way she cannot see or stop. She has been his sole caregiver for eighteen months and managed every symptom carefully — this is the first time she has felt completely helpless. She also fears the confusion means he is trying to tell her something she cannot hear.",
+    openingSpeakerName: 'Diane',
+    openingLine:
+      "He is not himself at all. He was calm this morning and now he won't stop moving, he said something about people in the room who aren't here, and he looks terrified. Is he in pain? What is happening to him? I don't know what to do.",
+    successCriteria: [
+      "Acknowledges Diane's fear and distress before explaining anything.",
+      "Explains terminal agitation and delirium in plain language — not a sign of pain alone.",
+      "Distinguishes agitation from pain — they can occur together but confusion and restlessness are neurological.",
+      "Provides immediate comfort measures Diane can use — calm voice, dim lights, familiar music, gentle presence.",
+      "Routes medication management to the on-call provider.",
+      "Does not leave Diane without a next step or a role.",
+    ],
+    failureCriteria: [
+      "States a specific medication dose without referencing hospice orders.",
+      "Overpromises that the agitation will stop quickly.",
+      "Leaves Diane without comfort measures or a next step.",
+      "Uses clinical jargon without explaining what it means.",
+      "Dismisses the possibility that he may be in pain without acknowledging the uncertainty.",
+    ],
+    patientStateDefaultId: 'terminal_agitation_home',
+  },
+
+  {
+    id: 'seizure_at_home',
+    title: 'It Happened Again',
+    allowedRoleId: 'rn',
+    difficulty: 'intermediate',
+    setting: 'Patient home, day after a seizure',
+    patient: {
+      name: 'Raymond Klein',
+      age: 67,
+    },
+    knownDiagnosisId: 'advanced_cancer',
+    recentClinicalChange:
+      "Raymond has advanced brain cancer on hospice and has had two breakthrough seizures in the past month. Last night he had another seizure lasting approximately ninety seconds. His wife Barbara sat with him alone, did not know what to do, and was terrified. Raymond recovered and slept for several hours. Barbara called the hospice nurse the next morning.",
+    whoIsPresent: ['Raymond', 'his wife Barbara'],
+    learnerObjective:
+      "Acknowledge Barbara's fear and the trauma of watching a seizure alone. Teach seizure safety in plain, actionable language — positioning, timing, what not to do. Explain what to expect during and after a seizure. Give her clear criteria for when to call the hospice line versus when to call 911. Route medication decisions to the on-call provider. Empower Barbara to manage the next episode without panic.",
+    roleReminder:
+      "You are an RN. You may explain seizure safety measures, provide caregiver education, and describe what the hospice plan provides. You should not state specific anticonvulsant doses, modify orders, or promise seizures will not recur. Route medication questions to the on-call hospice provider.",
+    hiddenFamilyFear:
+      "Barbara is terrified the next seizure will kill Raymond while she is alone with him. She also fears that her inaction during the seizure — she did not know what to do — caused harm. She blames herself for not asking more questions when he was first diagnosed. She needs both education and absolution.",
+    openingSpeakerName: 'Barbara',
+    openingLine:
+      "He had another one last night. I sat there and I didn't know what to do. I just watched it happen. It lasted maybe two minutes and then he slept for hours. Is it going to keep happening? What do I do next time so I don't make it worse?",
+    successCriteria: [
+      "Acknowledges Barbara's fear and validates the trauma of witnessing a seizure alone.",
+      "Reassures Barbara that her presence during the seizure was not harmful.",
+      "Teaches seizure safety — side positioning, do not restrain, do not put anything in mouth, time the seizure.",
+      "Explains what to expect during and after — the postictal phase of confusion and sleep is normal.",
+      "Gives clear criteria for calling the hospice line versus calling 911.",
+      "Routes antiseizure medication decisions to the on-call provider.",
+    ],
+    failureCriteria: [
+      "States a specific anticonvulsant dose.",
+      "Promises the seizures will not recur.",
+      "Tells Barbara to call 911 for all future seizures without qualification.",
+      "Skips the emotional acknowledgment and goes directly to instructions.",
+      "Leaves Barbara without clear escalation criteria.",
+    ],
+    patientStateDefaultId: 'seizure_at_home',
+  },
+
+  // ── Clinical Liaison: 5 new scenarios ─────────────────────────────────
+
+  {
+    id: 'coverage_confusion',
+    title: 'Can He Still See His Cardiologist?',
+    allowedRoleId: 'clinical_liaison',
+    difficulty: 'beginner',
+    setting: 'Phone call to hospice coordination office',
+    patient: {
+      name: 'William Park',
+      age: 78,
+    },
+    knownDiagnosisId: 'advanced_heart_failure',
+    recentClinicalChange:
+      'William Park enrolled in hospice one week ago after three hospitalizations for decompensated heart failure. His son Daniel called the hospice coordination office because he heard that William can no longer see his cardiologist, Dr. Patel, whom he has been seeing for twelve years. Daniel is angry and confused.',
+    whoIsPresent: ['Daniel Park, his son'],
+    learnerObjective:
+      "Acknowledge Daniel's frustration and concern. Explain what the Medicare hospice benefit covers and does not cover in plain language. Clarify that William can still see Dr. Patel for conditions unrelated to his hospice diagnosis, but that cardiac treatment for the terminal diagnosis transitions to the hospice team. Avoid misrepresenting coverage. Route specific billing questions to the hospice care coordinator.",
+    roleReminder:
+      "You are a Clinical Liaison. You may explain what the Medicare hospice benefit covers in general terms — that care related to the terminal diagnosis transfers to hospice, but unrelated conditions can still be treated. You should not make specific billing determinations, promise specific coverage outcomes, give prognosis estimates, or provide medication guidance.",
+    hiddenFamilyFear:
+      "Daniel believes that by enrolling his father in hospice, he has cut him off from all legitimate medical care — that Dr. Patel will no longer see him at all and that his father has been abandoned by the doctors who know him. He also fears he made a mistake by agreeing to hospice enrollment.",
+    openingSpeakerName: 'Daniel',
+    openingLine:
+      "I just heard that my dad can't see his cardiologist anymore now that he's on hospice. He has been seeing Dr. Patel for twelve years. Are you telling me we signed him up for something that cuts him off from his real doctors?",
+    successCriteria: [
+      "Acknowledges Daniel's frustration and concern before explaining anything.",
+      "Explains that hospice covers care related to the terminal diagnosis — heart failure in this case.",
+      "Clarifies that William can still see Dr. Patel for conditions unrelated to the hospice diagnosis.",
+      "Does not make a specific billing determination or promise a specific coverage outcome.",
+      "Routes detailed coverage questions to the hospice care coordinator.",
+      "Avoids prognosis estimates and medication guidance.",
+    ],
+    failureCriteria: [
+      "States that William can no longer see his cardiologist at all.",
+      "Makes a specific Medicare billing determination beyond general explanation.",
+      "Lists hospice services before addressing Daniel's anger and concern.",
+      "Provides prognosis estimates or medication guidance.",
+      "Leaves Daniel without a next step.",
+    ],
+    patientStateDefaultId: 'coverage_confusion',
+  },
+
+  {
+    id: 'hospice_discharge_fear',
+    title: 'What If She Gets Better?',
+    allowedRoleId: 'clinical_liaison',
+    difficulty: 'beginner',
+    setting: 'Outpatient care coordination office',
+    patient: {
+      name: 'Eleanor Lawson',
+      age: 84,
+    },
+    knownDiagnosisId: 'advanced_dementia',
+    recentClinicalChange:
+      "Eleanor has advanced Alzheimer's and has been on hospice for four months. Since enrolling, she has been more comfortable and her daughter Patricia has noticed she seems more settled — sleeping regularly, accepting some food. Patricia called to ask whether Eleanor's improvement means she will be discharged from hospice and lose all her support.",
+    whoIsPresent: ['Patricia Lawson, her daughter'],
+    learnerObjective:
+      "Acknowledge Patricia's fear that improvement leads to losing support. Explain how hospice recertification works — stabilization is common and expected on hospice, not a reason for automatic discharge. Explain what the process looks like if a patient no longer meets criteria. Clarify that families are never simply abandoned — there is always a care transition plan.",
+    roleReminder:
+      "You are a Clinical Liaison. You may explain the hospice recertification process and what happens if a patient stabilizes. You should not make eligibility determinations, give prognosis estimates, or state that Eleanor will or will not be discharged. Route specific clinical eligibility questions to the hospice physician or care team.",
+    hiddenFamilyFear:
+      "Patricia is terrified that hospice requires her mother to keep declining to stay enrolled — that if she has a good week, the support will disappear and Eleanor will return to the unmanaged distress she was in before. She has come to rely on the hospice team and the idea of losing them is devastating.",
+    openingSpeakerName: 'Patricia',
+    openingLine:
+      "She seems more comfortable lately. She's sleeping better and eating a little more. I know I should be happy, but now I'm afraid the hospice team will say she's improved and take her off. Can that happen? What do we do if she gets better?",
+    successCriteria: [
+      "Acknowledges that Patricia's fear makes sense — this is a question worth asking.",
+      "Explains that stabilization on hospice is common and does not automatically trigger discharge.",
+      "Describes the recertification process — the team assesses eligibility regularly, and a good period does not equal discharge.",
+      "Explains what happens if a patient no longer meets criteria — a planned transition, not an abrupt cutoff.",
+      "Does not make a specific eligibility determination for Eleanor.",
+      "Routes clinical eligibility questions to the hospice physician or care team.",
+    ],
+    failureCriteria: [
+      "States or implies that improvement means Eleanor will be discharged.",
+      "Makes a specific eligibility determination.",
+      "Dismisses Patricia's concern.",
+      "Gives a prognosis estimate.",
+      "Leaves Patricia without a next step or sense of what to do if she has questions.",
+    ],
+    patientStateDefaultId: 'hospice_discharge_fear',
+  },
+
+  {
+    id: 'inpatient_hospice_request',
+    title: 'We Cannot Keep Doing This at Home',
+    allowedRoleId: 'clinical_liaison',
+    difficulty: 'intermediate',
+    setting: 'Hospice coordination office',
+    patient: {
+      name: 'Henry Chen',
+      age: 74,
+    },
+    knownDiagnosisId: 'advanced_lung_disease',
+    recentClinicalChange:
+      "Henry has advanced lung cancer and has been on hospice at home for three months. His son Robert has been his primary caregiver. Over the past two weeks Henry's pain has become increasingly difficult to manage at home. Robert has not slept more than two hours at a stretch in a week. He called to ask whether there is a place — not a nursing home — where Henry could receive hospice-level care.",
+    whoIsPresent: ['Robert Chen, his son'],
+    learnerObjective:
+      "Acknowledge Robert's exhaustion and validate that asking for more support is not failure. Explain what inpatient hospice levels of care look like — both General Inpatient (GIP) for uncontrolled symptoms and residential hospice care. Explain when each level applies. Give Robert a clear next step. Do not make Robert feel he should continue managing at home if the situation is beyond home capacity.",
+    roleReminder:
+      "You are a Clinical Liaison. You may explain hospice levels of care including GIP and residential hospice. You should not make a GIP eligibility determination, promise availability of a specific inpatient bed, give prognosis estimates, or provide medication guidance.",
+    hiddenFamilyFear:
+      "Robert feels that asking to move his father out of the home is a betrayal — that Henry will believe he is being abandoned by his son. He also carries shame about his exhaustion, feeling that a good son should be able to endure more. He needs permission to ask for help without feeling like he is giving up on his father.",
+    openingSpeakerName: 'Robert',
+    openingLine:
+      "I haven't slept in days. His pain is out of control and I can't manage it at home anymore. Someone told me there is a place where hospice can happen — not a nursing home — is that real? Can we do that?",
+    successCriteria: [
+      "Acknowledges Robert's exhaustion and validates that asking for more support is not failure.",
+      "Explains inpatient hospice options — GIP for symptom crises and residential hospice for caregiving overwhelm.",
+      "Explains when GIP is typically indicated — uncontrolled pain, symptoms that cannot be managed at home.",
+      "Does not make Robert feel he should have managed longer at home.",
+      "Gives a clear next step — who to contact, what happens next.",
+      "Does not promise availability of a specific bed or make an eligibility determination.",
+    ],
+    failureCriteria: [
+      "Makes Robert feel guilty for asking or implies he should manage more at home.",
+      "Promises a specific inpatient bed without confirming availability.",
+      "Makes a GIP eligibility determination.",
+      "Provides medication guidance.",
+      "Leaves Robert without a next step.",
+    ],
+    patientStateDefaultId: 'inpatient_hospice_request',
+  },
+
+  {
+    id: 'treatment_just_failed',
+    title: 'The Treatment Stopped Working',
+    allowedRoleId: 'clinical_liaison',
+    difficulty: 'intermediate',
+    setting: 'Hospital oncology suite, immediately after physician meeting',
+    patient: {
+      name: 'Anne Walsh',
+      age: 69,
+    },
+    knownDiagnosisId: 'advanced_pancreatic_cancer',
+    recentClinicalChange:
+      "Anne Walsh has been receiving chemotherapy for pancreatic cancer for seven months. Her oncologist met with her daughter Karen twenty minutes ago and told her the chemotherapy is no longer working and that further treatment is not expected to help. The oncologist asked the clinical liaison to speak with Karen as the next step.",
+    whoIsPresent: ['Karen Walsh, her daughter'],
+    learnerObjective:
+      "Acknowledge Karen's shock — she has just received devastating news and is still in the room where it happened. Do not launch into hospice services. Hold space for the immediate emotional reality. When Karen is ready, explain in plain language what a transition to comfort-focused care looks like. Do not give a prognosis. Do not pressure toward a decision. Give Karen a single clear next step.",
+    roleReminder:
+      "You are a Clinical Liaison. You may acknowledge Karen's shock and grief, explain what hospice support looks like, and describe what the transition process involves. You should not confirm or contradict the oncologist's prognosis, determine hospice eligibility, apply pressure toward enrollment, or provide medication guidance.",
+    hiddenFamilyFear:
+      "Karen has conflated 'treatment stopped working' with 'she is dying right now.' She does not know there is space between treatment failure and death. She also fears that agreeing to hospice is what causes her mother to die — that if she holds on to treatment thinking, her mother will live longer.",
+    openingSpeakerName: 'Karen',
+    openingLine:
+      "The doctor just told us the chemo isn't working. She said to talk to hospice. I don't even know what that means. My mom is right here. Is she dying right now? What is happening to us?",
+    successCriteria: [
+      "Acknowledges the shock and grief before any explanation.",
+      "Does not launch into hospice services immediately.",
+      "Distinguishes between treatment not working and dying right now — creates space between those two things.",
+      "Explains what hospice support looks like in plain language when Karen is ready to hear it.",
+      "Does not confirm or contradict the oncologist's prognosis.",
+      "Does not pressure Karen toward a decision.",
+      "Gives Karen one clear, manageable next step.",
+    ],
+    failureCriteria: [
+      "Launches into hospice services without acknowledging the emotional reality first.",
+      "Confirms or contradicts the prognosis.",
+      "Implies or states that Karen's mother is dying today.",
+      "Pressures toward enrollment.",
+      "Provides medication guidance.",
+      "Leaves Karen without any next step.",
+    ],
+    patientStateDefaultId: 'treatment_just_failed',
+  },
+
+  {
+    id: 'sibling_prognosis_conflict',
+    title: 'My Brother Doesn\'t Want Her to Know',
+    allowedRoleId: 'clinical_liaison',
+    difficulty: 'advanced',
+    setting: 'Outpatient care coordination office',
+    patient: {
+      name: 'Margaret Holloway',
+      age: 81,
+    },
+    knownDiagnosisId: 'advanced_heart_failure',
+    recentClinicalChange:
+      "Margaret has advanced heart failure and has recently been enrolled in hospice. She has asked her daughter Christine directly whether she is dying. Christine wants to be honest with her mother. Her brother Tim has told Christine that telling their mother the truth will destroy her will to live and he has threatened to remove Christine from any family decisions if she tells her. Christine came to the liaison alone.",
+    whoIsPresent: ['Christine Holloway, her daughter'],
+    learnerObjective:
+      "Acknowledge the genuinely impossible position Christine is in. Explain the patient's right to information about her own condition — it belongs to Margaret, not to the family. Explore whether anyone has asked Margaret what she wants to know. Offer to facilitate a family meeting that centers Margaret's expressed wishes. Stay neutral between Christine and Tim. Do not tell Christine what to do.",
+    roleReminder:
+      "You are a Clinical Liaison. You may explain patient autonomy and the right to information, and offer to facilitate a family meeting. You should not take Christine's side or Tim's side, tell Christine to share or withhold information, make a prognosis statement, or provide medication guidance.",
+    hiddenFamilyFear:
+      "Christine is caught between loyalty to her mother's right to know and loyalty to her family's unity. She fears that telling her mother the truth will permanently rupture her relationship with Tim. She also fears that staying silent is a kind of betrayal — that her mother will die without knowing the truth and will feel abandoned by the daughter she trusted.",
+    openingSpeakerName: 'Christine',
+    openingLine:
+      "Mom keeps asking me if she is dying. I want to tell her the truth. But my brother Tim says we cannot — he says it will break her. He threatened to shut me out of everything if I say anything. I don't know what to do. What would you do?",
+    successCriteria: [
+      "Acknowledges the impossible position Christine is in — both options feel like betrayal.",
+      "Explains that the right to information belongs to Margaret, not to the family.",
+      "Explores whether anyone has asked Margaret what she wants to know.",
+      "Stays neutral — does not tell Christine to tell her mother or to agree with Tim.",
+      "Offers to facilitate a family meeting that centers Margaret's expressed wishes.",
+      "Does not make a prognosis statement.",
+    ],
+    failureCriteria: [
+      "Tells Christine she should tell her mother the truth.",
+      "Tells Christine she should agree with Tim.",
+      "Takes a side between Christine and Tim.",
+      "Makes a prognosis statement.",
+      "Moves to paperwork or process before addressing the emotional reality.",
+      "Provides medication guidance.",
+    ],
+    patientStateDefaultId: 'sibling_prognosis_conflict',
+  },
+
+  // ── Social Worker: 5 new scenarios ────────────────────────────────────
+
+  {
+    id: 'children_in_home',
+    title: 'What Do I Tell My Kids?',
+    allowedRoleId: 'social_worker',
+    difficulty: 'intermediate',
+    setting: 'Patient home, social work visit',
+    patient: {
+      name: 'Marcus Reed',
+      age: 41,
+    },
+    knownDiagnosisId: 'advanced_lung_disease',
+    recentClinicalChange:
+      "Marcus has advanced lung cancer and has been on hospice at home for three weeks. He is alert and engaged with his children when he has energy. His wife Angela, 38, has been managing their two children — ages 8 and 11 — alone. The children have been asking questions and the eight-year-old asked Angela directly yesterday whether daddy is going to die. Angela did not know what to say.",
+    whoIsPresent: ['Angela Reed, his wife'],
+    learnerObjective:
+      "Acknowledge how hard it is to protect children while also being honest with them. Provide developmentally appropriate guidance — children ages 8 and 11 generally do better with honest, simple information than with vague reassurance. Validate Angela's instinct to protect her children while also supporting them. Offer practical language. Do not prescribe exactly what she should say — offer a framework and let Angela decide.",
+    roleReminder:
+      "You are a Social Worker. You may provide guidance on talking with children about death, validate Angela's instincts, and offer resources including referrals to pediatric grief support. You should not diagnose the children, prescribe a specific script, take over the parenting decision, or provide medication guidance.",
+    hiddenFamilyFear:
+      "Angela believes that telling her children the truth will traumatize them permanently — that she will destroy their childhoods by telling them their father is dying. She also carries a fear that if she explains what is happening, the children will hate her for not protecting them from the pain. She cannot see that the uncertainty and vagueness is causing anxiety in them already.",
+    openingSpeakerName: 'Angela',
+    openingLine:
+      "My eight-year-old asked me yesterday if Daddy is going to die. I just said the doctors are helping him. I don't know if that was the right thing. How do I talk to them about this? I don't want to traumatize them.",
+    successCriteria: [
+      "Acknowledges how hard Angela's position is — protect or tell, both feel like they cost something.",
+      "Explains that children ages 8 and 11 generally manage truth better than vague reassurance, in plain language.",
+      "Validates Angela's protective instinct while gently expanding her framework.",
+      "Offers concrete language examples — not a script, but a direction.",
+      "Offers to connect Angela with pediatric grief support resources.",
+      "Does not prescribe what Angela must say — supports her in making the decision.",
+    ],
+    failureCriteria: [
+      "Tells Angela her response was wrong.",
+      "Prescribes an exact script Angela must use.",
+      "Implies children are always harmed by knowing.",
+      "Rushes to resources before acknowledging the emotional weight.",
+      "Provides medication guidance.",
+    ],
+    patientStateDefaultId: 'children_in_home',
+  },
+
+  {
+    id: 'financial_caregiver_stress',
+    title: 'I Had to Quit My Job',
+    allowedRoleId: 'social_worker',
+    difficulty: 'intermediate',
+    setting: 'Patient home, routine social work visit',
+    patient: {
+      name: 'Thomas Nguyen',
+      age: 74,
+    },
+    knownDiagnosisId: 'advanced_prostate_cancer',
+    recentClinicalChange:
+      "Thomas has advanced prostate cancer and has been on hospice for three months. His son James, 44, quit his job to become Thomas's full-time caregiver. He has been using his savings. The hospice social worker noted on a previous visit that James seemed withdrawn and mentioned 'money stuff' before quickly changing the subject. Today James mentioned it again before saying 'I don't want to talk about money when he's dying.'",
+    whoIsPresent: ['James Nguyen, his son'],
+    learnerObjective:
+      "Acknowledge that financial concerns during caregiving are legitimate and not selfish — they are part of whole-family care. Validate the sacrifice James made without sentimentalizing it. Assess his financial situation and what resources might help — FMLA information, financial assistance programs, hospice support services. Do not suggest placing Thomas as a financial solution.",
+    roleReminder:
+      "You are a Social Worker. You may explore caregiver financial stress, provide resource information, and validate the difficulty of caregiving without income. You should not make financial decisions for James, suggest placing Thomas as a solution to financial pressure, or provide medication guidance.",
+    hiddenFamilyFear:
+      "James feels that focusing on money is selfish and disloyal when his father is dying. He believes that mentioning financial stress reveals he is not fully committed to his father's care. He also fears that if he admits how bad it is, someone will suggest placing his father — which would feel like a betrayal of his sacrifice.",
+    openingSpeakerName: 'James',
+    openingLine:
+      "I quit my job three months ago to take care of him. I thought I could go back after... I don't know. My savings are almost gone. I don't even know why I'm telling you this. I feel like it's wrong to talk about money when he's dying.",
+    successCriteria: [
+      "Validates that financial concerns during caregiving are legitimate — not selfish.",
+      "Acknowledges the sacrifice James made without making him feel guilty or heroic — just seen.",
+      "Explores the financial situation gently — how bad is it, what resources does he know about.",
+      "Provides information on relevant resources — family leave, financial assistance, hospice aid services.",
+      "Does not suggest placing Thomas as a financial solution.",
+      "Does not rush past the emotional reality into a resource list.",
+    ],
+    failureCriteria: [
+      "Implies that talking about money is inappropriate.",
+      "Suggests or implies placement as a financial solution.",
+      "Launches into a resource list before acknowledging the emotional reality.",
+      "Makes James feel guilty for his financial situation.",
+      "Provides medication guidance.",
+    ],
+    patientStateDefaultId: 'financial_caregiver_stress',
+  },
+
+  {
+    id: 'patient_home_death_wish',
+    title: 'She Wants to Die at Home',
+    allowedRoleId: 'social_worker',
+    difficulty: 'advanced',
+    setting: 'Skilled nursing facility, social work office',
+    patient: {
+      name: 'Louise Perkins',
+      age: 74,
+    },
+    knownDiagnosisId: 'advanced_cancer',
+    recentClinicalChange:
+      "Louise has advanced ovarian cancer and is currently in a skilled nursing facility. She has told the social work team clearly and repeatedly that she wants to die at home in her own bed. Her son Alan has visited and says he cannot be there consistently — he travels for work and his sister lives in California. The social work team has been asked to facilitate a conversation with Alan about Louise's expressed wishes.",
+    whoIsPresent: ['Alan Perkins, her son'],
+    learnerObjective:
+      "Acknowledge Alan's grief and the impossibility he feels. Explore what honoring Louise's wish could realistically look like — not as an all-or-nothing proposition, but as a question of what support structure might make it possible. Explore what Louise herself has said about her needs. Do not tell Alan he must make this happen. Do not dismiss the wish as impractical without exploring it.",
+    roleReminder:
+      "You are a Social Worker. You may advocate for the patient's expressed wishes, explore caregiver feasibility, and discuss support structures that might bridge the gap. You should not tell Alan he has failed, pressure him to stop working, dismiss Louise's wish, or provide medication guidance.",
+    hiddenFamilyFear:
+      "Alan loves his mother deeply and is devastated that he cannot give her what she wants. He fears that if he tells her he cannot be there consistently, she will die believing her children abandoned her. He also carries enormous guilt about his career choices in relation to his family. He came into this conversation hoping the social worker would tell him there is no other option so he would not have to carry the decision.",
+    openingSpeakerName: 'Alan',
+    openingLine:
+      "She told me she wants to die at home. In her own bed. She has been saying it for months. But I travel for work, my sister is in California — we cannot be there every day. How do I tell her we can't do it without breaking her heart?",
+    successCriteria: [
+      "Acknowledges Alan's grief and the weight of what he is being asked to do.",
+      "Does not immediately dismiss Louise's wish as impossible.",
+      "Explores what honoring the wish could look like — hospice aide support, neighbor network, adjusted work schedule.",
+      "Explores what Louise has said about her own needs and flexibility.",
+      "Does not make Alan feel he has failed or is failing.",
+      "Does not pressure him to make a specific decision in the meeting.",
+    ],
+    failureCriteria: [
+      "Immediately declares home death impossible.",
+      "Makes Alan feel guilty for his work situation.",
+      "Dismisses Louise's wish without exploring options.",
+      "Tells Alan what decision to make.",
+      "Provides medication guidance.",
+    ],
+    patientStateDefaultId: 'patient_home_death_wish',
+  },
+
+  {
+    id: 'anticipatory_grief_isolation',
+    title: 'Everyone Tells Me to Be Strong',
+    allowedRoleId: 'social_worker',
+    difficulty: 'intermediate',
+    setting: 'Patient home, family support visit',
+    patient: {
+      name: 'Warren Brooks',
+      age: 71,
+    },
+    knownDiagnosisId: 'end_stage_heart_failure',
+    recentClinicalChange:
+      "Warren has advanced heart failure and is alert and present at home. His wife Helen, 68, has been managing his care with hospice support for two months. On this visit Helen pulled the social worker aside to say she has been crying frequently, that she cried in the grocery store yesterday over his brand of cereal, and that when she tries to tell friends how she is doing, they tell her to 'stay strong' or 'focus on the positive.'",
+    whoIsPresent: ['Helen Brooks, his wife'],
+    learnerObjective:
+      "Acknowledge Helen's experience and name anticipatory grief explicitly — validate that grieving while someone is still alive is real, recognized, and not a betrayal. Challenge the 'stay strong' message gently without criticizing her friends. Explore her isolation and what she needs. Offer connection to grief support proactively. Do not rush her toward resources before she feels heard.",
+    roleReminder:
+      "You are a Social Worker. You may normalize anticipatory grief, validate Helen's experience, and offer connection to grief support resources. You should not diagnose a grief disorder, tell Helen how she should feel, pressure her toward a timeline for resolution, or provide medication guidance.",
+    hiddenFamilyFear:
+      "Helen believes that grieving while Warren is still alive is a betrayal — that it means she has given up on him, or that some part of her is 'ready for it to be over,' which she cannot forgive herself for. She also feels profoundly isolated because everyone around her is performing strength, and she cannot find anyone who will let her be sad.",
+    openingSpeakerName: 'Helen',
+    openingLine:
+      "He is still here, and I know I should be grateful. But I cried in the grocery store yesterday because I saw his brand of cereal. And when I try to talk to my friends, they say stay strong and think positive. Is something wrong with me?",
+    successCriteria: [
+      "Acknowledges Helen's experience before explaining anything.",
+      "Names anticipatory grief explicitly — validates it as real and recognized.",
+      "Validates that the grocery store moment is normal, not a sign of something being wrong.",
+      "Gently challenges the 'stay strong' message without criticizing her friends.",
+      "Explores her isolation and what she needs right now.",
+      "Offers grief support proactively — before she has to ask for it.",
+    ],
+    failureCriteria: [
+      "Tells Helen to focus on the time she has left.",
+      "Implies that grieving now means she has given up on Warren.",
+      "Pathologizes the anticipatory grief as something to fix.",
+      "Rushes to resources before Helen feels heard.",
+      "Tells Helen her friends mean well — dismissing the isolation.",
+      "Provides medication guidance.",
+    ],
+    patientStateDefaultId: 'anticipatory_grief_isolation',
+  },
+
+  {
+    id: 'opioid_history_pain',
+    title: 'He Had a Problem Years Ago',
+    allowedRoleId: 'social_worker',
+    difficulty: 'advanced',
+    setting: 'Hospital room, day of hospice discharge planning',
+    patient: {
+      name: 'Roberto Santos',
+      age: 71,
+    },
+    knownDiagnosisId: 'advanced_cancer',
+    recentClinicalChange:
+      "Roberto has advanced cancer and is being discharged to home hospice today. The hospice comfort plan includes morphine for pain management. His son Victor, 50, pulled the social worker aside before discharge and disclosed that Roberto was dependent on opioids fifteen years ago, got clean, and has been sober since. Victor is terrified that the comfort medications will cause his father to relapse before he dies, but he also knows his father is in severe pain.",
+    whoIsPresent: ['Victor Santos, his son'],
+    learnerObjective:
+      "Acknowledge both of Victor's fears — watching his father suffer in pain AND watching him lose the sobriety he fought for. Validate that this is a legitimate concern, not a sign of bad judgment. Explain the clinical difference between physical dependence and addiction in the context of terminal illness. Explain that the hospice team is aware of and equipped to manage this. Route the clinical plan to the hospice physician and nurse.",
+    roleReminder:
+      "You are a Social Worker. You may acknowledge the addiction history concern, provide general education on the difference between dependence and addiction in terminal illness, and validate Victor's dilemma. You should not make medication decisions, state specific doses, dismiss the addiction history as irrelevant, or guarantee there will be no issues.",
+    hiddenFamilyFear:
+      "Victor is caught between two terrors: watching his father die in pain versus watching him lose the sobriety that took years to achieve and defined the second half of his life. He also carries shame about raising this concern — he fears someone will tell him his worry is selfish or disrespectful of his father's suffering. He needs someone to hold both fears as equally legitimate.",
+    openingSpeakerName: 'Victor',
+    openingLine:
+      "My dad had a problem with pills — opioids — about fifteen years ago. He got clean and stayed clean. I am proud of him. But now they want to give him morphine. I am scared he is going to get hooked again, or I am going to watch him relapse before he dies. But I also know he is in pain. I don't know what to think.",
+    successCriteria: [
+      "Acknowledges both fears as legitimate — pain and relapse — without dismissing either.",
+      "Validates Victor's concern rather than minimizing it as unnecessary worry.",
+      "Explains the clinical difference between physical dependence and addiction in terminal illness.",
+      "Explains that the hospice team takes addiction history into account in care planning.",
+      "Does not dismiss the addiction history as clinically irrelevant.",
+      "Routes the clinical medication plan to the hospice physician and nurse.",
+    ],
+    failureCriteria: [
+      "Dismisses the addiction history as irrelevant because he is dying.",
+      "Tells Victor not to worry about relapse.",
+      "States specific doses or makes medication decisions.",
+      "Makes Victor feel his concern is disrespectful of his father's pain.",
+      "Guarantees there will be no issues with the medication.",
+    ],
+    patientStateDefaultId: 'opioid_history_pain',
+  },
 ];

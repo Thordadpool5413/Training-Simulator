@@ -94,4 +94,79 @@ export const scenarioHints: Record<string, string[]> = {
     'hospice_fear_response',
     'cl_what_hospice_provides',
   ],
+  comfort_kit_first_use: [
+    'rn_medication_routing',
+    'rn_patient_autonomy',
+    'rn_covert_refusal',
+  ],
+  nausea_vomiting_home: [
+    'rn_pain_assessment_response',
+    'rn_provider_routing',
+    'rn_when_to_call',
+  ],
+  dehydration_education: [
+    'rn_dying_process_explanation',
+    'rn_air_hunger_explanation',
+    'rn_vigil_empowerment',
+  ],
+  terminal_agitation_home: [
+    'rn_dying_process_explanation',
+    'rn_medication_routing',
+    'rn_vigil_empowerment',
+  ],
+  seizure_at_home: [
+    'rn_when_to_call',
+    'rn_provider_routing',
+    'rn_medication_routing',
+  ],
+  coverage_confusion: [
+    'cl_what_hospice_provides',
+    'cl_hospice_timeline_education',
+    'hospice_fear_response',
+  ],
+  hospice_discharge_fear: [
+    'cl_revocation_plain_language',
+    'cl_hospice_as_choice',
+    'cl_hospice_timeline_education',
+  ],
+  inpatient_hospice_request: [
+    'cl_what_hospice_provides',
+    'cl_hospice_as_choice',
+    'hospice_fear_response',
+  ],
+  treatment_just_failed: [
+    'cl_ambiguous_grief_acknowledgment',
+    'hospice_fear_response',
+    'cl_hospice_as_choice',
+  ],
+  sibling_prognosis_conflict: [
+    'cl_prognosis_family_routing',
+    'cl_prognosis_estimate_reframe',
+    'cl_revocation_repair',
+  ],
+  children_in_home: [
+    'sw_caregiver_burden_validation',
+    'sw_values_elicitation',
+    'sw_grief_normalization',
+  ],
+  financial_caregiver_stress: [
+    'sw_caregiver_burden_validation',
+    'sw_respite_resource_offer',
+    'sw_autonomy_plain_language',
+  ],
+  patient_home_death_wish: [
+    'sw_values_elicitation',
+    'sw_autonomy_plain_language',
+    'sw_grief_normalization',
+  ],
+  anticipatory_grief_isolation: [
+    'sw_grief_normalization',
+    'sw_bereavement_education',
+    'sw_caregiver_burden_validation',
+  ],
+  opioid_history_pain: [
+    'sw_autonomy_plain_language',
+    'sw_capacity_routing',
+    'sw_values_elicitation',
+  ],
 };

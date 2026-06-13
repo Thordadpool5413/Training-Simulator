@@ -3,12 +3,16 @@
 -- Extended user profiles (auth.users is managed by Supabase Auth)
 CREATE TABLE IF NOT EXISTS public.user_profiles (
   id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
+  email TEXT,
   display_name TEXT,
   org_id TEXT,
   is_admin BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+ALTER TABLE public.user_profiles
+  ADD COLUMN IF NOT EXISTS email TEXT;
 
 -- Completed training sessions synced from device
 CREATE TABLE IF NOT EXISTS public.completed_sessions (
@@ -18,10 +22,14 @@ CREATE TABLE IF NOT EXISTS public.completed_sessions (
   scenario_title TEXT NOT NULL,
   role_id TEXT NOT NULL,
   overall_score NUMERIC(4,2) NOT NULL,
+  previous_score NUMERIC(4,2),
   skill_scores JSONB DEFAULT '[]',
   completed_at TIMESTAMPTZ NOT NULL,
   synced_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+ALTER TABLE public.completed_sessions
+  ADD COLUMN IF NOT EXISTS previous_score NUMERIC(4,2);
 
 -- Learner profiles synced from device
 CREATE TABLE IF NOT EXISTS public.learner_profiles (
@@ -37,20 +45,20 @@ CREATE TABLE IF NOT EXISTS public.learner_profiles (
 );
 
 -- View for admin team reporting (org members with aggregated stats)
-CREATE OR REPLACE VIEW public.org_member_stats AS
+CREATE OR REPLACE VIEW public.org_member_stats
+WITH (security_invoker = true) AS
 SELECT
   up.id AS user_id,
   up.org_id,
   up.display_name,
-  u.email,
+  up.email,
   COUNT(cs.id) AS completed_count,
   ROUND(COALESCE(AVG(cs.overall_score), 0), 2) AS avg_score,
   MAX(cs.completed_at) AS last_active_at
 FROM public.user_profiles up
-JOIN auth.users u ON u.id = up.id
 LEFT JOIN public.completed_sessions cs ON cs.user_id = up.id
 WHERE up.org_id IS NOT NULL
-GROUP BY up.id, up.org_id, up.display_name, u.email;
+GROUP BY up.id, up.org_id, up.display_name, up.email;
 
 -- Row Level Security
 ALTER TABLE public.user_profiles ENABLE ROW LEVEL SECURITY;
@@ -59,20 +67,41 @@ ALTER TABLE public.learner_profiles ENABLE ROW LEVEL SECURITY;
 
 -- user_profiles policies
 CREATE POLICY "Users manage own profile"
-  ON public.user_profiles FOR ALL
-  USING (auth.uid() = id);
+  ON public.user_profiles
+  FOR ALL
+  TO authenticated
+  USING ((select auth.uid()) = id)
+  WITH CHECK ((select auth.uid()) = id);
 
--- completed_sessions policies
-CREATE POLICY "Users manage own sessions"
-  ON public.completed_sessions FOR ALL
-  USING (auth.uid() = user_id);
-
-CREATE POLICY "Admins view org sessions"
-  ON public.completed_sessions FOR SELECT
+CREATE POLICY "Admins view org profiles"
+  ON public.user_profiles
+  FOR SELECT
+  TO authenticated
   USING (
     EXISTS (
       SELECT 1 FROM public.user_profiles admin_up
-      WHERE admin_up.id = auth.uid()
+      WHERE admin_up.id = (select auth.uid())
+        AND admin_up.is_admin = TRUE
+        AND admin_up.org_id = org_id
+    )
+  );
+
+-- completed_sessions policies
+CREATE POLICY "Users manage own sessions"
+  ON public.completed_sessions
+  FOR ALL
+  TO authenticated
+  USING ((select auth.uid()) = user_id)
+  WITH CHECK ((select auth.uid()) = user_id);
+
+CREATE POLICY "Admins view org sessions"
+  ON public.completed_sessions
+  FOR SELECT
+  TO authenticated
+  USING (
+    EXISTS (
+      SELECT 1 FROM public.user_profiles admin_up
+      WHERE admin_up.id = (select auth.uid())
         AND admin_up.is_admin = TRUE
         AND admin_up.org_id = (
           SELECT member_up.org_id FROM public.user_profiles member_up WHERE member_up.id = user_id
@@ -82,15 +111,18 @@ CREATE POLICY "Admins view org sessions"
 
 -- learner_profiles policies
 CREATE POLICY "Users manage own learner profile"
-  ON public.learner_profiles FOR ALL
-  USING (auth.uid() = user_id);
+  ON public.learner_profiles
+  FOR ALL
+  TO authenticated
+  USING ((select auth.uid()) = user_id)
+  WITH CHECK ((select auth.uid()) = user_id);
 
 -- Trigger to auto-create a user_profiles row on sign-up
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER LANGUAGE plpgsql SECURITY DEFINER AS $$
 BEGIN
-  INSERT INTO public.user_profiles (id) VALUES (NEW.id)
-  ON CONFLICT (id) DO NOTHING;
+  INSERT INTO public.user_profiles (id, email) VALUES (NEW.id, NEW.email)
+  ON CONFLICT (id) DO UPDATE SET email = EXCLUDED.email;
   RETURN NEW;
 END;
 $$;

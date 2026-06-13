@@ -5,16 +5,14 @@ import {
   ActivityIndicator,
   Alert,
   KeyboardAvoidingView,
-  Platform,
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { PremiumPill, PremiumScreen } from '@/components/premium-ui';
 import { Radius, SimulatorColors } from '@/constants/theme';
 import { signUp } from '@/services/authService';
 
@@ -41,27 +39,17 @@ export default function SignUpScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <PremiumScreen
+      eyebrow="Free Trial"
+      title="Create your account"
+      subtitle="Start your 7-day trial and keep your progress synced across devices."
+      onBack={() => (router.canGoBack() ? router.back() : router.replace('/welcome' as Href))}
+      backLabel="Back"
+      headerRight={<PremiumPill label="7-day trial" tone="indigo" />}>
       <KeyboardAvoidingView
         style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <ScrollView
-          contentContainerStyle={styles.content}
-          keyboardShouldPersistTaps="handled">
-          <Pressable
-            style={styles.backLink}
-            accessibilityRole="button"
-            onPress={() => router.canGoBack() ? router.back() : router.replace('/welcome' as Href)}>
-            <Text style={styles.backLinkText}>← Back</Text>
-          </Pressable>
-
-          <View style={styles.headerSection}>
-            <Text style={styles.title} accessibilityRole="header">Create your account</Text>
-            <Text style={styles.subtitle}>
-              Start your 7-day free trial. Cancel anytime.
-            </Text>
-          </View>
-
+        behavior={process.env.EXPO_OS === 'ios' ? 'padding' : undefined}>
+        <View style={styles.content}>
           <View style={styles.form}>
             <View style={styles.fieldGroup}>
               <Text style={styles.label}>Email</Text>
@@ -141,9 +129,9 @@ export default function SignUpScreen() {
               <Text style={styles.footerLink}>Sign in</Text>
             </Pressable>
           </View>
-        </ScrollView>
+        </View>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </PremiumScreen>
   );
 }
 

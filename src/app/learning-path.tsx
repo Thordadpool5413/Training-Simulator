@@ -1,8 +1,8 @@
 import { router } from 'expo-router';
 import type { Href } from 'expo-router';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { PremiumPill, PremiumScreen } from '@/components/premium-ui';
 import { Radius, SimulatorColors } from '@/constants/theme';
 import { scenarioTemplates } from '@/data/scenarioTemplates';
 import { LEARNING_PATHS, type LearningStage, type RoleLearningPath } from '@/data/learningPaths';
@@ -86,24 +86,14 @@ export default function LearningPathScreen() {
   let foundNextUp = false;
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-
-        {/* Header */}
-        <View style={styles.header}>
-          <Pressable
-            style={styles.backLink}
-            accessibilityRole="button"
-            onPress={() => router.back()}>
-            <Text style={styles.backLinkText}>← Back</Text>
-          </Pressable>
-          <View style={styles.headerText}>
-            <Text style={styles.title} accessibilityRole="header">Learning Path</Text>
-            <Text style={styles.subtitle}>
-              Structured progression from foundations to advanced clinical conversations.
-            </Text>
-          </View>
-        </View>
+    <PremiumScreen
+      eyebrow="Learning Path"
+      title="Structured Progression"
+      subtitle="A guided sequence of hospice communication practice from foundations to advanced conversations."
+      onBack={() => router.back()}
+      backLabel="Back"
+      headerRight={<PremiumPill label={`${totalCompleted}/${totalScenarios} complete`} tone="success" />}
+      scrollContentStyle={styles.scroll}>
 
         {/* Role tabs */}
         <View style={styles.roleTabs}>
@@ -318,8 +308,7 @@ export default function LearningPathScreen() {
           </View>
         )}
 
-      </ScrollView>
-    </SafeAreaView>
+    </PremiumScreen>
   );
 }
 

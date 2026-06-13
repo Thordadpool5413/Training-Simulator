@@ -53,10 +53,10 @@ export function CustomTabList(props: TabListProps) {
 
   return (
     <View {...props} style={styles.tabListContainer}>
-      <ThemedView type="backgroundElement" style={styles.innerContainer}>
-        <ThemedText type="smallBold" style={styles.brandText}>
-          Expo Starter
-        </ThemedText>
+        <ThemedView type="backgroundElement" style={styles.innerContainer}>
+          <ThemedText type="smallBold" style={styles.brandText}>
+          Hospice Training
+          </ThemedText>
 
         {props.children}
 

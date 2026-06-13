@@ -1,9 +1,9 @@
 import { router } from 'expo-router';
 import type { Href } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { PremiumPill, PremiumProgressRail, PremiumScreen } from '@/components/premium-ui';
 import { Radius, SimulatorColors } from '@/constants/theme';
 import { roles } from '@/data/roles';
 import { scenarioTemplates } from '@/data/scenarioTemplates';
@@ -82,21 +82,25 @@ export default function OnboardingScreen() {
   const progress = step / 3;
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <View style={styles.progressBar}>
-        <View style={[styles.progressFill, { width: `${progress * 100}%` as `${number}%` }]} />
-      </View>
+    <PremiumScreen
+      eyebrow="Onboarding"
+      title="Set up your training profile"
+      subtitle="Choose your role, share your experience level, and launch a recommended case that fits your practice."
+      onBack={() => router.replace('/')}
+      backLabel="Home"
+      headerRight={<PremiumPill label={`Step ${step}/3`} tone="indigo" />}
+      scrollContentStyle={styles.content}>
+      <PremiumProgressRail progress={progress} valueLabel={`Step ${step} of 3`} tone="brand" />
 
-      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         {step === 1 && (
           <>
             <View style={styles.stepHeader}>
               <Text style={styles.stepLabel}>Step 1 of 3</Text>
               <Text style={styles.title} accessibilityRole="header">
-                What's your clinical role?
+                Which role are you practicing today?
               </Text>
               <Text style={styles.subtitle}>
-                Scenarios and AI feedback will be tailored to your practice.
+                Scenarios and coaching feedback will be tailored to the role you select here.
               </Text>
             </View>
 
@@ -146,10 +150,10 @@ export default function OnboardingScreen() {
             <View style={styles.stepHeader}>
               <Text style={styles.stepLabel}>Step 2 of 3</Text>
               <Text style={styles.title} accessibilityRole="header">
-                Tell us about yourself
+                Tell us about your practice background
               </Text>
               <Text style={styles.subtitle}>
-                Helps the AI coach adjust feedback to your actual experience level.
+                This helps the coach match the tone, depth, and expectations of your current experience.
               </Text>
             </View>
 
@@ -210,10 +214,10 @@ export default function OnboardingScreen() {
             <View style={styles.stepHeader}>
               <Text style={styles.stepLabel}>Step 3 of 3</Text>
               <Text style={styles.title} accessibilityRole="header">
-                You're ready to start
+                You’re ready to begin
               </Text>
               <Text style={styles.subtitle}>
-                Here's your first recommended scenario as a {roleName}.
+                Here’s the first recommended scenario for a {roleName}.
               </Text>
             </View>
 
@@ -250,8 +254,7 @@ export default function OnboardingScreen() {
             </Pressable>
           </>
         )}
-      </ScrollView>
-    </SafeAreaView>
+    </PremiumScreen>
   );
 }
 

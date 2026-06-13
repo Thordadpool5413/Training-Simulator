@@ -10,89 +10,99 @@ const KEYS = {
   appSettings: 'sim_app_settings',
 } as const;
 
-export async function loadLearnerProfile(): Promise<LearnerProfile | null> {
+function scopedKey(scope: string, key: keyof typeof KEYS): string {
+  return `sim:${scope}:${KEYS[key]}`;
+}
+
+function legacyKey(key: keyof typeof KEYS): string {
+  return KEYS[key];
+}
+
+async function readJson<T>(keys: string[]): Promise<T | null> {
   try {
-    const raw = await AsyncStorage.getItem(KEYS.learnerProfile);
-    return raw ? (JSON.parse(raw) as LearnerProfile) : null;
+    for (const key of keys) {
+      const raw = await AsyncStorage.getItem(key);
+      if (raw) return JSON.parse(raw) as T;
+    }
+    return null;
   } catch {
     return null;
   }
 }
 
-export async function saveLearnerProfile(profile: LearnerProfile): Promise<void> {
+async function writeJson(key: string, value: unknown): Promise<void> {
   try {
-    await AsyncStorage.setItem(KEYS.learnerProfile, JSON.stringify(profile));
+    await AsyncStorage.setItem(key, JSON.stringify(value));
   } catch {
     // silently skip — storage failure should never crash the training app
   }
 }
 
-export async function loadCompletedSessions(): Promise<CompletedSession[]> {
-  try {
-    const raw = await AsyncStorage.getItem(KEYS.completedSessions);
-    return raw ? (JSON.parse(raw) as CompletedSession[]) : [];
-  } catch {
-    return [];
-  }
+export async function loadLearnerProfile(scope = 'guest'): Promise<LearnerProfile | null> {
+  return readJson<LearnerProfile>([
+    scopedKey(scope, 'learnerProfile'),
+    ...(scope === 'guest' ? [legacyKey('learnerProfile')] : []),
+  ]);
 }
 
-export async function saveCompletedSessions(sessions: CompletedSession[]): Promise<void> {
-  try {
-    await AsyncStorage.setItem(KEYS.completedSessions, JSON.stringify(sessions));
-  } catch {}
+export async function saveLearnerProfile(profile: LearnerProfile, scope = 'guest'): Promise<void> {
+  await writeJson(scopedKey(scope, 'learnerProfile'), profile);
 }
 
-export async function loadQuizResult(): Promise<QuizResult | null> {
-  try {
-    const raw = await AsyncStorage.getItem(KEYS.quizResult);
-    return raw ? (JSON.parse(raw) as QuizResult) : null;
-  } catch {
-    return null;
-  }
+export async function loadCompletedSessions(scope = 'guest'): Promise<CompletedSession[]> {
+  const sessions = await readJson<CompletedSession[]>([
+    scopedKey(scope, 'completedSessions'),
+    ...(scope === 'guest' ? [legacyKey('completedSessions')] : []),
+  ]);
+  return sessions ?? [];
 }
 
-export async function saveQuizResult(result: QuizResult): Promise<void> {
-  try {
-    await AsyncStorage.setItem(KEYS.quizResult, JSON.stringify(result));
-  } catch {}
+export async function saveCompletedSessions(
+  sessions: CompletedSession[],
+  scope = 'guest'
+): Promise<void> {
+  await writeJson(scopedKey(scope, 'completedSessions'), sessions);
 }
 
-export async function loadStreakData(): Promise<StreakData | null> {
-  try {
-    const raw = await AsyncStorage.getItem(KEYS.streakData);
-    return raw ? (JSON.parse(raw) as StreakData) : null;
-  } catch {
-    return null;
-  }
+export async function loadQuizResult(scope = 'guest'): Promise<QuizResult | null> {
+  return readJson<QuizResult>([
+    scopedKey(scope, 'quizResult'),
+    ...(scope === 'guest' ? [legacyKey('quizResult')] : []),
+  ]);
 }
 
-export async function saveStreakData(data: StreakData): Promise<void> {
-  try {
-    await AsyncStorage.setItem(KEYS.streakData, JSON.stringify(data));
-  } catch {}
+export async function saveQuizResult(result: QuizResult, scope = 'guest'): Promise<void> {
+  await writeJson(scopedKey(scope, 'quizResult'), result);
 }
 
-export async function loadAppSettings(): Promise<AppSettings | null> {
-  try {
-    const raw = await AsyncStorage.getItem(KEYS.appSettings);
-    return raw ? (JSON.parse(raw) as AppSettings) : null;
-  } catch {
-    return null;
-  }
+export async function loadStreakData(scope = 'guest'): Promise<StreakData | null> {
+  return readJson<StreakData>([
+    scopedKey(scope, 'streakData'),
+    ...(scope === 'guest' ? [legacyKey('streakData')] : []),
+  ]);
 }
 
-export async function saveAppSettings(settings: AppSettings): Promise<void> {
-  try {
-    await AsyncStorage.setItem(KEYS.appSettings, JSON.stringify(settings));
-  } catch {}
+export async function saveStreakData(data: StreakData, scope = 'guest'): Promise<void> {
+  await writeJson(scopedKey(scope, 'streakData'), data);
 }
 
-export async function clearAllProgress(): Promise<void> {
+export async function loadAppSettings(scope = 'guest'): Promise<AppSettings | null> {
+  return readJson<AppSettings>([scopedKey(scope, 'appSettings'), legacyKey('appSettings')]);
+}
+
+export async function saveAppSettings(settings: AppSettings, scope = 'guest'): Promise<void> {
+  await writeJson(scopedKey(scope, 'appSettings'), settings);
+}
+
+export async function clearAllProgress(scope = 'guest'): Promise<void> {
   try {
     await AsyncStorage.multiRemove([
-      KEYS.completedSessions,
-      KEYS.quizResult,
-      KEYS.streakData,
+      scopedKey(scope, 'completedSessions'),
+      scopedKey(scope, 'quizResult'),
+      scopedKey(scope, 'streakData'),
+      legacyKey('completedSessions'),
+      legacyKey('quizResult'),
+      legacyKey('streakData'),
     ]);
   } catch {}
 }

@@ -2,8 +2,8 @@ import { router } from 'expo-router';
 import type { Href } from 'expo-router';
 import { useMemo } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { PremiumEmptyState, PremiumPill, PremiumScreen } from '@/components/premium-ui';
 import { SectionCard } from '@/components/SectionCard';
 import { Radius, SimulatorColors } from '@/constants/theme';
 import { roles } from '@/data/roles';
@@ -60,23 +60,21 @@ export default function AnalyticsScreen() {
 
   if (analytics.totalSessions === 0) {
     return (
-      <SafeAreaView style={styles.safe}>
-        <View style={styles.emptyContainer}>
-          <Pressable style={styles.backLink} accessibilityRole="button" onPress={() => router.back()}>
-            <Text style={styles.backLinkText}>← Back</Text>
-          </Pressable>
-          <View style={styles.emptyContent}>
-            <Text style={styles.emptyIcon}>📊</Text>
-            <Text style={styles.emptyTitle}>No data yet</Text>
-            <Text style={styles.emptyText}>
-              Complete your first simulation to start tracking your progress here.
-            </Text>
-            <Pressable style={styles.emptyButton} accessibilityRole="button" onPress={() => router.push('/role' as Href)}>
-              <Text style={styles.emptyButtonText}>Start Practice</Text>
-            </Pressable>
-          </View>
-        </View>
-      </SafeAreaView>
+      <PremiumScreen
+        eyebrow="Analytics"
+        title="Progress Analytics"
+        subtitle="Complete your first simulation to start tracking progress, skill trends, and role mastery."
+        onBack={() => router.back()}
+        backLabel="Back"
+        headerRight={<PremiumPill label="No data yet" tone="muted" />}>
+        <PremiumEmptyState
+          icon="📊"
+          title="No data yet"
+          body="Complete your first simulation to start tracking your progress here."
+          actionLabel="Start Practice"
+          onAction={() => router.push('/role' as Href)}
+        />
+      </PremiumScreen>
     );
   }
 
@@ -104,13 +102,14 @@ export default function AnalyticsScreen() {
   const recentBars = analytics.scoreHistory.slice(-12);
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <Pressable style={styles.backLink} accessibilityRole="button" onPress={() => router.back()}>
-          <Text style={styles.backLinkText}>← Back</Text>
-        </Pressable>
-
-        <Text style={styles.title} accessibilityRole="header">Progress Analytics</Text>
+    <PremiumScreen
+      eyebrow="Analytics"
+      title="Progress Analytics"
+      subtitle="See how your communication skills are trending across sessions and roles."
+      onBack={() => router.back()}
+      backLabel="Back"
+      headerRight={<PremiumPill label={`${analytics.totalSessions} sessions`} tone="success" />}
+      scrollContentStyle={styles.content}>
 
         {/* Hero stat cards */}
         <View style={styles.statsRow}>
@@ -264,8 +263,7 @@ export default function AnalyticsScreen() {
             );
           })}
         </SectionCard>
-      </ScrollView>
-    </SafeAreaView>
+    </PremiumScreen>
   );
 }
 

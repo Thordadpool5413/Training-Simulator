@@ -94,12 +94,14 @@ export function KnowledgeQuizCard({ question, questionNumber, onAnswer }: Props)
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: Radius.lg,
+    backgroundColor: SimulatorColors.surface,
+    borderRadius: Radius.xl,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
-    padding: 16,
+    borderColor: SimulatorColors.border,
+    padding: 18,
     gap: 12,
+    borderCurve: 'continuous',
+    boxShadow: `0 18px 36px ${SimulatorColors.shadow}`,
   },
   headerRow: {
     flexDirection: 'row',
@@ -107,9 +109,9 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   numberBadge: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
+    width: 26,
+    height: 26,
+    borderRadius: 13,
     backgroundColor: SimulatorColors.brand,
     alignItems: 'center',
     justifyContent: 'center',
@@ -121,22 +123,24 @@ const styles = StyleSheet.create({
   },
   categoryBadge: {
     backgroundColor: SimulatorColors.brandTint,
-    borderRadius: Radius.sm,
+    borderRadius: Radius.md,
     paddingHorizontal: 7,
     paddingVertical: 3,
+    borderWidth: 1,
+    borderColor: `${SimulatorColors.brand}33`,
   },
   categoryText: {
     fontSize: 11,
-    fontWeight: '600',
-    color: SimulatorColors.brandDeep,
+    fontWeight: '700',
+    color: SimulatorColors.brand,
     textTransform: 'uppercase',
     letterSpacing: 0.4,
   },
   question: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#111827',
-    lineHeight: 21,
+    fontSize: 15,
+    fontWeight: '700',
+    color: SimulatorColors.textPrimary,
+    lineHeight: 22,
   },
   options: {
     gap: 8,
@@ -144,11 +148,11 @@ const styles = StyleSheet.create({
   optionBase: {
     borderRadius: Radius.md,
     borderWidth: 1.5,
-    padding: 12,
+    padding: 13,
   },
   optionDefault: {
-    borderColor: '#D1D5DB',
-    backgroundColor: '#F9FAFB',
+    borderColor: SimulatorColors.borderInput,
+    backgroundColor: SimulatorColors.surfaceRaised,
   },
   optionPressed: {
     backgroundColor: SimulatorColors.brandTint,
@@ -159,12 +163,12 @@ const styles = StyleSheet.create({
     backgroundColor: SimulatorColors.greenBackground,
   },
   optionWrong: {
-    borderColor: '#FCA5A5',
-    backgroundColor: '#FEF2F2',
+    borderColor: 'rgba(255, 107, 122, 0.42)',
+    backgroundColor: 'rgba(255, 107, 122, 0.12)',
   },
   optionDimmed: {
-    borderColor: '#E5E7EB',
-    backgroundColor: '#F9FAFB',
+    borderColor: SimulatorColors.border,
+    backgroundColor: SimulatorColors.surfaceRaised,
     opacity: 0.6,
   },
   optionInner: {
@@ -176,7 +180,7 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderRadius: 10,
-    backgroundColor: '#E5E7EB',
+    backgroundColor: SimulatorColors.surfaceMuted,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 1,
@@ -186,30 +190,30 @@ const styles = StyleSheet.create({
     backgroundColor: SimulatorColors.greenBorder,
   },
   optionLetterWrong: {
-    backgroundColor: '#FCA5A5',
+    backgroundColor: 'rgba(255, 107, 122, 0.22)',
   },
   optionLetterText: {
     fontSize: 10,
     fontWeight: '700',
-    color: '#374151',
+    color: SimulatorColors.textSecondary,
   },
   optionTextBase: {
     flex: 1,
-    fontSize: 13,
-    lineHeight: 20,
+    fontSize: 14,
+    lineHeight: 21,
   },
   optionTextDefault: {
-    color: '#374151',
+    color: SimulatorColors.textBody,
   },
   optionTextCorrect: {
     color: SimulatorColors.greenText,
     fontWeight: '500',
   },
   optionTextWrong: {
-    color: '#B91C1C',
+    color: SimulatorColors.scoreRed,
   },
   optionTextDimmed: {
-    color: '#9CA3AF',
+    color: SimulatorColors.textPlaceholder,
   },
   explanationBox: {
     borderRadius: Radius.md,
@@ -219,29 +223,29 @@ const styles = StyleSheet.create({
   explanationCorrect: {
     backgroundColor: SimulatorColors.greenBackground,
     borderWidth: 1,
-    borderColor: SimulatorColors.greenBorder,
+    borderColor: `${SimulatorColors.greenBorder}44`,
   },
   explanationWrong: {
     backgroundColor: SimulatorColors.warningBackground,
     borderWidth: 1,
-    borderColor: '#FDE68A',
+    borderColor: `${SimulatorColors.warningBorder}44`,
   },
   explanationLabel: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#374151',
+    color: SimulatorColors.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.4,
     marginBottom: 2,
   },
   explanationText: {
     fontSize: 13,
-    color: '#1F2937',
+    color: SimulatorColors.textBody,
     lineHeight: 20,
   },
   evidenceNote: {
     fontSize: 11,
-    color: '#6B7280',
+    color: SimulatorColors.textSecondary,
     fontStyle: 'italic',
     marginTop: 4,
   },

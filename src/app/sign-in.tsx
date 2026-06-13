@@ -5,16 +5,14 @@ import {
   ActivityIndicator,
   Alert,
   KeyboardAvoidingView,
-  Platform,
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { PremiumPill, PremiumScreen } from '@/components/premium-ui';
 import { Radius, SimulatorColors } from '@/constants/theme';
 import { resetPassword, signIn } from '@/services/authService';
 
@@ -55,25 +53,17 @@ export default function SignInScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <PremiumScreen
+      eyebrow="Secure Access"
+      title="Welcome back"
+      subtitle="Sign in to sync your hospice training progress across devices."
+      onBack={() => (router.canGoBack() ? router.back() : router.replace('/welcome' as Href))}
+      backLabel="Back"
+      headerRight={<PremiumPill label="Supabase" tone="success" />}>
       <KeyboardAvoidingView
         style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
-        <ScrollView
-          contentContainerStyle={styles.content}
-          keyboardShouldPersistTaps="handled">
-          <Pressable
-            style={styles.backLink}
-            accessibilityRole="button"
-            onPress={() => router.canGoBack() ? router.back() : router.replace('/welcome' as Href)}>
-            <Text style={styles.backLinkText}>← Back</Text>
-          </Pressable>
-
-          <View style={styles.headerSection}>
-            <Text style={styles.title} accessibilityRole="header">Welcome back</Text>
-            <Text style={styles.subtitle}>Sign in to your account</Text>
-          </View>
-
+        behavior={process.env.EXPO_OS === 'ios' ? 'padding' : undefined}>
+        <View style={styles.content}>
           {resetSent && (
             <View style={styles.successBanner}>
               <Text style={styles.successBannerText}>
@@ -145,9 +135,9 @@ export default function SignInScreen() {
               <Text style={styles.footerLink}>Start free trial</Text>
             </Pressable>
           </View>
-        </ScrollView>
+        </View>
       </KeyboardAvoidingView>
-    </SafeAreaView>
+    </PremiumScreen>
   );
 }
 

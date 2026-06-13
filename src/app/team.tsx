@@ -11,8 +11,8 @@ import {
   TextInput,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { PremiumEmptyState, PremiumPill, PremiumScreen } from '@/components/premium-ui';
 import { SectionCard } from '@/components/SectionCard';
 import { Radius, SimulatorColors } from '@/constants/theme';
 import { fetchOrgMembers } from '@/services/cloudSyncService';
@@ -71,52 +71,51 @@ export default function TeamScreen() {
 
   if (!authConfigured) {
     return (
-      <SafeAreaView style={styles.safe}>
-        <ScrollView contentContainerStyle={styles.content}>
-          <Pressable style={styles.backLink} accessibilityRole="button" onPress={() => router.back()}>
-            <Text style={styles.backLinkText}>← Back</Text>
-          </Pressable>
-          <Text style={styles.title}>Team</Text>
-          <View style={styles.emptyCard}>
-            <Text style={styles.emptyText}>
-              Team features require an account. Set up Supabase and add your credentials to enable team management.
-            </Text>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+      <PremiumScreen
+        eyebrow="Team"
+        title="Team Collaboration"
+        subtitle="Supabase-backed org reporting, member lists, and team progress."
+        onBack={() => router.back()}
+        backLabel="Back"
+        headerRight={<PremiumPill label="Supabase required" tone="warning" />}>
+        <PremiumEmptyState
+          icon="👥"
+          title="Team features require an account"
+          body="Set up Supabase and add your credentials to enable team management."
+        />
+      </PremiumScreen>
     );
   }
 
   if (!isSignedIn) {
     return (
-      <SafeAreaView style={styles.safe}>
-        <ScrollView contentContainerStyle={styles.content}>
-          <Pressable style={styles.backLink} accessibilityRole="button" onPress={() => router.back()}>
-            <Text style={styles.backLinkText}>← Back</Text>
-          </Pressable>
-          <Text style={styles.title}>Team</Text>
-          <View style={styles.emptyCard}>
-            <Text style={styles.emptyText}>Sign in to access team features.</Text>
-            <Pressable
-              style={styles.actionButton}
-              accessibilityRole="button"
-              onPress={() => router.push('/sign-in')}>
-              <Text style={styles.actionButtonText}>Sign In</Text>
-            </Pressable>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
+      <PremiumScreen
+        eyebrow="Team"
+        title="Team Collaboration"
+        subtitle="Sign in to access team features and org reporting."
+        onBack={() => router.back()}
+        backLabel="Back"
+        headerRight={<PremiumPill label="Sign in required" tone="muted" />}>
+        <PremiumEmptyState
+          icon="🔐"
+          title="Sign in to access team features"
+          body="Use your account to join a team, view reports, and manage org settings."
+          actionLabel="Sign In"
+          onAction={() => router.push('/sign-in')}
+        />
+      </PremiumScreen>
     );
   }
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <Pressable style={styles.backLink} accessibilityRole="button" onPress={() => router.back()}>
-          <Text style={styles.backLinkText}>← Back</Text>
-        </Pressable>
-
-        <Text style={styles.title} accessibilityRole="header">Team</Text>
+    <PremiumScreen
+      eyebrow="Team"
+      title="Team Collaboration"
+      subtitle="Invite colleagues, review team progress, and manage your org settings."
+      onBack={() => router.back()}
+      backLabel="Back"
+      headerRight={orgId ? <PremiumPill label={`Org ${orgId}`} tone={isAdmin ? 'success' : 'indigo'} /> : <PremiumPill label="No org" tone="muted" />}
+      scrollContentStyle={styles.content}>
 
         <SectionCard title="Your Account">
           <Text style={styles.accountEmail}>{email}</Text>
@@ -238,8 +237,7 @@ export default function TeamScreen() {
           onPress={() => router.push('/paywall')}>
           <Text style={styles.paywallLinkText}>View subscription options →</Text>
         </Pressable>
-      </ScrollView>
-    </SafeAreaView>
+    </PremiumScreen>
   );
 }
 

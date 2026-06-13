@@ -1,9 +1,9 @@
 import { router } from 'expo-router';
 import type { Href } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { PremiumEmptyState, PremiumPill, PremiumScreen } from '@/components/premium-ui';
 import { DiagnosisChip } from '@/components/DiagnosisChip';
 import { EvidenceCard } from '@/components/EvidenceCard';
 import { KnowledgeQuizCard } from '@/components/KnowledgeQuizCard';
@@ -61,113 +61,121 @@ export default function ClinicalDebriefScreen() {
 
   if (!scenario || !clinicalDiagnosis) {
     return (
-      <SafeAreaView style={styles.safe}>
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>No simulation found. Complete a scenario first.</Text>
-          <Pressable
-            style={styles.button}
-            accessibilityRole="button"
-            onPress={() => router.push('/role' as Href)}
-          >
-            <Text style={styles.buttonText}>Return to Role Selection</Text>
-          </Pressable>
-        </View>
-      </SafeAreaView>
+      <PremiumScreen
+        eyebrow="Clinical Debrief"
+        title="Knowledge Review"
+        subtitle="Complete a scenario first to unlock the debrief."
+        onBack={() => router.back()}
+        backLabel="Back"
+        headerRight={<PremiumPill label="Locked" tone="muted" />}>
+        <PremiumEmptyState
+          icon="🧪"
+          title="No simulation found"
+          body="Complete a scenario before opening the clinical knowledge debrief."
+          actionLabel="Return to Role Selection"
+          onAction={() => router.push('/role' as Href)}
+        />
+      </PremiumScreen>
     );
   }
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.screenTitle} accessibilityRole="header">
-          Clinical Knowledge Debrief
-        </Text>
-        <Text style={styles.screenSubtitle}>{scenario.title}</Text>
-
-        <SectionCard title="Diagnosis">
-          <DiagnosisChip
-            icd10Code={clinicalDiagnosis.icd10Code}
-            icd10Description={clinicalDiagnosis.icd10Description}
-            lcdId={clinicalDiagnosis.lcdId}
-          />
-          <View style={styles.divider} />
-          <View style={styles.roleRow}>
-            {Object.entries(clinicalDiagnosis.roleRelevance).map(([roleKey, text]) => (
-              <View key={roleKey} style={styles.roleBlock}>
-                <Text style={styles.roleLabel}>{ROLE_LABELS[roleKey] ?? roleKey}</Text>
-                <Text style={styles.roleText}>{text}</Text>
-              </View>
-            ))}
-          </View>
-        </SectionCard>
-
-        <SectionCard title="CMS Coverage Criteria">
-          <LCDCriteriaCard diagnosis={clinicalDiagnosis} />
-        </SectionCard>
-
-        <SectionCard title="Knowledge Check">
-          {allAnswered && (
-            <View style={[styles.scoreSummary, score === questions.length ? styles.scorePerfect : score >= 2 ? styles.scoreGood : styles.scoreLow]}>
-              <Text style={styles.scoreText}>
-                {score} / {questions.length} correct
-              </Text>
-              <Text style={styles.scoreMessage}>
-                {score === questions.length
-                  ? 'All correct — excellent clinical knowledge.'
-                  : score >= 2
-                  ? 'Good foundation — review the explanations for any missed questions.'
-                  : 'Review the explanations carefully — clinical knowledge builds over time.'}
-              </Text>
+    <PremiumScreen
+      eyebrow="Clinical Debrief"
+      title="Knowledge Review"
+      subtitle={scenario.title}
+      onBack={() => router.back()}
+      backLabel="Back"
+      headerRight={
+        <PremiumPill
+          label={allAnswered ? `${score}/${questions.length}` : `${questions.length} quiz`}
+          tone={allAnswered ? (score === questions.length ? 'success' : 'warning') : 'indigo'}
+        />
+      }
+      scrollContentStyle={styles.scrollContent}>
+      <SectionCard title="Diagnosis">
+        <DiagnosisChip
+          icd10Code={clinicalDiagnosis.icd10Code}
+          icd10Description={clinicalDiagnosis.icd10Description}
+          lcdId={clinicalDiagnosis.lcdId}
+        />
+        <View style={styles.divider} />
+        <View style={styles.roleRow}>
+          {Object.entries(clinicalDiagnosis.roleRelevance).map(([roleKey, text]) => (
+            <View key={roleKey} style={styles.roleBlock}>
+              <Text style={styles.roleLabel}>{ROLE_LABELS[roleKey] ?? roleKey}</Text>
+              <Text style={styles.roleText}>{text}</Text>
             </View>
-          )}
-          {questions.map((q, i) => (
-            <KnowledgeQuizCard
-              key={q.id}
-              question={q}
-              questionNumber={i + 1}
-              onAnswer={(selectedIndex, isCorrect) =>
-                handleAnswer(q.id, selectedIndex, isCorrect)
-              }
-            />
           ))}
-          {questions.length === 0 && (
-            <Text style={styles.bodyText}>No quiz questions available for this scenario.</Text>
-          )}
-        </SectionCard>
+        </View>
+      </SectionCard>
 
-        {evidence != null && (
-          <SectionCard title="Clinical Evidence">
-            <EvidenceCard evidence={evidence} />
-          </SectionCard>
-        )}
+      <SectionCard title="CMS Coverage Criteria">
+        <LCDCriteriaCard diagnosis={clinicalDiagnosis} />
+      </SectionCard>
 
-        {relevantMeds.length > 0 && (
-          <SectionCard title="Hospice Medications">
-            <Text style={styles.medsIntro}>
-              Medications commonly used in this clinical scenario. Tap any card to expand.
+      <SectionCard title="Knowledge Check">
+        {allAnswered && (
+          <View style={[styles.scoreSummary, score === questions.length ? styles.scorePerfect : score >= 2 ? styles.scoreGood : styles.scoreLow]}>
+            <Text style={styles.scoreText}>
+              {score} / {questions.length} correct
             </Text>
-            {relevantMeds.map((med) => (
-              <MedicationCard key={med.id} medication={med} roleId={selectedRoleId ?? undefined} />
-            ))}
-          </SectionCard>
+            <Text style={styles.scoreMessage}>
+              {score === questions.length
+                ? 'All correct — excellent clinical knowledge.'
+                : score >= 2
+                ? 'Good foundation — review the explanations for any missed questions.'
+                : 'Review the explanations carefully — clinical knowledge builds over time.'}
+            </Text>
+          </View>
         )}
+        {questions.map((q, i) => (
+          <KnowledgeQuizCard
+            key={q.id}
+            question={q}
+            questionNumber={i + 1}
+            onAnswer={(selectedIndex, isCorrect) =>
+              handleAnswer(q.id, selectedIndex, isCorrect)
+            }
+          />
+        ))}
+        {questions.length === 0 && (
+          <Text style={styles.bodyText}>No quiz questions available for this scenario.</Text>
+        )}
+      </SectionCard>
 
-        <Pressable
-          style={styles.dashboardButton}
-          accessibilityRole="button"
-          onPress={() => router.push('/dashboard' as Href)}
-        >
-          <Text style={styles.dashboardButtonText}>View Dashboard</Text>
-        </Pressable>
-        <Pressable
-          style={[styles.button, styles.returnButton]}
-          accessibilityRole="button"
-          onPress={() => router.push('/role' as Href)}
-        >
-          <Text style={styles.buttonText}>Return to Role Selection</Text>
-        </Pressable>
-      </ScrollView>
-    </SafeAreaView>
+      {evidence != null && (
+        <SectionCard title="Clinical Evidence">
+          <EvidenceCard evidence={evidence} />
+        </SectionCard>
+      )}
+
+      {relevantMeds.length > 0 && (
+        <SectionCard title="Hospice Medications">
+          <Text style={styles.medsIntro}>
+            Medications commonly used in this clinical scenario. Tap any card to expand.
+          </Text>
+          {relevantMeds.map((med) => (
+            <MedicationCard key={med.id} medication={med} roleId={selectedRoleId ?? undefined} />
+          ))}
+        </SectionCard>
+      )}
+
+      <Pressable
+        style={styles.dashboardButton}
+        accessibilityRole="button"
+        onPress={() => router.push('/dashboard' as Href)}
+      >
+        <Text style={styles.dashboardButtonText}>View Dashboard</Text>
+      </Pressable>
+      <Pressable
+        style={[styles.button, styles.returnButton]}
+        accessibilityRole="button"
+        onPress={() => router.push('/role' as Href)}
+      >
+        <Text style={styles.buttonText}>Return to Role Selection</Text>
+      </Pressable>
+    </PremiumScreen>
   );
 }
 
@@ -178,26 +186,11 @@ const ROLE_LABELS: Record<string, string> = {
 };
 
 const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: SimulatorColors.screenBackground,
-  },
   scrollContent: {
-    padding: 20,
+    paddingHorizontal: 24,
+    paddingTop: 8,
     paddingBottom: 48,
     gap: 16,
-  },
-  screenTitle: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: SimulatorColors.textPrimary,
-    marginBottom: 4,
-  },
-  screenSubtitle: {
-    fontSize: 14,
-    color: SimulatorColors.textSecondary,
-    lineHeight: 20,
-    marginBottom: 8,
   },
   bodyText: {
     fontSize: 15,
@@ -290,18 +283,5 @@ const styles = StyleSheet.create({
     color: SimulatorColors.brand,
     fontSize: 16,
     fontWeight: '600',
-  },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 32,
-  },
-  emptyText: {
-    fontSize: 16,
-    color: SimulatorColors.textSecondary,
-    textAlign: 'center',
-    marginBottom: 24,
-    lineHeight: 24,
   },
 });

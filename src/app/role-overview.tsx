@@ -1,8 +1,8 @@
 import { router } from 'expo-router';
 import type { Href } from 'expo-router';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { PremiumPill, PremiumScreen } from '@/components/premium-ui';
 import { SectionCard } from '@/components/SectionCard';
 import { Radius, SimulatorColors } from '@/constants/theme';
 import { roles } from '@/data/roles';
@@ -17,78 +17,79 @@ export default function RoleOverviewScreen() {
 
   if (!role) {
     return (
-      <SafeAreaView style={styles.safe}>
+      <PremiumScreen
+        eyebrow="Role Overview"
+        title="Choose a Role"
+        subtitle="Select a practice role first so we can tailor the overview."
+        onBack={() => router.back()}
+        backLabel="Back"
+        headerRight={<PremiumPill label="Role required" tone="warning" />}>
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>No role selected. Please go back and select a role.</Text>
           <Pressable style={styles.button} accessibilityRole="button" onPress={() => router.push('/role' as Href)}>
             <Text style={styles.buttonText}>Back to Role Selection</Text>
           </Pressable>
         </View>
-      </SafeAreaView>
+      </PremiumScreen>
     );
   }
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Pressable
-          style={styles.backLink}
-          accessibilityRole="button"
-          onPress={() => router.push('/role' as Href)}>
-          <Text style={styles.backLinkText}>← Change Role</Text>
-        </Pressable>
-
-        <Text style={styles.roleName} accessibilityRole="header">{role.name}</Text>
-        <Text style={styles.scenarioCount}>{scenarioCount} practice scenarios available</Text>
-
-        <SectionCard title="What You Can Do">
-          {role.allowed.map((item, i) => (
-            <View key={i} style={styles.listRow}>
-              <Text style={styles.checkMark}>✓</Text>
-              <Text style={styles.listText}>{item}</Text>
-            </View>
-          ))}
-        </SectionCard>
-
-        <SectionCard title="What Is Outside This Role">
-          {role.blocked.map((item, i) => (
-            <View key={i} style={styles.listRow}>
-              <Text style={styles.xMark}>✗</Text>
-              <Text style={styles.listText}>{item}</Text>
-            </View>
-          ))}
-        </SectionCard>
-
-        <SectionCard title="Common Mistakes to Avoid">
-          {role.commonMistakes.map((item, i) => (
-            <View key={i} style={styles.listRow}>
-              <Text style={styles.warningMark}>!</Text>
-              <Text style={styles.listText}>{item}</Text>
-            </View>
-          ))}
-        </SectionCard>
-
-        <SectionCard title="Scoring Categories">
-          <Text style={styles.scoringIntro}>
-            Your performance in each simulation is scored across these skill areas.
-          </Text>
-          <View style={styles.categoryGrid}>
-            {role.scoringCategories.map((cat, i) => (
-              <View key={i} style={styles.categoryChip}>
-                <Text style={styles.categoryText}>{cat}</Text>
-              </View>
-            ))}
+    <PremiumScreen
+      eyebrow="Role Overview"
+      title={role.name}
+      subtitle={`${scenarioCount} practice scenarios available`}
+      onBack={() => router.push('/role' as Href)}
+      backLabel="Change Role"
+      headerRight={<PremiumPill label={`${scenarioCount} scenarios`} tone="indigo" />}
+      scrollContentStyle={styles.scrollContent}>
+      <SectionCard title="What You Can Do">
+        {role.allowed.map((item, i) => (
+          <View key={i} style={styles.listRow}>
+            <Text style={styles.checkMark}>✓</Text>
+            <Text style={styles.listText}>{item}</Text>
           </View>
-        </SectionCard>
+        ))}
+      </SectionCard>
 
-        <Pressable
-          style={styles.startButton}
-          accessibilityRole="button"
-          onPress={() => router.push('/scenario' as Href)}>
-          <Text style={styles.startButtonText}>Choose a Scenario</Text>
-        </Pressable>
-      </ScrollView>
-    </SafeAreaView>
+      <SectionCard title="What Is Outside This Role">
+        {role.blocked.map((item, i) => (
+          <View key={i} style={styles.listRow}>
+            <Text style={styles.xMark}>✗</Text>
+            <Text style={styles.listText}>{item}</Text>
+          </View>
+        ))}
+      </SectionCard>
+
+      <SectionCard title="Common Mistakes to Avoid">
+        {role.commonMistakes.map((item, i) => (
+          <View key={i} style={styles.listRow}>
+            <Text style={styles.warningMark}>!</Text>
+            <Text style={styles.listText}>{item}</Text>
+          </View>
+        ))}
+      </SectionCard>
+
+      <SectionCard title="Scoring Categories">
+        <Text style={styles.scoringIntro}>
+          Your performance in each simulation is scored across these skill areas.
+        </Text>
+        <View style={styles.categoryGrid}>
+          {role.scoringCategories.map((cat, i) => (
+            <View key={i} style={styles.categoryChip}>
+              <Text style={styles.categoryText}>{cat}</Text>
+            </View>
+          ))}
+        </View>
+      </SectionCard>
+
+      <Pressable
+        style={styles.startButton}
+        accessibilityRole="button"
+        onPress={() => router.push('/scenario' as Href)}>
+        <Text style={styles.startButtonText}>Choose a Scenario</Text>
+      </Pressable>
+    </PremiumScreen>
   );
 }
 

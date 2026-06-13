@@ -1,16 +1,15 @@
 import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
-  ActivityIndicator,
   Alert,
+  ActivityIndicator,
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { PremiumActionButton, PremiumPill, PremiumScreen } from '@/components/premium-ui';
 import { Radius, SimulatorColors } from '@/constants/theme';
 import {
   getOfferings,
@@ -22,14 +21,15 @@ import { useAuth } from '@/state/AuthContext';
 
 const FEATURES = [
   'All 34 clinical scenarios',
-  'Voice mode — speak your responses',
-  'AI coaching calibrated to your role',
+  'Voice mode - speak your responses',
+  'Role-calibrated AI coaching',
   'Score tracking and certificates',
   'Cloud sync across devices',
 ];
 
 const TESTIMONIAL = {
-  quote: "This is the most realistic hospice communication training I've experienced. I use it before difficult family meetings.",
+  quote:
+    'This is the most realistic hospice communication training I have experienced. I use it before difficult family meetings.',
   author: 'Clinical Liaison, Regional Medical Center',
 };
 
@@ -49,7 +49,6 @@ export default function PaywallScreen() {
   useEffect(() => {
     void getOfferings().then((pkgs) => {
       setPackages(pkgs);
-      // Default to last package (annual) but clamp if fewer packages returned
       if (pkgs.length > 0) setSelectedIndex(pkgs.length - 1);
       setLoading(false);
     });
@@ -91,234 +90,151 @@ export default function PaywallScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <Pressable
-          style={styles.closeButton}
-          accessibilityRole="button"
-          onPress={() => router.back()}>
-          <Text style={styles.closeButtonText}>✕</Text>
-        </Pressable>
-
-        <View style={styles.header}>
-          <Text style={styles.badge}>7-DAY FREE TRIAL</Text>
-          <Text style={styles.title} accessibilityRole="header">Unlock Full Access</Text>
-          <Text style={styles.subtitle}>
-            Practice every scenario. Master every conversation.
-          </Text>
+    <PremiumScreen
+      eyebrow="Subscription"
+      title="Unlock full access"
+      subtitle="Practice every scenario. Master every conversation."
+      onBack={() => router.back()}
+      backLabel="Close"
+      scrollContentStyle={styles.content}>
+      <View style={styles.heroCard}>
+        <View style={styles.heroPills}>
+          <PremiumPill label="7-day free trial" tone="success" />
+          <PremiumPill label="No live data" tone="indigo" />
         </View>
+        <Text style={styles.heroQuote}>"{TESTIMONIAL.quote}"</Text>
+        <Text style={styles.heroAuthor}>- {TESTIMONIAL.author}</Text>
+      </View>
 
-        <View style={styles.trustBar}>
-          <Text style={styles.trustStars}>★★★★★</Text>
-          <Text style={styles.trustText}>Trusted by 500+ hospice clinicians</Text>
-        </View>
-
-        <View style={styles.testimonialCard}>
-          <Text style={styles.testimonialQuote}>"{TESTIMONIAL.quote}"</Text>
-          <Text style={styles.testimonialAuthor}>— {TESTIMONIAL.author}</Text>
-        </View>
-
-        <View style={styles.featureList}>
-          {FEATURES.map((f) => (
-            <View key={f} style={styles.featureRow}>
-              <View style={styles.checkCircle}>
-                <Text style={styles.checkMark}>✓</Text>
-              </View>
-              <Text style={styles.featureText}>{f}</Text>
+      <View style={styles.featureList}>
+        {FEATURES.map((f) => (
+          <View key={f} style={styles.featureRow}>
+            <View style={styles.checkCircle}>
+              <Text style={styles.checkMark}>✓</Text>
             </View>
-          ))}
-        </View>
-
-        {loading ? (
-          <ActivityIndicator size="large" color={SimulatorColors.brand} style={styles.loader} />
-        ) : (
-          <View style={styles.packagesSection}>
-            {displayPackages ? (
-              displayPackages.map((pkg, idx) => (
-                <Pressable
-                  key={pkg.identifier}
-                  style={[styles.packageCard, idx === selectedIndex && styles.packageCardSelected]}
-                  accessibilityRole="button"
-                  onPress={() => setSelectedIndex(idx)}>
-                  <View style={styles.packageRadio}>
-                    {idx === selectedIndex && <View style={styles.packageRadioInner} />}
-                  </View>
-                  <View style={styles.packageInfo}>
-                    <Text style={[styles.packageId, idx === selectedIndex && styles.packageIdSelected]}>
-                      {pkg.identifier}
-                    </Text>
-                    <Text style={styles.packagePrice}>{pkg.localizedPriceString}</Text>
-                  </View>
-                </Pressable>
-              ))
-            ) : (
-              FALLBACK_PACKAGES.map((pkg, idx) => (
-                <Pressable
-                  key={pkg.identifier}
-                  style={[styles.packageCard, idx === selectedIndex && styles.packageCardSelected]}
-                  accessibilityRole="button"
-                  onPress={() => setSelectedIndex(idx)}>
-                  <View style={styles.packageRadio}>
-                    {idx === selectedIndex && <View style={styles.packageRadioInner} />}
-                  </View>
-                  <View style={styles.packageInfo}>
-                    <Text style={[styles.packageId, idx === selectedIndex && styles.packageIdSelected]}>
-                      {pkg.label}
-                    </Text>
-                    <Text style={styles.packagePrice}>{pkg.localizedPriceString}</Text>
-                  </View>
-                  {'savings' in pkg && pkg.savings ? (
-                    <View style={styles.savingsBadge}>
-                      <Text style={styles.savingsText}>{pkg.savings}</Text>
-                    </View>
-                  ) : null}
-                </Pressable>
-              ))
-            )}
+            <Text style={styles.featureText}>{f}</Text>
           </View>
-        )}
+        ))}
+      </View>
 
-        <Pressable
-          style={[styles.ctaButton, (purchasing || loading) && styles.ctaButtonDisabled]}
-          accessibilityRole="button"
-          onPress={() => { void handlePurchase(); }}
-          disabled={purchasing || loading}>
-          {purchasing ? (
-            <ActivityIndicator size="small" color={SimulatorColors.textOnBrand} />
-          ) : (
-            <Text style={styles.ctaButtonText}>Start Free Trial</Text>
-          )}
-        </Pressable>
-
-        <Text style={styles.trialNote}>
-          Free for 7 days, then billed at the selected rate. Cancel anytime in App Store settings.
-        </Text>
-
-        <Pressable
-          style={styles.restoreButton}
-          accessibilityRole="button"
-          onPress={() => { void handleRestore(); }}
-          disabled={restoring}>
-          {restoring ? (
+      <View style={styles.packagesSection}>
+        {loading ? (
+          <View style={styles.loadingRow}>
             <ActivityIndicator size="small" color={SimulatorColors.brand} />
-          ) : (
-            <Text style={styles.restoreButtonText}>Restore Purchases</Text>
-          )}
-        </Pressable>
+            <Text style={styles.loadingText}>Loading subscription options...</Text>
+          </View>
+        ) : displayPackages ? (
+          displayPackages.map((pkg, idx) => (
+            <Pressable
+              key={pkg.identifier}
+              style={[styles.packageCard, idx === selectedIndex && styles.packageCardSelected]}
+              accessibilityRole="button"
+              onPress={() => setSelectedIndex(idx)}>
+              <View style={styles.packageRadio}>
+                {idx === selectedIndex && <View style={styles.packageRadioInner} />}
+              </View>
+              <View style={styles.packageInfo}>
+                <Text style={[styles.packageId, idx === selectedIndex && styles.packageIdSelected]}>
+                  {pkg.identifier}
+                </Text>
+                <Text style={styles.packagePrice}>{pkg.localizedPriceString}</Text>
+              </View>
+            </Pressable>
+          ))
+        ) : (
+          FALLBACK_PACKAGES.map((pkg, idx) => (
+            <Pressable
+              key={pkg.identifier}
+              style={[styles.packageCard, idx === selectedIndex && styles.packageCardSelected]}
+              accessibilityRole="button"
+              onPress={() => setSelectedIndex(idx)}>
+              <View style={styles.packageRadio}>
+                {idx === selectedIndex && <View style={styles.packageRadioInner} />}
+              </View>
+              <View style={styles.packageInfo}>
+                <Text style={[styles.packageId, idx === selectedIndex && styles.packageIdSelected]}>
+                  {pkg.label}
+                </Text>
+                <Text style={styles.packagePrice}>{pkg.localizedPriceString}</Text>
+              </View>
+              {'savings' in pkg && pkg.savings ? (
+                <View style={styles.savingsBadge}>
+                  <Text style={styles.savingsText}>{pkg.savings}</Text>
+                </View>
+              ) : null}
+            </Pressable>
+          ))
+        )}
+      </View>
 
-        <Pressable
-          style={styles.teamNote}
-          accessibilityRole="button"
-          onPress={() => router.push('/team')}>
-          <Text style={styles.teamNoteText}>
-            Purchasing for your team? Get team pricing →
-          </Text>
-        </Pressable>
-      </ScrollView>
-    </SafeAreaView>
+      <PremiumActionButton
+        label={purchasing ? 'Starting Trial...' : 'Start Free Trial'}
+        onPress={() => {
+          void handlePurchase();
+        }}
+        busy={purchasing}
+        disabled={loading}
+      />
+
+      <Text style={styles.trialNote}>
+        Free for 7 days, then billed at the selected rate. Cancel anytime in App Store settings.
+      </Text>
+
+      <PremiumActionButton
+        label={restoring ? 'Restoring...' : 'Restore Purchases'}
+        onPress={() => {
+          void handleRestore();
+        }}
+        variant="secondary"
+        busy={restoring}
+      />
+
+      <Pressable style={styles.teamNote} accessibilityRole="button" onPress={() => router.push('/team')}>
+        <Text style={styles.teamNoteText}>Purchasing for your team? Get team pricing →</Text>
+      </Pressable>
+    </PremiumScreen>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: SimulatorColors.screenBackground,
-  },
   content: {
-    padding: 24,
-    paddingBottom: 48,
+    gap: 16,
   },
-  closeButton: {
-    alignSelf: 'flex-end',
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: SimulatorColors.border,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 8,
-  },
-  closeButtonText: {
-    fontSize: 14,
-    color: SimulatorColors.textSecondary,
-    fontWeight: '700',
-  },
-  header: {
-    alignItems: 'center',
-    gap: 8,
-    marginBottom: 24,
-  },
-  badge: {
-    fontSize: 11,
-    fontWeight: '800',
-    color: SimulatorColors.brand,
-    letterSpacing: 1.5,
-    backgroundColor: SimulatorColors.brandTint,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: Radius.sm,
-    overflow: 'hidden',
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '800',
-    color: SimulatorColors.textPrimary,
-    textAlign: 'center',
-    letterSpacing: -0.5,
-  },
-  subtitle: {
-    fontSize: 15,
-    color: SimulatorColors.textSecondary,
-    textAlign: 'center',
-    lineHeight: 22,
-  },
-  trustBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    marginBottom: 4,
-  },
-  trustStars: {
-    fontSize: 13,
-    color: '#F59E0B',
-    letterSpacing: 1,
-  },
-  trustText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: SimulatorColors.textSecondary,
-  },
-  testimonialCard: {
+  heroCard: {
     backgroundColor: SimulatorColors.surface,
-    borderRadius: Radius.lg,
+    borderRadius: Radius.xl,
     borderWidth: 1,
     borderColor: SimulatorColors.border,
-    borderLeftWidth: 3,
-    borderLeftColor: SimulatorColors.brand,
-    padding: 16,
-    gap: 8,
-    marginBottom: 4,
+    padding: 18,
+    gap: 10,
+    borderCurve: 'continuous',
+    boxShadow: `0 18px 40px ${SimulatorColors.shadow}`,
   },
-  testimonialQuote: {
-    fontSize: 14,
+  heroPills: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  heroQuote: {
+    fontSize: 15,
     color: SimulatorColors.textBody,
-    lineHeight: 21,
+    lineHeight: 22,
     fontStyle: 'italic',
   },
-  testimonialAuthor: {
+  heroAuthor: {
     fontSize: 12,
-    fontWeight: '600',
+    fontWeight: '700',
     color: SimulatorColors.textSecondary,
   },
   featureList: {
     backgroundColor: SimulatorColors.surface,
-    borderRadius: Radius.lg,
-    padding: 20,
+    borderRadius: Radius.xl,
+    padding: 18,
     gap: 12,
-    marginBottom: 24,
     borderWidth: 1,
     borderColor: SimulatorColors.border,
+    borderCurve: 'continuous',
+    boxShadow: `0 18px 40px ${SimulatorColors.shadow}`,
   },
   featureRow: {
     flexDirection: 'row',
@@ -331,14 +247,14 @@ const styles = StyleSheet.create({
     borderRadius: 11,
     backgroundColor: SimulatorColors.greenBackground,
     borderWidth: 1,
-    borderColor: SimulatorColors.greenBorder,
+    borderColor: `${SimulatorColors.greenBorder}66`,
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
   },
   checkMark: {
     fontSize: 11,
-    fontWeight: '800',
+    fontWeight: '900',
     color: SimulatorColors.scoreGreen,
   },
   featureText: {
@@ -347,22 +263,30 @@ const styles = StyleSheet.create({
     flex: 1,
     lineHeight: 21,
   },
-  loader: {
-    marginVertical: 32,
-  },
   packagesSection: {
     gap: 10,
-    marginBottom: 20,
+  },
+  loadingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingVertical: 10,
+  },
+  loadingText: {
+    fontSize: 14,
+    color: SimulatorColors.textSecondary,
   },
   packageCard: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
     backgroundColor: SimulatorColors.surface,
-    borderRadius: Radius.md,
+    borderRadius: Radius.lg,
     padding: 16,
-    borderWidth: 1.5,
+    borderWidth: 1,
     borderColor: SimulatorColors.border,
+    borderCurve: 'continuous',
+    boxShadow: `0 16px 36px ${SimulatorColors.shadow}`,
   },
   packageCardSelected: {
     borderColor: SimulatorColors.brand,
@@ -389,12 +313,12 @@ const styles = StyleSheet.create({
   },
   packageId: {
     fontSize: 15,
-    fontWeight: '600',
-    color: SimulatorColors.textBody,
+    fontWeight: '800',
+    color: SimulatorColors.textPrimary,
     textTransform: 'capitalize',
   },
   packageIdSelected: {
-    color: SimulatorColors.brandDeep,
+    color: SimulatorColors.brand,
   },
   packagePrice: {
     fontSize: 14,
@@ -403,46 +327,22 @@ const styles = StyleSheet.create({
   savingsBadge: {
     backgroundColor: SimulatorColors.greenBackground,
     borderWidth: 1,
-    borderColor: SimulatorColors.greenBorder,
+    borderColor: `${SimulatorColors.greenBorder}66`,
     borderRadius: Radius.sm,
     paddingHorizontal: 8,
     paddingVertical: 3,
   },
   savingsText: {
     fontSize: 11,
-    fontWeight: '700',
-    color: SimulatorColors.scoreGreen,
-  },
-  ctaButton: {
-    backgroundColor: SimulatorColors.brand,
-    borderRadius: Radius.md,
-    paddingVertical: 16,
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  ctaButtonDisabled: {
-    backgroundColor: SimulatorColors.brandDisabled,
-  },
-  ctaButtonText: {
-    color: SimulatorColors.textOnBrand,
-    fontSize: 17,
     fontWeight: '800',
+    color: SimulatorColors.scoreGreen,
   },
   trialNote: {
     fontSize: 11,
     color: SimulatorColors.textSecondary,
     textAlign: 'center',
     lineHeight: 16,
-    marginBottom: 16,
-  },
-  restoreButton: {
-    paddingVertical: 10,
-    alignItems: 'center',
-  },
-  restoreButtonText: {
-    fontSize: 13,
-    color: SimulatorColors.brand,
-    fontWeight: '600',
+    marginTop: -2,
   },
   teamNote: {
     paddingVertical: 8,

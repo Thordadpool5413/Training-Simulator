@@ -36,12 +36,14 @@ export function LCDCriteriaCard({ diagnosis }: Props) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: Radius.md,
+    backgroundColor: SimulatorColors.surface,
+    borderRadius: Radius.xl,
     borderWidth: 1,
-    borderColor: '#E0E7FF',
-    padding: 14,
+    borderColor: `${SimulatorColors.indigoBorder}33`,
+    padding: 18,
     gap: 8,
+    borderCurve: 'continuous',
+    boxShadow: `0 18px 36px ${SimulatorColors.shadow}`,
   },
   header: {
     marginBottom: 4,
@@ -49,25 +51,25 @@ const styles = StyleSheet.create({
   lcdId: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#4338CA',
+    color: SimulatorColors.indigoLabel,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     marginBottom: 2,
   },
   lcdTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1E1B4B',
+    fontSize: 15,
+    fontWeight: '800',
+    color: SimulatorColors.textPrimary,
     marginBottom: 2,
   },
   contractor: {
     fontSize: 12,
-    color: '#6B7280',
+    color: SimulatorColors.textSecondary,
   },
   sectionLabel: {
     fontSize: 11,
-    fontWeight: '600',
-    color: SimulatorColors.brandDeep,
+    fontWeight: '800',
+    color: SimulatorColors.indigoLabel,
     textTransform: 'uppercase',
     letterSpacing: 0.4,
     marginTop: 4,
@@ -86,14 +88,14 @@ const styles = StyleSheet.create({
   },
   criterionText: {
     flex: 1,
-    fontSize: 13,
-    color: '#1F2937',
-    lineHeight: 20,
+    fontSize: 14,
+    color: SimulatorColors.textBody,
+    lineHeight: 21,
   },
   indicatorText: {
     flex: 1,
-    fontSize: 13,
-    color: '#374151',
-    lineHeight: 20,
+    fontSize: 14,
+    color: SimulatorColors.textBody,
+    lineHeight: 21,
   },
 });

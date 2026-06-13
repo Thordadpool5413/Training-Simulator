@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   KeyboardAvoidingView,
-  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -15,6 +14,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { PremiumBackdrop, PremiumEmptyState, PremiumPill, PremiumScreen } from '@/components/premium-ui';
 import { Radius, SimulatorColors } from '@/constants/theme';
 import { patientStateDefaults } from '@/data/patientStateDefaults';
 import { roles } from '@/data/roles';
@@ -287,54 +287,70 @@ export default function SimulationScreen() {
 
   if (!selectedRoleId) {
     return (
-      <SafeAreaView style={styles.safe}>
-        <View style={styles.centerContainer}>
-          <Text style={styles.centerText}>
-            Please select a role before starting a simulation.
-          </Text>
-          <Pressable style={styles.button} accessibilityRole="button" onPress={() => router.push('/role' as Href)}>
-            <Text style={styles.buttonText}>Go to Role Selection</Text>
-          </Pressable>
-        </View>
-      </SafeAreaView>
+      <PremiumScreen
+        eyebrow="Simulation"
+        title="Live Conversation"
+        subtitle="Choose a role first so we can load the right simulation context."
+        onBack={() => router.back()}
+        backLabel="Back"
+        headerRight={<PremiumPill label="Role required" tone="warning" />}>
+        <PremiumEmptyState
+          icon="🧭"
+          title="Select a role first"
+          body="Pick the role you want to practice before starting the live simulation."
+          actionLabel="Go to Role Selection"
+          onAction={() => router.push('/role' as Href)}
+        />
+      </PremiumScreen>
     );
   }
 
   if (!selectedScenarioId) {
     return (
-      <SafeAreaView style={styles.safe}>
-        <View style={styles.centerContainer}>
-          <Text style={styles.centerText}>
-            Please select a scenario before starting a simulation.
-          </Text>
-          <Pressable style={styles.button} accessibilityRole="button" onPress={() => router.push('/scenario' as Href)}>
-            <Text style={styles.buttonText}>Go to Scenario Selection</Text>
-          </Pressable>
-        </View>
-      </SafeAreaView>
+      <PremiumScreen
+        eyebrow="Simulation"
+        title="Live Conversation"
+        subtitle="Select a scenario to load the live dialogue and patient state."
+        onBack={() => router.back()}
+        backLabel="Back"
+        headerRight={<PremiumPill label="Scenario required" tone="warning" />}>
+        <PremiumEmptyState
+          icon="📁"
+          title="Select a scenario first"
+          body="Choose a scenario from the library before opening the live simulation."
+          actionLabel="Go to Scenario Selection"
+          onAction={() => router.push('/scenario' as Href)}
+        />
+      </PremiumScreen>
     );
   }
 
   if (!scenario) {
     return (
-      <SafeAreaView style={styles.safe}>
-        <View style={styles.centerContainer}>
-          <Text style={styles.centerText}>
-            Scenario not found. Please select a scenario.
-          </Text>
-          <Pressable style={styles.button} accessibilityRole="button" onPress={() => router.push('/scenario' as Href)}>
-            <Text style={styles.buttonText}>Go to Scenario Selection</Text>
-          </Pressable>
-        </View>
-      </SafeAreaView>
+      <PremiumScreen
+        eyebrow="Simulation"
+        title="Live Conversation"
+        subtitle="The selected scenario could not be found."
+        onBack={() => router.back()}
+        backLabel="Back"
+        headerRight={<PremiumPill label="Missing scenario" tone="muted" />}>
+        <PremiumEmptyState
+          icon="📁"
+          title="Scenario not found"
+          body="Return to the scenario library and choose another case."
+          actionLabel="Go to Scenario Selection"
+          onAction={() => router.push('/scenario' as Href)}
+        />
+      </PremiumScreen>
     );
   }
 
   return (
     <SafeAreaView style={styles.safe}>
+      <PremiumBackdrop />
       <KeyboardAvoidingView
         style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        behavior={process.env.EXPO_OS === 'ios' ? 'padding' : undefined}>
 
         {/* Header */}
         <View style={styles.header}>
@@ -347,19 +363,22 @@ export default function SimulationScreen() {
               {scenario.patient.name}, age {scenario.patient.age}
             </Text>
           </View>
-          <View style={styles.finishArea}>
-            {learnerTurnCount > 0 && (
-              <Text style={styles.turnCount}>
-                {learnerTurnCount} {learnerTurnCount === 1 ? 'turn' : 'turns'}
-              </Text>
-            )}
-            <Pressable
-              style={styles.finishButton}
-              accessibilityRole="button"
-              accessibilityLabel="Finish simulation and view feedback"
-              onPress={() => router.push('/feedback' as Href)}>
-              <Text style={styles.finishButtonText}>Finish</Text>
-            </Pressable>
+          <View style={styles.headerRight}>
+            <PremiumPill label={voiceEnabled ? 'Voice mode' : 'Text mode'} tone={voiceEnabled ? 'indigo' : 'muted'} />
+            <View style={styles.finishArea}>
+              {learnerTurnCount > 0 && (
+                <Text style={styles.turnCount}>
+                  {learnerTurnCount} {learnerTurnCount === 1 ? 'turn' : 'turns'}
+                </Text>
+              )}
+              <Pressable
+                style={styles.finishButton}
+                accessibilityRole="button"
+                accessibilityLabel="Finish simulation and view feedback"
+                onPress={() => router.push('/feedback' as Href)}>
+                <Text style={styles.finishButtonText}>Finish</Text>
+              </Pressable>
+            </View>
           </View>
         </View>
 
@@ -635,19 +654,29 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginHorizontal: 12,
+    marginTop: 12,
+    marginBottom: 10,
     paddingHorizontal: 16,
-    paddingVertical: 12,
-    backgroundColor: SimulatorColors.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: SimulatorColors.border,
+    paddingVertical: 14,
+    backgroundColor: SimulatorColors.surfaceMuted,
+    borderRadius: Radius.lg,
+    borderWidth: 1,
+    borderColor: SimulatorColors.border,
+    borderCurve: 'continuous',
+    boxShadow: `0 14px 28px ${SimulatorColors.shadow}`,
   },
   headerLeft: {
     flex: 1,
     marginRight: 12,
   },
+  headerRight: {
+    alignItems: 'flex-end',
+    gap: 6,
+  },
   headerTitle: {
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: 17,
+    fontWeight: '800',
     color: SimulatorColors.textPrimary,
     marginBottom: 2,
   },
@@ -660,9 +689,9 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   turnCount: {
-    fontSize: 10,
+    fontSize: 11,
     color: SimulatorColors.textSecondary,
-    fontWeight: '500',
+    fontWeight: '700',
   },
   finishButton: {
     paddingVertical: 6,
@@ -670,19 +699,23 @@ const styles = StyleSheet.create({
     borderRadius: Radius.sm,
     borderWidth: 1,
     borderColor: SimulatorColors.brand,
-    backgroundColor: SimulatorColors.screenBackground,
+    backgroundColor: SimulatorColors.surfaceRaised,
   },
   finishButtonText: {
     fontSize: 14,
     color: SimulatorColors.brand,
-    fontWeight: '600',
+    fontWeight: '700',
   },
   reminder: {
     backgroundColor: SimulatorColors.indigoBackground,
+    marginHorizontal: 12,
     paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: SimulatorColors.indigoBorder,
+    paddingVertical: 12,
+    borderRadius: Radius.lg,
+    borderWidth: 1,
+    borderColor: SimulatorColors.indigoBorder,
+    borderCurve: 'continuous',
+    boxShadow: `0 12px 24px ${SimulatorColors.shadow}`,
   },
   reminderHeader: {
     flexDirection: 'row',
@@ -711,22 +744,29 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   chatContent: {
-    padding: 16,
+    paddingHorizontal: 12,
+    paddingTop: 4,
+    paddingBottom: 12,
     gap: 12,
   },
   inputBar: {
     flexDirection: 'row',
     alignItems: 'flex-end',
+    marginHorizontal: 12,
+    marginBottom: 12,
     paddingHorizontal: 12,
-    paddingVertical: 10,
-    backgroundColor: SimulatorColors.surface,
-    borderTopWidth: 1,
-    borderTopColor: SimulatorColors.border,
+    paddingVertical: 12,
+    backgroundColor: SimulatorColors.surfaceMuted,
+    borderRadius: Radius.lg,
+    borderWidth: 1,
+    borderColor: SimulatorColors.border,
+    borderCurve: 'continuous',
+    boxShadow: `0 12px 24px ${SimulatorColors.shadow}`,
     gap: 8,
   },
   textInput: {
     flex: 1,
-    backgroundColor: SimulatorColors.screenBackground,
+    backgroundColor: SimulatorColors.surfaceRaised,
     borderWidth: 1,
     borderColor: SimulatorColors.borderInput,
     borderRadius: Radius.md,
@@ -767,10 +807,15 @@ const styles = StyleSheet.create({
   },
   hintBanner: {
     backgroundColor: SimulatorColors.indigoBackground,
-    borderTopWidth: 1,
-    borderTopColor: SimulatorColors.indigoBorder,
+    marginHorizontal: 12,
+    marginBottom: 12,
     paddingHorizontal: 16,
     paddingVertical: 12,
+    borderRadius: Radius.lg,
+    borderWidth: 1,
+    borderColor: SimulatorColors.indigoBorder,
+    borderCurve: 'continuous',
+    boxShadow: `0 12px 24px ${SimulatorColors.shadow}`,
     gap: 6,
   },
   hintHeader: {
@@ -836,7 +881,7 @@ const styles = StyleSheet.create({
     borderRadius: Radius.md,
     borderWidth: 1,
     borderColor: SimulatorColors.borderInput,
-    backgroundColor: SimulatorColors.surface,
+    backgroundColor: SimulatorColors.surfaceRaised,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -867,9 +912,13 @@ const typingStyles = StyleSheet.create({
 
 const panelStyles = StyleSheet.create({
   container: {
-    backgroundColor: SimulatorColors.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: SimulatorColors.border,
+    marginHorizontal: 12,
+    backgroundColor: SimulatorColors.surfaceMuted,
+    borderWidth: 1,
+    borderColor: SimulatorColors.border,
+    borderRadius: Radius.lg,
+    borderCurve: 'continuous',
+    boxShadow: `0 12px 24px ${SimulatorColors.shadow}`,
   },
   header: {
     flexDirection: 'row',
@@ -907,7 +956,7 @@ const panelStyles = StyleSheet.create({
   barTrack: {
     flex: 1,
     height: 6,
-    backgroundColor: SimulatorColors.borderDivider,
+    backgroundColor: SimulatorColors.surfaceRaised,
     borderRadius: 3,
     overflow: 'hidden',
   },
@@ -930,8 +979,9 @@ const systemStyles = StyleSheet.create({
     backgroundColor: SimulatorColors.warningBackground,
     borderWidth: 1,
     borderColor: SimulatorColors.warningBorder,
-    borderRadius: Radius.md,
+    borderRadius: Radius.lg,
     padding: 14,
+    borderCurve: 'continuous',
   },
   label: {
     fontSize: 11,
@@ -968,9 +1018,10 @@ const bubbleStyles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 10,
     maxWidth: '80%',
+    borderCurve: 'continuous',
   },
   bubbleFamily: {
-    backgroundColor: SimulatorColors.surface,
+    backgroundColor: SimulatorColors.surfaceMuted,
     borderWidth: 1,
     borderColor: SimulatorColors.border,
   },

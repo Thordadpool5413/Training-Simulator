@@ -1,8 +1,8 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { PremiumPill, PremiumScreen } from '@/components/premium-ui';
 import { SectionCard } from '@/components/SectionCard';
 import { Radius, SimulatorColors } from '@/constants/theme';
 import { useSimulator } from '@/state/SimulatorContext';
@@ -93,151 +93,125 @@ export default function ProfileSetupScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <Pressable
-          style={styles.backLink}
-          accessibilityRole="button"
-          onPress={() => router.canGoBack() ? router.back() : router.replace('/')}>
-          <Text style={styles.backLinkText}>← Back</Text>
-        </Pressable>
-
-        <Text style={styles.title} accessibilityRole="header">
-          {learnerProfile ? 'Update Your Profile' : 'Set Up Your Profile'}
-        </Text>
-        <Text style={styles.subtitle}>
-          Helps tailor coaching feedback to your actual experience level.
-        </Text>
-
-        <SectionCard title="Years in Your Clinical Role">
-          <View style={styles.chipRow}>
-            {YEARS_OPTIONS.map((opt) => (
-              <Pressable
-                key={opt.value}
-                style={[styles.chip, yearsInRole === opt.value && styles.chipActive]}
-                accessibilityRole="button"
-                onPress={() => setYearsInRole(opt.value)}>
-                <Text style={[styles.chipText, yearsInRole === opt.value && styles.chipTextActive]}>
-                  {opt.label}
-                </Text>
-              </Pressable>
-            ))}
-          </View>
-        </SectionCard>
-
-        <SectionCard title="Hospice Experience">
-          {EXPERIENCE_OPTIONS.map((opt) => (
+    <PremiumScreen
+      eyebrow="Learner Profile"
+      title={learnerProfile ? 'Update Your Profile' : 'Set Up Your Profile'}
+      subtitle="Helps tailor coaching feedback to your actual experience level."
+      onBack={() => (router.canGoBack() ? router.back() : router.replace('/'))}
+      backLabel="Back"
+      headerRight={
+        <PremiumPill
+          label={learnerProfile ? 'Saved' : 'Local only'}
+          tone={learnerProfile ? 'success' : 'muted'}
+        />
+      }
+      scrollContentStyle={styles.content}>
+      <SectionCard title="Years in Your Clinical Role">
+        <View style={styles.chipRow}>
+          {YEARS_OPTIONS.map((opt) => (
             <Pressable
               key={opt.value}
-              style={[styles.optionRow, hospiceExperience === opt.value && styles.optionRowActive]}
+              style={[styles.chip, yearsInRole === opt.value && styles.chipActive]}
               accessibilityRole="button"
-              onPress={() => setHospiceExperience(opt.value)}>
-              <View style={[styles.radioOuter, hospiceExperience === opt.value && styles.radioOuterActive]}>
-                {hospiceExperience === opt.value && <View style={styles.radioInner} />}
-              </View>
-              <View style={styles.optionText}>
-                <Text style={[styles.optionLabel, hospiceExperience === opt.value && styles.optionLabelActive]}>
-                  {opt.label}
-                </Text>
-                <Text style={styles.optionDesc}>{opt.desc}</Text>
-              </View>
+              onPress={() => setYearsInRole(opt.value)}>
+              <Text style={[styles.chipText, yearsInRole === opt.value && styles.chipTextActive]}>
+                {opt.label}
+              </Text>
             </Pressable>
           ))}
-        </SectionCard>
+        </View>
+      </SectionCard>
 
-        <SectionCard title="Primary Practice Setting">
-          <View style={styles.chipRow}>
-            {SETTING_OPTIONS.map((opt) => (
-              <Pressable
-                key={opt.value}
-                style={[styles.chip, primarySetting === opt.value && styles.chipActive]}
-                accessibilityRole="button"
-                onPress={() => setPrimarySetting(opt.value)}>
-                <Text style={[styles.chipText, primarySetting === opt.value && styles.chipTextActive]}>
-                  {opt.label}
-                </Text>
-              </Pressable>
-            ))}
-          </View>
-        </SectionCard>
-
-        <SectionCard title="Comfort Levels">
-          <Text style={styles.comfortNote}>
-            Rate your comfort from 1 (new to this) to 5 (expert).
-          </Text>
-          {[
-            { key: 'comfortHospice' as const, label: 'Hospice conversations', value: comfortHospice, setter: setComfortHospice },
-            { key: 'comfortObjections' as const, label: 'Family objections', value: comfortObjections, setter: setComfortObjections },
-            { key: 'comfortMeds' as const, label: 'Medication questions', value: comfortMeds, setter: setComfortMeds },
-            { key: 'comfortDeath' as const, label: 'Death and dying', value: comfortDeath, setter: setComfortDeath },
-          ].map(({ key, label, value, setter }) => (
-            <View key={key} style={styles.comfortRow}>
-              <Text style={styles.comfortLabel}>{label}</Text>
-              <View style={styles.raterRow}>
-                {([1, 2, 3, 4, 5] as ComfortLevel[]).map((n) => (
-                  <Pressable
-                    key={n}
-                    style={[styles.raterButton, value === n && styles.raterButtonActive]}
-                    accessibilityRole="button"
-                    accessibilityLabel={`${label}: ${COMFORT_LABELS[n]}`}
-                    onPress={() => setter(n)}>
-                    <Text style={[styles.raterNum, value === n && styles.raterNumActive]}>{n}</Text>
-                    <Text style={[styles.raterLbl, value === n && styles.raterLblActive]}>
-                      {COMFORT_LABELS[n]}
-                    </Text>
-                  </Pressable>
-                ))}
-              </View>
+      <SectionCard title="Hospice Experience">
+        {EXPERIENCE_OPTIONS.map((opt) => (
+          <Pressable
+            key={opt.value}
+            style={[styles.optionRow, hospiceExperience === opt.value && styles.optionRowActive]}
+            accessibilityRole="button"
+            onPress={() => setHospiceExperience(opt.value)}>
+            <View style={[styles.radioOuter, hospiceExperience === opt.value && styles.radioOuterActive]}>
+              {hospiceExperience === opt.value && <View style={styles.radioInner} />}
             </View>
+            <View style={styles.optionText}>
+              <Text style={[styles.optionLabel, hospiceExperience === opt.value && styles.optionLabelActive]}>
+                {opt.label}
+              </Text>
+              <Text style={styles.optionDesc}>{opt.desc}</Text>
+            </View>
+          </Pressable>
+        ))}
+      </SectionCard>
+
+      <SectionCard title="Primary Practice Setting">
+        <View style={styles.chipRow}>
+          {SETTING_OPTIONS.map((opt) => (
+            <Pressable
+              key={opt.value}
+              style={[styles.chip, primarySetting === opt.value && styles.chipActive]}
+              accessibilityRole="button"
+              onPress={() => setPrimarySetting(opt.value)}>
+              <Text style={[styles.chipText, primarySetting === opt.value && styles.chipTextActive]}>
+                {opt.label}
+              </Text>
+            </Pressable>
           ))}
-        </SectionCard>
+        </View>
+      </SectionCard>
 
-        <Pressable
-          style={[styles.saveButton, !canSave && styles.saveButtonDisabled]}
-          accessibilityRole="button"
-          disabled={!canSave}
-          onPress={handleSave}>
-          <Text style={styles.saveButtonText}>
-            {learnerProfile ? 'Update Profile' : 'Save Profile'}
-          </Text>
-        </Pressable>
-
-        <Text style={styles.note}>
-          Your profile is stored locally and never shared.
+      <SectionCard title="Comfort Levels">
+        <Text style={styles.comfortNote}>
+          Rate your comfort from 1 (new to this) to 5 (expert).
         </Text>
-      </ScrollView>
-    </SafeAreaView>
+        {[
+          { key: 'comfortHospice' as const, label: 'Hospice conversations', value: comfortHospice, setter: setComfortHospice },
+          { key: 'comfortObjections' as const, label: 'Family objections', value: comfortObjections, setter: setComfortObjections },
+          { key: 'comfortMeds' as const, label: 'Medication questions', value: comfortMeds, setter: setComfortMeds },
+          { key: 'comfortDeath' as const, label: 'Death and dying', value: comfortDeath, setter: setComfortDeath },
+        ].map(({ key, label, value, setter }) => (
+          <View key={key} style={styles.comfortRow}>
+            <Text style={styles.comfortLabel}>{label}</Text>
+            <View style={styles.raterRow}>
+              {([1, 2, 3, 4, 5] as ComfortLevel[]).map((n) => (
+                <Pressable
+                  key={n}
+                  style={[styles.raterButton, value === n && styles.raterButtonActive]}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${label}: ${COMFORT_LABELS[n]}`}
+                  onPress={() => setter(n)}>
+                  <Text style={[styles.raterNum, value === n && styles.raterNumActive]}>{n}</Text>
+                  <Text style={[styles.raterLbl, value === n && styles.raterLblActive]}>
+                    {COMFORT_LABELS[n]}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+          </View>
+        ))}
+      </SectionCard>
+
+      <Pressable
+        style={[styles.saveButton, !canSave && styles.saveButtonDisabled]}
+        accessibilityRole="button"
+        disabled={!canSave}
+        onPress={handleSave}>
+        <Text style={styles.saveButtonText}>
+          {learnerProfile ? 'Update Profile' : 'Save Profile'}
+        </Text>
+      </Pressable>
+
+      <Text style={styles.note}>
+        Your profile is stored locally and never shared.
+      </Text>
+    </PremiumScreen>
   );
 }
 
 const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: SimulatorColors.screenBackground,
-  },
   content: {
-    padding: 20,
+    paddingHorizontal: 24,
+    paddingTop: 8,
     paddingBottom: 48,
     gap: 16,
-  },
-  backLink: {
-    alignSelf: 'flex-start',
-  },
-  backLinkText: {
-    fontSize: 14,
-    color: SimulatorColors.brand,
-    fontWeight: '600',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: SimulatorColors.textPrimary,
-  },
-  subtitle: {
-    fontSize: 15,
-    color: SimulatorColors.textSecondary,
-    lineHeight: 22,
-    marginTop: -8,
   },
   chipRow: {
     flexDirection: 'row',

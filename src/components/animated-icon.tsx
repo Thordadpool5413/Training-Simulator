@@ -1,33 +1,30 @@
+import { useWindowDimensions, View, Text, StyleSheet } from 'react-native';
 import { Image } from 'expo-image';
-import { useState } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
 import Animated, { Easing, Keyframe } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
+import { useState } from 'react';
 
-const INITIAL_SCALE_FACTOR = Dimensions.get('screen').height / 90;
-const DURATION = 600;
+import { SimulatorColors } from '@/constants/theme';
+
+const DURATION = 700;
 
 export function AnimatedSplashOverlay() {
   const [visible, setVisible] = useState(true);
+  const { height } = useWindowDimensions();
+  const size = Math.min(156, Math.max(124, Math.round(height * 0.18)));
 
   if (!visible) return null;
 
   const splashKeyframe = new Keyframe({
     0: {
-      transform: [{ scale: INITIAL_SCALE_FACTOR }],
       opacity: 1,
     },
-    20: {
+    85: {
       opacity: 1,
-    },
-    70: {
-      opacity: 0,
-      easing: Easing.elastic(0.7),
     },
     100: {
       opacity: 0,
-      transform: [{ scale: 1 }],
-      easing: Easing.elastic(0.7),
+      easing: Easing.out(Easing.quad),
     },
   });
 
@@ -39,94 +36,149 @@ export function AnimatedSplashOverlay() {
           scheduleOnRN(setVisible, false);
         }
       })}
-      style={styles.backgroundSolidColor}
-    />
+      style={styles.overlay}
+    >
+      <AnimatedIcon size={size} />
+    </Animated.View>
   );
 }
 
-const keyframe = new Keyframe({
+const frameKeyframe = new Keyframe({
   0: {
-    transform: [{ scale: INITIAL_SCALE_FACTOR }],
+    transform: [{ scale: 0.92 }],
+    opacity: 0,
   },
   100: {
     transform: [{ scale: 1 }],
-    easing: Easing.elastic(0.7),
-  },
-});
-
-const logoKeyframe = new Keyframe({
-  0: {
-    transform: [{ scale: 1.3 }],
-    opacity: 0,
-  },
-  40: {
-    transform: [{ scale: 1.3 }],
-    opacity: 0,
-    easing: Easing.elastic(0.7),
-  },
-  100: {
     opacity: 1,
-    transform: [{ scale: 1 }],
-    easing: Easing.elastic(0.7),
+    easing: Easing.out(Easing.cubic),
   },
 });
 
 const glowKeyframe = new Keyframe({
   0: {
-    transform: [{ rotateZ: '0deg' }],
+    opacity: 0,
+    transform: [{ scale: 0.85 }],
   },
   100: {
-    transform: [{ rotateZ: '7200deg' }],
+    opacity: 1,
+    transform: [{ scale: 1 }],
+    easing: Easing.out(Easing.cubic),
   },
 });
 
-export function AnimatedIcon() {
-  return (
-    <View style={styles.iconContainer}>
-      <Animated.View entering={glowKeyframe.duration(60 * 1000 * 4)} style={styles.glow}>
-        <Image style={styles.glow} source={require('@/assets/images/logo-glow.png')} />
-      </Animated.View>
+type AnimatedIconProps = {
+  size?: number;
+};
 
-      <Animated.View entering={keyframe.duration(DURATION)} style={styles.background} />
-      <Animated.View style={styles.imageContainer} entering={logoKeyframe.duration(DURATION)}>
-        <Image style={styles.image} source={require('@/assets/images/expo-logo.png')} />
+export function AnimatedIcon({ size = 132 }: AnimatedIconProps) {
+  const glowSize = Math.round(size * 1.65);
+  const cornerRadius = Math.round(size * 0.27);
+  const monogramSize = Math.round(size * 0.44);
+
+  return (
+    <View style={[styles.iconContainer, { width: size, height: size }]}>
+      <Animated.View
+        entering={glowKeyframe.duration(DURATION)}
+        style={[
+          styles.glow,
+          {
+            width: glowSize,
+            height: glowSize,
+            borderRadius: glowSize / 2,
+            top: -(glowSize - size) / 2,
+            left: -(glowSize - size) / 2,
+          },
+        ]}
+      />
+
+      <Animated.View
+        entering={frameKeyframe.duration(DURATION)}
+        style={[
+          styles.frame,
+          {
+            width: size,
+            height: size,
+            borderRadius: cornerRadius,
+          },
+        ]}
+      >
+        <View style={[styles.innerFrame, { borderRadius: Math.round(cornerRadius * 0.82) }]}>
+          <Text style={[styles.monogram, { fontSize: monogramSize }]}>H</Text>
+          <View style={styles.captionRow}>
+            <View style={styles.pulseDot} />
+            <View style={styles.pulseBar} />
+          </View>
+          <Text style={styles.caption}>Hospice Training</Text>
+        </View>
       </Animated.View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  imageContainer: {
-    justifyContent: 'center',
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: SimulatorColors.screenBackground,
     alignItems: 'center',
-  },
-  glow: {
-    width: 201,
-    height: 201,
-    position: 'absolute',
+    justifyContent: 'center',
+    zIndex: 1000,
   },
   iconContainer: {
-    justifyContent: 'center',
     alignItems: 'center',
-    width: 128,
-    height: 128,
-    zIndex: 100,
+    justifyContent: 'center',
+    position: 'relative',
   },
-  image: {
+  glow: {
     position: 'absolute',
-    width: 76,
-    height: 71,
+    backgroundColor: 'rgba(94, 175, 255, 0.15)',
+    boxShadow: `0 0 40px rgba(105, 182, 255, 0.45)`,
   },
-  background: {
-    borderRadius: 40,
-    experimental_backgroundImage: `linear-gradient(180deg, #3C9FFE, #0274DF)`,
-    width: 128,
-    height: 128,
-    position: 'absolute',
+  frame: {
+    backgroundColor: 'rgba(14, 22, 38, 0.92)',
+    borderWidth: 1,
+    borderColor: 'rgba(94, 175, 255, 0.22)',
+    padding: 12,
+    boxShadow: `0 24px 60px ${SimulatorColors.shadowStrong}`,
   },
-  backgroundSolidColor: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: '#2563EB',
-    zIndex: 1000,
+  innerFrame: {
+    flex: 1,
+    backgroundColor: SimulatorColors.surfaceRaised,
+    borderWidth: 1,
+    borderColor: 'rgba(157, 176, 199, 0.12)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+  },
+  monogram: {
+    color: SimulatorColors.textPrimary,
+    fontWeight: '900',
+    letterSpacing: -3,
+    lineHeight: 1,
+  },
+  captionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 4,
+  },
+  pulseDot: {
+    width: 7,
+    height: 7,
+    borderRadius: 999,
+    backgroundColor: SimulatorColors.scoreGreen,
+  },
+  pulseBar: {
+    width: 26,
+    height: 2,
+    borderRadius: 999,
+    backgroundColor: SimulatorColors.brand,
+  },
+  caption: {
+    fontSize: 10,
+    letterSpacing: 2.2,
+    textTransform: 'uppercase',
+    color: SimulatorColors.textSecondary,
+    fontWeight: '700',
   },
 });

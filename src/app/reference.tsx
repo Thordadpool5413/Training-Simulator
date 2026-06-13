@@ -1,9 +1,9 @@
 import { router } from 'expo-router';
 import type { Href } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { PremiumPill, PremiumScreen } from '@/components/premium-ui';
 import { DiagnosisChip } from '@/components/DiagnosisChip';
 import { MedicationCard } from '@/components/MedicationCard';
 import { SectionCard } from '@/components/SectionCard';
@@ -28,44 +28,35 @@ export default function ReferenceScreen() {
   const [activeTab, setActiveTab] = useState<Tab>('medications');
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <View style={styles.header}>
-        <Pressable
-          style={styles.backLink}
-          accessibilityRole="button"
-          onPress={() => router.back()}>
-          <Text style={styles.backLinkText}>← Back</Text>
-        </Pressable>
-        <Text style={styles.title} accessibilityRole="header">
-          Clinical Reference
-        </Text>
-        <Text style={styles.subtitle}>
-          Hospice medications, diagnoses, and CMS coverage criteria
-        </Text>
-        <View style={styles.tabRow}>
-          {TABS.map((tab) => (
-            <Pressable
-              key={tab.id}
-              style={[styles.tab, activeTab === tab.id && styles.tabActive]}
-              accessibilityRole="button"
-              onPress={() => setActiveTab(tab.id)}>
-              <Text style={[styles.tabText, activeTab === tab.id && styles.tabTextActive]}>
-                {tab.label}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
+    <PremiumScreen
+      eyebrow="Reference"
+      title="Clinical Reference"
+      subtitle="Hospice medications, diagnoses, and CMS coverage criteria."
+      onBack={() => router.back()}
+      backLabel="Back"
+      headerRight={<PremiumPill label={TABS.find((tab) => tab.id === activeTab)?.label ?? 'Reference'} tone="indigo" />}
+      scrollContentStyle={styles.scrollContent}>
+      <View style={styles.tabRow}>
+        {TABS.map((tab) => (
+          <Pressable
+            key={tab.id}
+            style={[styles.tab, activeTab === tab.id && styles.tabActive]}
+            accessibilityRole="button"
+            onPress={() => setActiveTab(tab.id)}>
+            <Text style={[styles.tabText, activeTab === tab.id && styles.tabTextActive]}>
+              {tab.label}
+            </Text>
+          </Pressable>
+        ))}
       </View>
 
-      <ScrollView contentContainerStyle={styles.scrollContent}>
         {activeTab === 'medications' && (
           <MedicationsTab roleId={selectedRoleId ?? undefined} />
         )}
         {activeTab === 'diagnoses' && <DiagnosesTab />}
         {activeTab === 'lcds' && <LCDsTab />}
         {activeTab === 'phrases' && <PhrasesTab roleId={selectedRoleId ?? undefined} />}
-      </ScrollView>
-    </SafeAreaView>
+    </PremiumScreen>
   );
 }
 

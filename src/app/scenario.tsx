@@ -1,9 +1,9 @@
 import { router } from 'expo-router';
 import type { Href } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
+import { PremiumEmptyState, PremiumPill, PremiumScreen } from '@/components/premium-ui';
 import { Radius, SimulatorColors } from '@/constants/theme';
 import { diagnoses } from '@/data/diagnoses';
 import { roles } from '@/data/roles';
@@ -49,17 +49,21 @@ export default function ScenarioScreen() {
 
   if (!selectedRoleId) {
     return (
-      <SafeAreaView style={styles.safe}>
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Please select a role before choosing a scenario.</Text>
-          <Pressable
-            style={styles.errorButton}
-            accessibilityRole="button"
-            onPress={() => router.push('/role' as Href)}>
-            <Text style={styles.errorButtonText}>Go to Role Selection</Text>
-          </Pressable>
-        </View>
-      </SafeAreaView>
+      <PremiumScreen
+        eyebrow="Scenario Selection"
+        title="Choose a Scenario"
+        subtitle="Pick a scenario after selecting the role you want to practice."
+        onBack={() => router.back()}
+        backLabel="Back"
+        headerRight={<PremiumPill label="Role required" tone="warning" />}>
+        <PremiumEmptyState
+          icon="🧭"
+          title="Please select a role first"
+          body="Choose a role before picking a scenario so the training path stays aligned."
+          actionLabel="Go to Role Selection"
+          onAction={() => router.push('/role' as Href)}
+        />
+      </PremiumScreen>
     );
   }
 
@@ -84,17 +88,21 @@ export default function ScenarioScreen() {
 
   if (roleScenarios.length === 0) {
     return (
-      <SafeAreaView style={styles.safe}>
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>No scenarios available for the selected role.</Text>
-          <Pressable
-            style={styles.errorButton}
-            accessibilityRole="button"
-            onPress={() => router.push('/role' as Href)}>
-            <Text style={styles.errorButtonText}>Go to Role Selection</Text>
-          </Pressable>
-        </View>
-      </SafeAreaView>
+      <PremiumScreen
+        eyebrow="Scenario Selection"
+        title="Choose a Scenario"
+        subtitle="No scenarios are available for the selected role."
+        onBack={() => router.back()}
+        backLabel="Back"
+        headerRight={<PremiumPill label="No scenarios" tone="muted" />}>
+        <PremiumEmptyState
+          icon="🗂️"
+          title="No scenarios available"
+          body="Try a different role to explore a different simulation path."
+          actionLabel="Go to Role Selection"
+          onAction={() => router.push('/role' as Href)}
+        />
+      </PremiumScreen>
     );
   }
 
@@ -109,143 +117,144 @@ export default function ScenarioScreen() {
   }
 
   const selectedRole = roles.find((r) => r.id === selectedRoleId);
-  const completedForRole = completedSessions.filter((s) => s.roleId === selectedRoleId).length;
   const uniqueCompletedIds = new Set(
     completedSessions.filter((s) => s.roleId === selectedRoleId).map((s) => s.scenarioId)
   );
   const uniqueCompleted = uniqueCompletedIds.size;
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.headerRow}>
-          <Text style={styles.title} accessibilityRole="header">Select a Scenario</Text>
-          <Pressable
-            accessibilityRole="button"
-            accessibilityLabel="Change role"
-            onPress={() => router.push('/role' as Href)}>
-            <Text style={styles.changeRoleText}>Change Role</Text>
-          </Pressable>
-        </View>
-        <View style={styles.roleMeta}>
-          <Text style={styles.roleLabel}>Role: {selectedRole?.name ?? selectedRoleId}</Text>
-          {completedForRole > 0 && (
-            <View style={styles.progressPill}>
-              <Text style={styles.progressPillText}>{uniqueCompleted} / {roleScenarios.length} completed</Text>
-            </View>
-          )}
-        </View>
-
-        <TextInput
-          style={styles.searchInput}
-          value={searchText}
-          onChangeText={setSearchText}
-          placeholder="Search by title, patient, or objective..."
-          placeholderTextColor={SimulatorColors.textPlaceholder}
-          accessibilityLabel="Search scenarios"
-          clearButtonMode="while-editing"
-          returnKeyType="search"
+    <PremiumScreen
+      eyebrow="Scenario Library"
+      title="Select a Scenario"
+      subtitle="Filter by difficulty, topic, and search terms. Locked scenarios stay gated behind the premium tier."
+      onBack={() => router.back()}
+      backLabel="Role"
+      headerRight={
+        <PremiumPill
+          label={`${uniqueCompleted}/${roleScenarios.length} complete`}
+          tone={uniqueCompleted > 0 ? 'success' : 'muted'}
         />
+      }
+      scrollContentStyle={styles.container}>
+      <View style={styles.roleMeta}>
+        <Text style={styles.roleLabel}>Role: {selectedRole?.name ?? selectedRoleId}</Text>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Change role"
+          onPress={() => router.push('/role' as Href)}>
+          <Text style={styles.changeRoleText}>Change Role</Text>
+        </Pressable>
+      </View>
 
-        <View style={styles.filterRow}>
-          {DIFFICULTY_FILTERS.map((f) => (
-            <Pressable
-              key={f.value}
-              style={[styles.filterChip, difficultyFilter === f.value && styles.filterChipActive]}
-              accessibilityRole="button"
-              onPress={() => setDifficultyFilter(f.value)}>
-              <Text style={[styles.filterText, difficultyFilter === f.value && styles.filterTextActive]}>
-                {f.label}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
+      <TextInput
+        style={styles.searchInput}
+        value={searchText}
+        onChangeText={setSearchText}
+        placeholder="Search by title, patient, or objective..."
+        placeholderTextColor={SimulatorColors.textPlaceholder}
+        accessibilityLabel="Search scenarios"
+        clearButtonMode="while-editing"
+        returnKeyType="search"
+      />
 
-        <View style={styles.filterRow}>
-          {TOPIC_FILTERS.map((f) => (
-            <Pressable
-              key={f.value}
-              style={[styles.filterChip, topicFilter === f.value && styles.topicChipActive]}
-              accessibilityRole="button"
-              onPress={() => setTopicFilter(f.value)}>
-              <Text style={[styles.filterText, topicFilter === f.value && styles.topicTextActive]}>
-                {f.label}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
+      <View style={styles.filterRow}>
+        {DIFFICULTY_FILTERS.map((f) => (
+          <Pressable
+            key={f.value}
+            style={[styles.filterChip, difficultyFilter === f.value && styles.filterChipActive]}
+            accessibilityRole="button"
+            onPress={() => setDifficultyFilter(f.value)}>
+            <Text style={[styles.filterText, difficultyFilter === f.value && styles.filterTextActive]}>
+              {f.label}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
 
-        {availableScenarios.length === 0 && (
-          <Text style={styles.emptyFilter}>
-            No scenarios match these filters. Try adjusting the difficulty, topic, or search.
-          </Text>
-        )}
+      <View style={styles.filterRow}>
+        {TOPIC_FILTERS.map((f) => (
+          <Pressable
+            key={f.value}
+            style={[styles.filterChip, topicFilter === f.value && styles.topicChipActive]}
+            accessibilityRole="button"
+            onPress={() => setTopicFilter(f.value)}>
+            <Text style={[styles.filterText, topicFilter === f.value && styles.topicTextActive]}>
+              {f.label}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
 
-        {availableScenarios.map((scenario) => {
-          const diagnosis = diagnoses.find((d) => d.id === scenario.knownDiagnosisId);
-          const completed = completedSessions.find(
-            (s) => s.scenarioId === scenario.id && s.roleId === selectedRoleId
-          );
-          const isLocked = AUTH_CONFIGURED && !isSubscribed && scenario.id !== FREE_SCENARIO_ID;
-          return (
-            <Pressable
-              key={scenario.id}
-              style={({ pressed }) => [
-                styles.card,
-                pressed && styles.cardPressed,
-                completed != null && styles.cardCompleted,
-                isLocked && styles.cardLocked,
-              ]}
-              accessibilityRole="button"
-              accessibilityLabel={`${scenario.title}, ${scenario.patient.name}, age ${scenario.patient.age}, ${scenario.setting}${isLocked ? ', locked — requires subscription' : ''}`}
-              onPress={() => handleSelect(scenario.id)}>
-              <View style={styles.cardHeader}>
-                <Text style={[styles.scenarioTitle, isLocked && styles.scenarioTitleLocked]}>
-                  {scenario.title}
-                </Text>
-                <View style={styles.badgeRow}>
-                  {isLocked && (
-                    <View style={styles.lockBadge}>
-                      <Text style={styles.lockBadgeText}>🔒</Text>
-                    </View>
-                  )}
-                  {scenario.difficulty != null && !isLocked && (
-                    <View style={[styles.diffBadge, { backgroundColor: diffBadgeBg(scenario.difficulty) }]}>
-                      <Text style={[styles.diffBadgeText, { color: DIFFICULTY_COLORS[scenario.difficulty] }]}>
-                        {scenario.difficulty}
-                      </Text>
-                    </View>
-                  )}
-                  {completed != null && (
-                    <View style={styles.doneBadge}>
-                      <Text style={styles.doneBadgeText}>✓ {completed.overallScore.toFixed(1)}</Text>
-                    </View>
-                  )}
-                </View>
-              </View>
-              <Text style={styles.scenarioMeta}>
-                {scenario.patient.name}, age {scenario.patient.age} · {scenario.setting}
+      {availableScenarios.length === 0 && (
+        <Text style={styles.emptyFilter}>
+          No scenarios match these filters. Try adjusting the difficulty, topic, or search.
+        </Text>
+      )}
+
+      {availableScenarios.map((scenario) => {
+        const diagnosis = diagnoses.find((d) => d.id === scenario.knownDiagnosisId);
+        const completed = completedSessions.find(
+          (s) => s.scenarioId === scenario.id && s.roleId === selectedRoleId
+        );
+        const isLocked = AUTH_CONFIGURED && !isSubscribed && scenario.id !== FREE_SCENARIO_ID;
+        return (
+          <Pressable
+            key={scenario.id}
+            style={({ pressed }) => [
+              styles.card,
+              pressed && styles.cardPressed,
+              completed != null && styles.cardCompleted,
+              isLocked && styles.cardLocked,
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel={`${scenario.title}, ${scenario.patient.name}, age ${scenario.patient.age}, ${scenario.setting}${isLocked ? ', locked — requires subscription' : ''}`}
+            onPress={() => handleSelect(scenario.id)}>
+            <View style={styles.cardHeader}>
+              <Text style={[styles.scenarioTitle, isLocked && styles.scenarioTitleLocked]}>
+                {scenario.title}
               </Text>
-              {diagnosis != null && (
-                <Text style={styles.scenarioMeta}>{diagnosis.name}</Text>
-              )}
-              <Text style={styles.scenarioObjective} numberOfLines={2}>
-                {scenario.learnerObjective}
-              </Text>
-              {SCENARIO_TOPICS[scenario.id] != null && (
-                <View style={styles.topicTagRow}>
-                  <View style={styles.topicTag}>
-                    <Text style={styles.topicTagText}>
-                      {TOPIC_LABELS[SCENARIO_TOPICS[scenario.id] as ScenarioTopic]}
+              <View style={styles.badgeRow}>
+                {isLocked && (
+                  <View style={styles.lockBadge}>
+                    <Text style={styles.lockBadgeText}>🔒</Text>
+                  </View>
+                )}
+                {scenario.difficulty != null && !isLocked && (
+                  <View style={[styles.diffBadge, { backgroundColor: diffBadgeBg(scenario.difficulty) }]}>
+                    <Text style={[styles.diffBadgeText, { color: DIFFICULTY_COLORS[scenario.difficulty] }]}>
+                      {scenario.difficulty}
                     </Text>
                   </View>
+                )}
+                {completed != null && (
+                  <View style={styles.doneBadge}>
+                    <Text style={styles.doneBadgeText}>✓ {completed.overallScore.toFixed(1)}</Text>
+                  </View>
+                )}
+              </View>
+            </View>
+            <Text style={styles.scenarioMeta}>
+              {scenario.patient.name}, age {scenario.patient.age} · {scenario.setting}
+            </Text>
+            {diagnosis != null && (
+              <Text style={styles.scenarioMeta}>{diagnosis.name}</Text>
+            )}
+            <Text style={styles.scenarioObjective} numberOfLines={2}>
+              {scenario.learnerObjective}
+            </Text>
+            {SCENARIO_TOPICS[scenario.id] != null && (
+              <View style={styles.topicTagRow}>
+                <View style={styles.topicTag}>
+                  <Text style={styles.topicTagText}>
+                    {TOPIC_LABELS[SCENARIO_TOPICS[scenario.id] as ScenarioTopic]}
+                  </Text>
                 </View>
-              )}
-            </Pressable>
-          );
-        })}
-      </ScrollView>
-    </SafeAreaView>
+              </View>
+            )}
+          </Pressable>
+        );
+      })}
+    </PremiumScreen>
   );
 }
 
@@ -258,24 +267,11 @@ function diffBadgeBg(difficulty: ScenarioDifficulty): string {
 }
 
 const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: SimulatorColors.screenBackground,
-  },
   container: {
-    padding: 24,
+    paddingHorizontal: 24,
+    paddingTop: 8,
     paddingBottom: 48,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 4,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: SimulatorColors.textPrimary,
+    gap: 16,
   },
   changeRoleText: {
     fontSize: 14,

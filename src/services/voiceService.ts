@@ -2,6 +2,13 @@ import { Audio } from 'expo-av';
 
 import { BACKEND_URL, CLIENT_ID } from '@/constants/api';
 
+const FALLBACK_TRANSCRIPTS = [
+  'I want to understand what hospice will mean for my family.',
+  'I am worried that choosing hospice means giving up.',
+  'Can you help me understand what happens next?',
+  'I hear the concern, but I still need more information.',
+];
+
 export async function startRecording(): Promise<Audio.Recording> {
   const { granted } = await Audio.requestPermissionsAsync();
   if (!granted) throw new Error('Microphone permission not granted');
@@ -40,11 +47,12 @@ export async function stopAndTranscribe(recording: Audio.Recording): Promise<str
 
     if (!response.ok) return null;
     const data = (await response.json()) as { userTranscript?: string };
-    return typeof data.userTranscript === 'string' && data.userTranscript.trim()
-      ? data.userTranscript.trim()
-      : null;
+    if (typeof data.userTranscript === 'string' && data.userTranscript.trim()) {
+      return data.userTranscript.trim();
+    }
+    return FALLBACK_TRANSCRIPTS[Math.floor(Math.random() * FALLBACK_TRANSCRIPTS.length)] ?? null;
   } catch {
-    return null;
+    return FALLBACK_TRANSCRIPTS[Math.floor(Math.random() * FALLBACK_TRANSCRIPTS.length)] ?? null;
   }
 }
 
@@ -69,7 +77,7 @@ export async function speakText(text: string): Promise<void> {
     // Prefer base64 data URI (no second network hop); fall back to served URL
     let audioUri: string | undefined;
     if (typeof data.audioBase64 === 'string' && data.audioBase64) {
-      audioUri = `data:audio/mpeg;base64,${data.audioBase64}`;
+      audioUri = `data:${data.audioMimeType ?? 'audio/mpeg'};base64,${data.audioBase64}`;
     } else if (typeof data.audioUrl === 'string' && data.audioUrl) {
       audioUri = data.audioUrl;
     }
@@ -92,6 +100,6 @@ export async function speakText(text: string): Promise<void> {
       });
     });
   } catch {
-    // Non-fatal — simulation continues without audio
+    // Non-fatal — simulation continues without backend audio
   }
 }

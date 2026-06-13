@@ -10,8 +10,8 @@ import {
   Text,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { PremiumPill, PremiumScreen } from '@/components/premium-ui';
 import { Radius, SimulatorColors } from '@/constants/theme';
 import { LEARNING_PATHS, type LearningStage } from '@/data/learningPaths';
 import { useSimulator } from '@/state/SimulatorContext';
@@ -525,6 +525,7 @@ export default function CertificateScreen() {
       )
     : null;
   const totalScenarios = path.stages.reduce((n, s) => n + s.scenarioIds.length, 0);
+  const earnedTiers = tierData.filter((t) => t.isEarned).length;
 
   async function handleDownload(stageNumber: 1 | 2 | 3) {
     const idx = stageNumber - 1;
@@ -575,18 +576,14 @@ export default function CertificateScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-
-        <View style={styles.header}>
-          <Pressable style={styles.backLink} accessibilityRole="button" onPress={() => router.back()}>
-            <Text style={styles.backLinkText}>← Back</Text>
-          </Pressable>
-          <Text style={styles.title} accessibilityRole="header">Certificates</Text>
-          <Text style={styles.subtitle}>
-            Earn expert credentials by completing each stage of your learning path.
-          </Text>
-        </View>
+    <PremiumScreen
+      eyebrow="Certificates"
+      title="Credential Builder"
+      subtitle="Earn training certificates by completing each stage of your learning path."
+      onBack={() => router.back()}
+      backLabel="Back"
+      headerRight={<PremiumPill label={`${earnedTiers}/3 earned`} tone="success" />}
+      scrollContentStyle={styles.scroll}>
 
         {/* Role tabs */}
         <View style={styles.roleTabs}>
@@ -693,8 +690,7 @@ export default function CertificateScreen() {
         <Text style={styles.disclaimer}>
           Certificates are for personal training records only and do not constitute a professional credential or CE credit.
         </Text>
-      </ScrollView>
-    </SafeAreaView>
+    </PremiumScreen>
   );
 }
 
@@ -712,18 +708,11 @@ const docStyles = StyleSheet.create({
     borderRadius: Radius.md,
     overflow: 'hidden',
     backgroundColor: '#fff',
-    // second inner border effect via shadow
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.06,
-    shadowRadius: 4,
-    elevation: 2,
+    boxShadow: '0 1px 4px rgba(0, 0, 0, 0.06)',
   },
   frameExpert: {
     borderWidth: 2,
-    shadowOpacity: 0.12,
-    shadowRadius: 8,
-    elevation: 4,
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.12)',
   },
   expertGoldBar: { height: 5, backgroundColor: '#F59E0B' },
   expertHeader: {

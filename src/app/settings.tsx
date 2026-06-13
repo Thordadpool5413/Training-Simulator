@@ -1,9 +1,9 @@
 import { router } from 'expo-router';
 import type { Href } from 'expo-router';
 import { useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Alert, Pressable, StyleSheet, Switch, Text, View } from 'react-native';
 
+import { PremiumPill, PremiumScreen } from '@/components/premium-ui';
 import { SectionCard } from '@/components/SectionCard';
 import { Radius, SimulatorColors } from '@/constants/theme';
 import { rescheduleDailyReminder } from '@/services/notificationService';
@@ -96,16 +96,23 @@ export default function SettingsScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <Pressable
-          style={styles.backLink}
-          accessibilityRole="button"
-          onPress={() => router.back()}>
-          <Text style={styles.backLinkText}>← Back</Text>
-        </Pressable>
-
-        <Text style={styles.title} accessibilityRole="header">Settings</Text>
+    <PremiumScreen
+      eyebrow="Preferences"
+      title="Settings"
+      subtitle="Manage reminders, weekly goals, and account details."
+      onBack={() => router.back()}
+      backLabel="Back"
+      headerRight={
+        AUTH_CONFIGURED && isSignedIn ? (
+          <PremiumPill
+            label={isSubscribed ? (subscription.plan === 'team' ? 'Team Plan' : 'Pro') : 'Free Trial'}
+            tone={isSubscribed ? 'success' : 'warning'}
+          />
+        ) : (
+          <PremiumPill label="Guest mode" tone="muted" />
+        )
+      }
+      scrollContentStyle={styles.content}>
 
         {AUTH_CONFIGURED && isSignedIn && (
           <SectionCard title="Account">
@@ -256,8 +263,7 @@ export default function SettingsScreen() {
             Clears completed sessions, quiz scores, and streak. Profile and settings are kept.
           </Text>
         </SectionCard>
-      </ScrollView>
-    </SafeAreaView>
+    </PremiumScreen>
   );
 }
 

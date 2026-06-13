@@ -1,9 +1,9 @@
 import { router } from 'expo-router';
 import type { Href } from 'expo-router';
 import { useMemo } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { PremiumEmptyState, PremiumPill, PremiumScreen } from '@/components/premium-ui';
 import { SectionCard } from '@/components/SectionCard';
 import { Radius, SimulatorColors } from '@/constants/theme';
 import { roles } from '@/data/roles';
@@ -43,21 +43,34 @@ export default function DashboardScreen() {
 
   if (!hasSession && !hasPriorProgress) {
     return (
-      <SafeAreaView style={styles.safe}>
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>No completed simulations yet. Complete a scenario to see your progress here.</Text>
-          <Pressable style={styles.button} accessibilityRole="button" onPress={() => router.push('/role' as Href)}>
-            <Text style={styles.buttonText}>Start Practice</Text>
-          </Pressable>
-        </View>
-      </SafeAreaView>
+      <PremiumScreen
+        eyebrow="Dashboard"
+        title="Progress Dashboard"
+        subtitle="Track session quality, safety corrections, and your training streak in one place."
+        headerRight={<PremiumPill label="No sessions yet" tone="muted" />}>
+        <PremiumEmptyState
+          icon="📊"
+          title="No completed simulations yet"
+          body="Complete a scenario to see your progress, streaks, and mastery trends here."
+          actionLabel="Start Practice"
+          onAction={() => router.push('/role' as Href)}
+        />
+      </PremiumScreen>
     );
   }
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.screenTitle} accessibilityRole="header">Dashboard</Text>
+    <PremiumScreen
+      eyebrow="Dashboard"
+      title="Progress Dashboard"
+      subtitle="Track session quality, safety corrections, and your training streak in one place."
+      headerRight={
+        streakData.currentStreak > 0 ? (
+          <PremiumPill label={`${streakData.currentStreak} day streak`} tone="success" />
+        ) : (
+          <PremiumPill label="Build your streak" tone="indigo" />
+        )
+      }>
 
         {hasSession && summary && (
           <>
@@ -210,8 +223,7 @@ export default function DashboardScreen() {
           onPress={() => router.push('/role' as Href)}>
           <Text style={styles.buttonText}>Return to Role Selection</Text>
         </Pressable>
-      </ScrollView>
-    </SafeAreaView>
+    </PremiumScreen>
   );
 }
 

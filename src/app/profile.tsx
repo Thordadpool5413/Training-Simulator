@@ -1,9 +1,9 @@
 import { router } from 'expo-router';
 import type { Href } from 'expo-router';
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { useState } from 'react';
 
+import { PremiumPill, PremiumScreen } from '@/components/premium-ui';
 import { Radius, SimulatorColors } from '@/constants/theme';
 import { useSimulator } from '@/state/SimulatorContext';
 import type {
@@ -110,83 +110,83 @@ export default function ProfileScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>Learner Profile</Text>
-        <Text style={styles.subtitle}>
-          This helps calibrate the simulation to your experience level.
+    <PremiumScreen
+      eyebrow="Learner Profile"
+      title="Profile Setup"
+      subtitle="This helps calibrate the simulation to your experience level."
+      onBack={() => router.back()}
+      backLabel="Back"
+      headerRight={<PremiumPill label="Local draft" tone="muted" />}
+      scrollContentStyle={styles.container}>
+      <View style={styles.field}>
+        <Text style={styles.label}>Years in role</Text>
+        <TextInput
+          style={styles.textInput}
+          value={yearsInRole}
+          onChangeText={setYearsInRole}
+          placeholder="e.g. 3"
+          keyboardType="numeric"
+          maxLength={3}
+        />
+      </View>
+
+      <View style={styles.field}>
+        <Text style={styles.label}>Hospice experience level</Text>
+        <OptionRow
+          options={EXPERIENCE_OPTIONS}
+          selected={hospiceExperienceLevel}
+          onSelect={setHospiceExperienceLevel}
+        />
+      </View>
+
+      <View style={styles.field}>
+        <Text style={styles.label}>Primary setting</Text>
+        <OptionRow
+          options={SETTING_OPTIONS}
+          selected={primarySetting}
+          onSelect={setPrimarySetting}
+        />
+      </View>
+
+      <View style={styles.field}>
+        <Text style={styles.label}>
+          Comfort with hospice conversations
+          <Text style={styles.scale}> (1 = low, 5 = high)</Text>
         </Text>
+        <ComfortRow value={comfortHospiceConversations} onChange={setComfortHospiceConversations} />
+      </View>
 
-        <View style={styles.field}>
-          <Text style={styles.label}>Years in role</Text>
-          <TextInput
-            style={styles.textInput}
-            value={yearsInRole}
-            onChangeText={setYearsInRole}
-            placeholder="e.g. 3"
-            keyboardType="numeric"
-            maxLength={3}
-          />
-        </View>
+      <View style={styles.field}>
+        <Text style={styles.label}>
+          Comfort with family objections
+          <Text style={styles.scale}> (1 = low, 5 = high)</Text>
+        </Text>
+        <ComfortRow value={comfortFamilyObjections} onChange={setComfortFamilyObjections} />
+      </View>
 
-        <View style={styles.field}>
-          <Text style={styles.label}>Hospice experience level</Text>
-          <OptionRow
-            options={EXPERIENCE_OPTIONS}
-            selected={hospiceExperienceLevel}
-            onSelect={setHospiceExperienceLevel}
-          />
-        </View>
+      <View style={styles.field}>
+        <Text style={styles.label}>
+          Comfort with medication questions
+          <Text style={styles.scale}> (1 = low, 5 = high)</Text>
+        </Text>
+        <ComfortRow
+          value={comfortMedicationQuestions}
+          onChange={setComfortMedicationQuestions}
+        />
+      </View>
 
-        <View style={styles.field}>
-          <Text style={styles.label}>Primary setting</Text>
-          <OptionRow
-            options={SETTING_OPTIONS}
-            selected={primarySetting}
-            onSelect={setPrimarySetting}
-          />
-        </View>
+      <View style={styles.field}>
+        <Text style={styles.label}>
+          Comfort with death and dying conversations
+          <Text style={styles.scale}> (1 = low, 5 = high)</Text>
+        </Text>
+        <ComfortRow value={comfortDeathAndDying} onChange={setComfortDeathAndDying} />
+      </View>
 
-        <View style={styles.field}>
-          <Text style={styles.label}>
-            Comfort with hospice conversations
-            <Text style={styles.scale}> (1 = low, 5 = high)</Text>
-          </Text>
-          <ComfortRow value={comfortHospiceConversations} onChange={setComfortHospiceConversations} />
-        </View>
-
-        <View style={styles.field}>
-          <Text style={styles.label}>
-            Comfort with family objections
-            <Text style={styles.scale}> (1 = low, 5 = high)</Text>
-          </Text>
-          <ComfortRow value={comfortFamilyObjections} onChange={setComfortFamilyObjections} />
-        </View>
-
-        <View style={styles.field}>
-          <Text style={styles.label}>
-            Comfort with medication questions
-            <Text style={styles.scale}> (1 = low, 5 = high)</Text>
-          </Text>
-          <ComfortRow
-            value={comfortMedicationQuestions}
-            onChange={setComfortMedicationQuestions}
-          />
-        </View>
-
-        <View style={styles.field}>
-          <Text style={styles.label}>
-            Comfort with death and dying conversations
-            <Text style={styles.scale}> (1 = low, 5 = high)</Text>
-          </Text>
-          <ComfortRow value={comfortDeathAndDying} onChange={setComfortDeathAndDying} />
-        </View>
-
-        <Pressable style={styles.button} onPress={handleContinue}>
-          <Text style={styles.buttonText}>Continue</Text>
-        </Pressable>
-      </ScrollView>
-    </SafeAreaView>
+      <Pressable style={styles.button} onPress={handleContinue}>
+        <Text style={styles.buttonText}>Continue</Text>
+      </Pressable>
+    </PremiumScreen>
   );
 }
 

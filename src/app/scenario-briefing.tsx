@@ -1,8 +1,8 @@
 import { router } from 'expo-router';
 import type { Href } from 'expo-router';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { PremiumEmptyState, PremiumPill, PremiumScreen } from '@/components/premium-ui';
 import { DiagnosisChip } from '@/components/DiagnosisChip';
 import { SectionCard } from '@/components/SectionCard';
 import { Radius, SimulatorColors } from '@/constants/theme';
@@ -17,27 +17,41 @@ export default function ScenarioBriefingScreen() {
 
   if (!selectedRoleId) {
     return (
-      <SafeAreaView style={styles.safe}>
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Please select a role before viewing a scenario.</Text>
-          <Pressable style={styles.button} accessibilityRole="button" onPress={() => router.push('/role' as Href)}>
-            <Text style={styles.buttonText}>Go to Role Selection</Text>
-          </Pressable>
-        </View>
-      </SafeAreaView>
+      <PremiumScreen
+        eyebrow="Scenario Briefing"
+        title="Review the Case"
+        subtitle="Choose a role first so the briefing can match the training path."
+        onBack={() => router.back()}
+        backLabel="Back"
+        headerRight={<PremiumPill label="Role required" tone="warning" />}>
+        <PremiumEmptyState
+          icon="🧭"
+          title="Select a role first"
+          body="Pick the role you want to practice before opening a scenario briefing."
+          actionLabel="Go to Role Selection"
+          onAction={() => router.push('/role' as Href)}
+        />
+      </PremiumScreen>
     );
   }
 
   if (!selectedScenarioId) {
     return (
-      <SafeAreaView style={styles.safe}>
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Please select a scenario before viewing the briefing.</Text>
-          <Pressable style={styles.button} accessibilityRole="button" onPress={() => router.push('/scenario' as Href)}>
-            <Text style={styles.buttonText}>Go to Scenario Selection</Text>
-          </Pressable>
-        </View>
-      </SafeAreaView>
+      <PremiumScreen
+        eyebrow="Scenario Briefing"
+        title="Review the Case"
+        subtitle="Select a scenario so we can build the full briefing."
+        onBack={() => router.back()}
+        backLabel="Back"
+        headerRight={<PremiumPill label="Scenario required" tone="warning" />}>
+        <PremiumEmptyState
+          icon="📁"
+          title="Select a scenario first"
+          body="Choose a scenario from the library to view the briefing, eligibility context, and start button."
+          actionLabel="Go to Scenario Selection"
+          onAction={() => router.push('/scenario' as Href)}
+        />
+      </PremiumScreen>
     );
   }
 
@@ -45,14 +59,21 @@ export default function ScenarioBriefingScreen() {
 
   if (!scenario) {
     return (
-      <SafeAreaView style={styles.safe}>
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Scenario not found. Please select a scenario.</Text>
-          <Pressable style={styles.button} accessibilityRole="button" onPress={() => router.push('/scenario' as Href)}>
-            <Text style={styles.buttonText}>Go to Scenario Selection</Text>
-          </Pressable>
-        </View>
-      </SafeAreaView>
+      <PremiumScreen
+        eyebrow="Scenario Briefing"
+        title="Review the Case"
+        subtitle="The selected scenario could not be found."
+        onBack={() => router.back()}
+        backLabel="Back"
+        headerRight={<PremiumPill label="Missing scenario" tone="muted" />}>
+        <PremiumEmptyState
+          icon="📁"
+          title="Scenario not found"
+          body="Return to the scenario library and choose another case."
+          actionLabel="Go to Scenario Selection"
+          onAction={() => router.push('/scenario' as Href)}
+        />
+      </PremiumScreen>
     );
   }
 
@@ -61,94 +82,90 @@ export default function ScenarioBriefingScreen() {
   const clinicalDx = clinicalDiagnoses.find((d) => d.diagnosisId === scenario.knownDiagnosisId);
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <ScrollView contentContainerStyle={styles.container}>
-        <Pressable
-          style={styles.backLink}
-          accessibilityRole="button"
-          accessibilityLabel="Back to scenarios"
-          onPress={() => router.back()}>
-          <Text style={styles.backLinkText}>← Back to Scenarios</Text>
-        </Pressable>
-        <Text style={styles.title} accessibilityRole="header">{scenario.title}</Text>
-
-        <View style={styles.card}>
-          <BriefingRow label="Your role" value={role?.name ?? selectedRoleId} />
-          <BriefingRow label="Setting" value={scenario.setting} />
-          <BriefingRow
-            label="Patient"
-            value={`${scenario.patient.name}, age ${scenario.patient.age}`}
-          />
-          <View style={[rowStyles.row, rowStyles.rowBorder]}>
-            <Text style={rowStyles.label}>Known diagnosis</Text>
-            <Text style={rowStyles.value}>{diagnosis?.name ?? scenario.knownDiagnosisId}</Text>
-            {clinicalDx != null && (
-              <View style={styles.chipContainer}>
-                <DiagnosisChip
-                  icd10Code={clinicalDx.icd10Code}
-                  icd10Description={clinicalDx.icd10Description}
-                  lcdId={clinicalDx.lcdId}
-                />
-              </View>
-            )}
-          </View>
-          <BriefingRow
-            label="Recent clinical change"
-            value={scenario.recentClinicalChange}
-          />
-          <BriefingRow
-            label="Who is present"
-            value={scenario.whoIsPresent.join(', ')}
-          />
-          <BriefingRow label="Your objective" value={scenario.learnerObjective} emphasized />
-          <BriefingRow label="Role reminder" value={scenario.roleReminder} emphasized last />
-        </View>
-
-        {diagnosis != null && diagnosis.familyMisconceptions.length > 0 && (
-          <SectionCard title="What the Family May Believe">
-            <Text style={styles.misconceptionIntro}>
-              These are common misconceptions families hold about this diagnosis. Expect to hear resistance shaped by one or more of these beliefs.
-            </Text>
-            {diagnosis.familyMisconceptions.map((m, i) => (
-              <View key={i} style={styles.misconceptionRow}>
-                <Text style={styles.misconceptionBullet}>!</Text>
-                <Text style={styles.misconceptionText}>{m}</Text>
-              </View>
-            ))}
-          </SectionCard>
-        )}
-
-        {clinicalDx != null && (
-          <SectionCard title="Clinical Eligibility Context">
-            <Text style={styles.eligibilityIntro}>
-              Top indicators supporting hospice eligibility for this diagnosis — per CMS LCD {clinicalDx.lcdId}.
-            </Text>
-            {clinicalDx.eligibilityCriteria.slice(0, 3).map((criterion, i) => (
-              <View key={i} style={styles.criterionRow}>
-                <Text style={styles.criterionBullet}>•</Text>
-                <Text style={styles.criterionText}>{criterion}</Text>
-              </View>
-            ))}
-            <View style={styles.declineHeader}>
-              <Text style={styles.declineSectionLabel}>Clinical decline indicators</Text>
+    <PremiumScreen
+      eyebrow="Scenario Briefing"
+      title={scenario.title}
+      subtitle={`${scenario.patient.name} · ${scenario.setting} · ${scenario.patient.age} years old`}
+      onBack={() => router.back()}
+      backLabel="Scenarios"
+      headerRight={<PremiumPill label={role?.name ?? selectedRoleId} tone="indigo" />}
+      scrollContentStyle={styles.container}>
+      <View style={styles.card}>
+        <BriefingRow label="Your role" value={role?.name ?? selectedRoleId} />
+        <BriefingRow label="Setting" value={scenario.setting} />
+        <BriefingRow
+          label="Patient"
+          value={`${scenario.patient.name}, age ${scenario.patient.age}`}
+        />
+        <View style={[rowStyles.row, rowStyles.rowBorder]}>
+          <Text style={rowStyles.label}>Known diagnosis</Text>
+          <Text style={rowStyles.value}>{diagnosis?.name ?? scenario.knownDiagnosisId}</Text>
+          {clinicalDx != null && (
+            <View style={styles.chipContainer}>
+              <DiagnosisChip
+                icd10Code={clinicalDx.icd10Code}
+                icd10Description={clinicalDx.icd10Description}
+                lcdId={clinicalDx.lcdId}
+              />
             </View>
-            {clinicalDx.clinicalDeclineIndicators.slice(0, 3).map((indicator, i) => (
-              <View key={i} style={styles.criterionRow}>
-                <Text style={styles.criterionBullet}>◦</Text>
-                <Text style={styles.indicatorText}>{indicator}</Text>
-              </View>
-            ))}
-          </SectionCard>
-        )}
+          )}
+        </View>
+        <BriefingRow
+          label="Recent clinical change"
+          value={scenario.recentClinicalChange}
+        />
+        <BriefingRow
+          label="Who is present"
+          value={scenario.whoIsPresent.join(', ')}
+        />
+        <BriefingRow label="Your objective" value={scenario.learnerObjective} emphasized />
+        <BriefingRow label="Role reminder" value={scenario.roleReminder} emphasized last />
+      </View>
 
-        <Pressable
-          style={styles.button}
-          accessibilityRole="button"
-          onPress={() => router.push('/simulation' as Href)}>
-          <Text style={styles.buttonText}>Start Simulation</Text>
-        </Pressable>
-      </ScrollView>
-    </SafeAreaView>
+      {diagnosis != null && diagnosis.familyMisconceptions.length > 0 && (
+        <SectionCard title="What the Family May Believe">
+          <Text style={styles.misconceptionIntro}>
+            These are common misconceptions families hold about this diagnosis. Expect to hear resistance shaped by one or more of these beliefs.
+          </Text>
+          {diagnosis.familyMisconceptions.map((m, i) => (
+            <View key={i} style={styles.misconceptionRow}>
+              <Text style={styles.misconceptionBullet}>!</Text>
+              <Text style={styles.misconceptionText}>{m}</Text>
+            </View>
+          ))}
+        </SectionCard>
+      )}
+
+      {clinicalDx != null && (
+        <SectionCard title="Clinical Eligibility Context">
+          <Text style={styles.eligibilityIntro}>
+            Top indicators supporting hospice eligibility for this diagnosis — per CMS LCD {clinicalDx.lcdId}.
+          </Text>
+          {clinicalDx.eligibilityCriteria.slice(0, 3).map((criterion, i) => (
+            <View key={i} style={styles.criterionRow}>
+              <Text style={styles.criterionBullet}>•</Text>
+              <Text style={styles.criterionText}>{criterion}</Text>
+            </View>
+          ))}
+          <View style={styles.declineHeader}>
+            <Text style={styles.declineSectionLabel}>Clinical decline indicators</Text>
+          </View>
+          {clinicalDx.clinicalDeclineIndicators.slice(0, 3).map((indicator, i) => (
+            <View key={i} style={styles.criterionRow}>
+              <Text style={styles.criterionBullet}>◦</Text>
+              <Text style={styles.indicatorText}>{indicator}</Text>
+            </View>
+          ))}
+        </SectionCard>
+      )}
+
+      <Pressable
+        style={styles.button}
+        accessibilityRole="button"
+        onPress={() => router.push('/simulation' as Href)}>
+        <Text style={styles.buttonText}>Start Simulation</Text>
+      </Pressable>
+    </PremiumScreen>
   );
 }
 

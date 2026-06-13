@@ -9,18 +9,18 @@ import { Platform } from 'react-native';
 
 export const Colors = {
   light: {
-    text: '#000000',
-    background: '#ffffff',
-    backgroundElement: '#F0F0F3',
-    backgroundSelected: '#E0E1E6',
-    textSecondary: '#60646C',
+    text: '#F4F8FF',
+    background: '#07101C',
+    backgroundElement: '#101B2B',
+    backgroundSelected: '#18263D',
+    textSecondary: '#9DB0C7',
   },
   dark: {
-    text: '#ffffff',
-    background: '#000000',
-    backgroundElement: '#212225',
-    backgroundSelected: '#2E3135',
-    textSecondary: '#B0B4BA',
+    text: '#F4F8FF',
+    background: '#050B14',
+    backgroundElement: '#0D1726',
+    backgroundSelected: '#162133',
+    textSecondary: '#9DB0C7',
   },
 } as const;
 
@@ -65,51 +65,59 @@ export const BottomTabInset = Platform.select({ ios: 50, android: 80 }) ?? 0;
 export const MaxContentWidth = 800;
 
 export const SimulatorColors = {
-  screenBackground: '#F9FAFB',
-  surface: '#FFFFFF',
+  screenBackground: '#050B15',
+  surface: 'rgba(11, 19, 32, 0.90)',
+  surfaceRaised: '#132033',
+  surfaceMuted: 'rgba(15, 24, 40, 0.76)',
+  surfaceElevated: '#17253A',
   textOnBrand: '#FFFFFF',
 
-  textPrimary: '#111827',
-  textSecondary: '#6B7280',
-  textBody: '#374151',
-  textPlaceholder: '#9CA3AF',
+  textPrimary: '#F4F8FF',
+  textSecondary: '#A7B7CB',
+  textBody: '#D8E3F0',
+  textPlaceholder: '#7487A0',
 
-  border: '#E5E7EB',
-  borderInput: '#D1D5DB',
-  borderDivider: '#F3F4F6',
+  border: 'rgba(167, 183, 203, 0.18)',
+  borderInput: 'rgba(167, 183, 203, 0.24)',
+  borderDivider: 'rgba(167, 183, 203, 0.10)',
 
-  brand: '#2563EB',
-  brandDark: '#1D4ED8',
-  brandDisabled: '#93C5FD',
-  brandTint: '#EFF6FF',
-  brandDeep: '#1E40AF',
+  brand: '#69B6FF',
+  brandDark: '#2D83E6',
+  brandDisabled: '#35506B',
+  brandTint: 'rgba(105, 182, 255, 0.14)',
+  brandDeep: '#2F89FF',
 
-  warningBackground: '#FEF3C7',
-  warningBorder: '#F59E0B',
-  warningLabelText: '#92400E',
-  warningBodyText: '#78350F',
+  warningBackground: 'rgba(245, 158, 11, 0.14)',
+  warningBorder: '#F4B94F',
+  warningLabelText: '#FFD9A0',
+  warningBodyText: '#F8E8C5',
 
-  indigoBackground: '#E0E7FF',
-  indigoBorder: '#C7D2FE',
-  indigoLabel: '#4338CA',
-  indigoText: '#3730A3',
+  indigoBackground: 'rgba(99, 102, 241, 0.14)',
+  indigoBorder: '#7B8CFF',
+  indigoLabel: '#CBD4FF',
+  indigoText: '#E2E7FF',
 
-  greenBackground: '#F0FDF4',
-  greenBorder: '#86EFAC',
-  greenText: '#166534',
+  greenBackground: 'rgba(16, 185, 129, 0.11)',
+  greenBorder: '#31D0C0',
+  greenText: '#C1F8E2',
 
-  amberBackground: '#FFF7ED',
-  amberBorder: '#FDBA74',
-  amberBadge: '#F59E0B',
+  amberBackground: 'rgba(245, 158, 11, 0.14)',
+  amberBorder: '#F4B94F',
+  amberBadge: '#F7CD63',
 
-  scoreRed: '#DC2626',
-  scoreOrange: '#EA580C',
-  scoreYellow: '#CA8A04',
-  scoreGreen: '#16A34A',
+  scoreRed: '#FF6B7A',
+  scoreOrange: '#FB923C',
+  scoreYellow: '#F7C948',
+  scoreGreen: '#31D0C0',
+
+  shadow: 'rgba(3, 8, 18, 0.32)',
+  shadowStrong: 'rgba(3, 8, 18, 0.46)',
 } as const;
 
 export const Radius = {
-  sm: 6,
-  md: 8,
-  lg: 12,
+  sm: 10,
+  md: 16,
+  lg: 24,
+  xl: 32,
+  pill: 999,
 } as const;

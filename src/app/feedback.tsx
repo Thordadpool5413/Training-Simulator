@@ -2,8 +2,15 @@ import { router } from 'expo-router';
 import type { Href } from 'expo-router';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, Share, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
+import {
+  PremiumActionButton,
+  PremiumBottomActions,
+  PremiumEmptyState,
+  PremiumPill,
+  PremiumScreen,
+  PremiumStatRail,
+} from '@/components/premium-ui';
 import { Radius, SimulatorColors } from '@/constants/theme';
 import { scenarioTemplates } from '@/data/scenarioTemplates';
 import { generateFeedbackReport } from '@/services/feedbackService';
@@ -125,24 +132,33 @@ export default function FeedbackScreen() {
 
   if (!report) {
     return (
-      <SafeAreaView style={styles.safe}>
-        <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>No completed simulation found.</Text>
-          <Pressable style={styles.button} accessibilityRole="button" onPress={() => router.push('/role' as Href)}>
-            <Text style={styles.buttonText}>Return to Role Selection</Text>
-          </Pressable>
-        </View>
-      </SafeAreaView>
+      <PremiumScreen
+        eyebrow="Feedback"
+        title="Simulation Feedback"
+        subtitle="Review the session once you complete a scenario."
+        onBack={() => router.push('/role' as Href)}
+        backLabel="Role"
+        headerRight={<PremiumPill label="No session" tone="muted" />}>
+        <PremiumEmptyState
+          icon="🩺"
+          title="No completed simulation found"
+          body="Finish a scenario to unlock your feedback, AI coach notes, and exportable report."
+          actionLabel="Return to Role Selection"
+          onAction={() => router.push('/role' as Href)}
+        />
+      </PremiumScreen>
     );
   }
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.screenTitle} accessibilityRole="header">Simulation Feedback</Text>
-        {scenario != null && (
-          <Text style={styles.screenSubtitle}>{scenario.title}</Text>
-        )}
+    <PremiumScreen
+      eyebrow="Feedback"
+      title="Simulation Feedback"
+      subtitle={scenario?.title ?? 'Session review, coaching insights, and next practice priorities'}
+      onBack={() => router.back()}
+      backLabel="Back"
+      headerRight={scoreReport !== null ? <PremiumPill label={`${scoreReport.overallScore.toFixed(1)} / 4`} tone="success" /> : <PremiumPill label="Ready" tone="indigo" />}
+      scrollContentStyle={styles.scrollContent}>
 
         {scoreReport !== null && (
           <View style={heroStyles.container}>
@@ -166,6 +182,17 @@ export default function FeedbackScreen() {
               })()}
             </View>
           </View>
+        )}
+
+        {scoreReport !== null && (
+          <PremiumStatRail
+            items={[
+              { label: 'Overall', value: scoreReport.overallScore.toFixed(1), caption: 'Out of 4.0', tone: 'brand' },
+              { label: 'Strength', value: scoreReport.primaryStrength, caption: 'Top skill area', tone: 'success' },
+              { label: 'Growth', value: scoreReport.primaryGrowthArea, caption: 'Primary coaching target', tone: 'warning' },
+              { label: 'Safety', value: String(safetyEvents.length), caption: 'Corrections logged', tone: safetyEvents.length > 0 ? 'warning' : 'success' },
+            ]}
+          />
         )}
 
         <SectionCard title="Overall Coaching Summary">
@@ -328,49 +355,45 @@ export default function FeedbackScreen() {
         </SectionCard>
 
         {AUTH_CONFIGURED && !isSubscribed && activeScenarioId === 'hospice_means_giving_up' && scoreReport !== null && (
-          <View style={demoCtaStyles.container}>
-            <Text style={demoCtaStyles.headline}>
+          <View style={trialCtaStyles.container}>
+            <Text style={trialCtaStyles.headline}>
               You scored {scoreReport.overallScore.toFixed(1)}/4.0 on your first scenario
             </Text>
-            <Text style={demoCtaStyles.body}>
+            <Text style={trialCtaStyles.body}>
               Unlock 33 more clinical scenarios, AI coaching, and voice practice with a free trial.
             </Text>
             <Pressable
-              style={demoCtaStyles.button}
+              style={trialCtaStyles.button}
               accessibilityRole="button"
               onPress={() => router.push('/paywall' as Href)}>
-              <Text style={demoCtaStyles.buttonText}>Start 7-Day Free Trial</Text>
+              <Text style={trialCtaStyles.buttonText}>Start 7-Day Free Trial</Text>
             </Pressable>
-            <Text style={demoCtaStyles.sub}>No credit card required to start</Text>
+            <Text style={trialCtaStyles.sub}>No credit card required to start</Text>
           </View>
         )}
 
-        <Pressable
-          style={styles.button}
-          accessibilityRole="button"
-          onPress={() => router.push('/clinical-debrief' as Href)}>
-          <Text style={styles.buttonText}>Clinical Knowledge Check</Text>
-        </Pressable>
-        <Pressable
-          style={styles.shareButton}
-          accessibilityRole="button"
-          onPress={handleShareFeedback}>
-          <Text style={styles.shareButtonText}>Share / Export Feedback</Text>
-        </Pressable>
-        <Pressable
-          style={styles.viewDashboardButton}
-          accessibilityRole="button"
-          onPress={() => router.push('/dashboard' as Href)}>
-          <Text style={styles.viewDashboardButtonText}>View Dashboard</Text>
-        </Pressable>
-        <Pressable
-          style={[styles.button, styles.returnButton]}
-          accessibilityRole="button"
-          onPress={() => router.push('/role' as Href)}>
-          <Text style={styles.buttonText}>Return to Role Selection</Text>
-        </Pressable>
-      </ScrollView>
-    </SafeAreaView>
+        <PremiumBottomActions>
+          <PremiumActionButton
+            label="Clinical Knowledge Check"
+            onPress={() => router.push('/clinical-debrief' as Href)}
+          />
+          <PremiumActionButton
+            label="Share / Export Feedback"
+            variant="secondary"
+            onPress={handleShareFeedback}
+          />
+          <PremiumActionButton
+            label="View Dashboard"
+            variant="secondary"
+            onPress={() => router.push('/dashboard' as Href)}
+          />
+          <PremiumActionButton
+            label="Return to Role Selection"
+            variant="ghost"
+            onPress={() => router.push('/role' as Href)}
+          />
+        </PremiumBottomActions>
+    </PremiumScreen>
   );
 }
 
@@ -774,7 +797,7 @@ const heroStyles = StyleSheet.create({
   },
 });
 
-const demoCtaStyles = StyleSheet.create({
+const trialCtaStyles = StyleSheet.create({
   container: {
     backgroundColor: SimulatorColors.brandDeep,
     borderRadius: Radius.lg,

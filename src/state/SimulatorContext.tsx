@@ -10,6 +10,12 @@ import type {
   StreakData,
 } from '@/types/simulator';
 import type { QuizResult } from '@/types/quiz';
+import { useAuth } from '@/state/AuthContext';
+import {
+  clearCloudProgress,
+  loadCloudCompletedSessions,
+  loadCloudLearnerProfile,
+} from '@/services/cloudSyncService';
 import {
   clearAllProgress,
   loadAppSettings,
@@ -68,6 +74,83 @@ function computeNewStreakData(prev: StreakData): StreakData {
   };
 }
 
+function isoDate(value: string): string {
+  return value.slice(0, 10);
+}
+
+function startOfWeekIso(value: string): string {
+  const date = new Date(value);
+  const diffToMon = (date.getDay() + 6) % 7;
+  date.setDate(date.getDate() - diffToMon);
+  return date.toISOString().slice(0, 10);
+}
+
+function diffDays(aIso: string, bIso: string): number {
+  return Math.round((new Date(aIso).getTime() - new Date(bIso).getTime()) / 86400000);
+}
+
+function mergeCompletedSessions(
+  localSessions: CompletedSession[],
+  cloudSessions: CompletedSession[]
+): CompletedSession[] {
+  const byScenarioRole = new Map<string, CompletedSession>();
+  const allSessions = [...localSessions, ...cloudSessions].sort(
+    (a, b) => new Date(a.completedAt).getTime() - new Date(b.completedAt).getTime()
+  );
+
+  for (const session of allSessions) {
+    const key = `${session.scenarioId}::${session.roleId}`;
+    const existing = byScenarioRole.get(key);
+    if (!existing || new Date(session.completedAt).getTime() >= new Date(existing.completedAt).getTime()) {
+      byScenarioRole.set(key, session);
+    }
+  }
+
+  return Array.from(byScenarioRole.values()).sort(
+    (a, b) => new Date(a.completedAt).getTime() - new Date(b.completedAt).getTime()
+  );
+}
+
+function deriveStreakDataFromSessions(
+  sessions: CompletedSession[],
+  weeklyGoal: number
+): StreakData {
+  if (sessions.length === 0) {
+    return {
+      ...DEFAULT_STREAK,
+      weeklyGoal,
+    };
+  }
+
+  const todayIso = new Date().toISOString().slice(0, 10);
+  const weekStart = startOfWeekIso(todayIso);
+  const sessionsThisWeek = sessions.filter((session) => startOfWeekIso(session.completedAt) === weekStart);
+  const uniquePracticeDates = Array.from(new Set(sessions.map((session) => isoDate(session.completedAt)))).sort(
+    (a, b) => new Date(b).getTime() - new Date(a).getTime()
+  );
+  const latestPracticeDate = uniquePracticeDates[0] ?? null;
+  let currentStreak = 0;
+
+  if (latestPracticeDate && diffDays(todayIso, latestPracticeDate) <= 1) {
+    currentStreak = 1;
+    for (let i = 1; i < uniquePracticeDates.length; i += 1) {
+      if (diffDays(uniquePracticeDates[i - 1], uniquePracticeDates[i]) === 1) {
+        currentStreak += 1;
+      } else {
+        break;
+      }
+    }
+  }
+
+  return {
+    currentStreak,
+    lastPracticeDate: latestPracticeDate,
+    weeklySessionCount: sessionsThisWeek.length,
+    weeklyGoalStart: weekStart,
+    weeklyGoal,
+  };
+}
+
 interface SimulatorState {
   selectedRoleId: string | null;
   learnerProfile: LearnerProfile | null;
@@ -99,11 +182,13 @@ interface SimulatorState {
   setQuizResult: (result: QuizResult) => void;
   recordCompletedSession: (session: Omit<CompletedSession, 'id' | 'completedAt' | 'previousScore'>) => void;
   resetSimulationSession: () => void;
+  isHydrated: boolean;
 }
 
 const SimulatorContext = createContext<SimulatorState | null>(null);
 
 export function SimulatorProvider({ children }: { children: React.ReactNode }) {
+  const { userId } = useAuth();
   const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);
   const [learnerProfile, setLearnerProfileState] = useState<LearnerProfile | null>(null);
   const [selectedScenarioId, setSelectedScenarioIdInternal] = useState<string | null>(null);
@@ -119,56 +204,90 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
   const [hydrated, setHydrated] = useState(false);
 
   const sessionIdCounter = useRef(0);
+  const hydrationToken = useRef(0);
+  const storageScope = userId ?? 'guest';
 
-  // Load persisted state once on mount
+  // Load persisted state once per account scope.
   useEffect(() => {
+    const token = ++hydrationToken.current;
+    setHydrated(false);
+    setLearnerProfileState(null);
+    setCompletedSessions([]);
+    setQuizResultInternal(null);
+    setStreakData(DEFAULT_STREAK);
+    setAppSettings(DEFAULT_APP_SETTINGS);
+
     async function hydrate() {
       const [profile, sessions, quiz, streak, settings] = await Promise.all([
-        loadLearnerProfile(),
-        loadCompletedSessions(),
-        loadQuizResult(),
-        loadStreakData(),
-        loadAppSettings(),
+        loadLearnerProfile(storageScope),
+        loadCompletedSessions(storageScope),
+        loadQuizResult(storageScope),
+        loadStreakData(storageScope),
+        loadAppSettings(storageScope),
       ]);
-      if (profile) setLearnerProfileState(profile);
-      if (sessions.length > 0) setCompletedSessions(sessions);
-      if (quiz) setQuizResultInternal(quiz);
-      if (streak) setStreakData(streak);
+
+      if (token !== hydrationToken.current) return;
+
+      let nextProfile = profile;
+      let nextSessions = sessions;
+      let nextGoal = streak?.weeklyGoal ?? DEFAULT_STREAK.weeklyGoal;
+
+      if (userId) {
+        const [cloudProfile, cloudSessions] = await Promise.all([
+          loadCloudLearnerProfile(userId),
+          loadCloudCompletedSessions(userId),
+        ]);
+
+        if (token !== hydrationToken.current) return;
+
+        nextProfile = cloudProfile ?? nextProfile;
+        nextSessions = mergeCompletedSessions(nextSessions, cloudSessions);
+        nextGoal = streak?.weeklyGoal ?? DEFAULT_STREAK.weeklyGoal;
+      }
+
+      setLearnerProfileState(nextProfile ?? null);
+      setCompletedSessions(nextSessions);
+      setQuizResultInternal(quiz);
+      setStreakData(deriveStreakDataFromSessions(nextSessions, nextGoal));
       if (settings) setAppSettings(settings);
+      else setAppSettings(DEFAULT_APP_SETTINGS);
       setHydrated(true);
     }
     void hydrate();
-  }, []);
+    return () => {
+      hydrationToken.current += 1;
+    };
+  }, [storageScope]);
 
   // Persist learnerProfile changes after hydration
   useEffect(() => {
     if (!hydrated || !learnerProfile) return;
-    void saveLearnerProfile(learnerProfile);
-  }, [learnerProfile, hydrated]);
+    void saveLearnerProfile(learnerProfile, storageScope);
+  }, [learnerProfile, hydrated, storageScope]);
 
   // Persist completedSessions changes after hydration
   useEffect(() => {
     if (!hydrated) return;
-    void saveCompletedSessions(completedSessions);
-  }, [completedSessions, hydrated]);
+    void saveCompletedSessions(completedSessions, storageScope);
+  }, [completedSessions, hydrated, storageScope]);
 
   // Persist quizResult changes after hydration
   useEffect(() => {
     if (!hydrated || !quizResult) return;
-    void saveQuizResult(quizResult);
-  }, [quizResult, hydrated]);
+    void saveQuizResult(quizResult, storageScope);
+  }, [quizResult, hydrated, storageScope]);
 
   // Persist streakData changes after hydration
   useEffect(() => {
     if (!hydrated) return;
-    void saveStreakData(streakData);
-  }, [streakData, hydrated]);
+    void saveStreakData(streakData, storageScope);
+  }, [streakData, hydrated, storageScope]);
 
   // Persist appSettings changes after hydration
   useEffect(() => {
     if (!hydrated) return;
-    void saveAppSettings(appSettings);
-  }, [appSettings, hydrated]);
+    void saveAppSettings(appSettings, storageScope);
+  }, [appSettings, hydrated, storageScope]);
 
   function startSimulationSession(
     scenarioId: string,
@@ -224,8 +343,12 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
     setCompletedSessions([]);
     setQuizResultInternal(null);
     setStreakData(DEFAULT_STREAK);
-    void clearAllProgress();
-  }, []);
+    if (userId) {
+      void clearCloudProgress(userId);
+      void clearAllProgress('guest');
+    }
+    void clearAllProgress(storageScope);
+  }, [storageScope, userId]);
 
   const recordCompletedSession = useCallback(
     (session: Omit<CompletedSession, 'id' | 'completedAt' | 'previousScore'>): void => {
@@ -289,6 +412,7 @@ export function SimulatorProvider({ children }: { children: React.ReactNode }) {
         setQuizResult,
         recordCompletedSession,
         resetSimulationSession,
+        isHydrated: hydrated,
       }}>
       {children}
     </SimulatorContext.Provider>

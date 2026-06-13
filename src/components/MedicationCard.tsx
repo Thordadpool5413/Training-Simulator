@@ -19,7 +19,10 @@ export function MedicationCard({ medication, roleId }: Props) {
 
   return (
     <View style={styles.card}>
-      <Pressable onPress={() => setExpanded((v) => !v)} style={styles.header}>
+      <Pressable
+        onPress={() => setExpanded((v) => !v)}
+        style={({ pressed }) => [styles.header, pressed && styles.headerPressed]}
+      >
         <View style={styles.headerLeft}>
           <Text style={styles.name}>{medication.name}</Text>
           <View style={styles.classBadge}>
@@ -27,8 +30,10 @@ export function MedicationCard({ medication, roleId }: Props) {
           </View>
         </View>
         <View style={styles.headerRight}>
-          <Text style={styles.rxcui}>RxCUI {medication.rxcui}</Text>
-          <Text style={styles.chevron}>{expanded ? '▲' : '▼'}</Text>
+          <Text style={styles.rxcui} selectable>
+            RxCUI {medication.rxcui}
+          </Text>
+          <Text style={styles.chevron}>{expanded ? '−' : '+'}</Text>
         </View>
       </Pressable>
 
@@ -74,17 +79,22 @@ export function MedicationCard({ medication, roleId }: Props) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: Radius.md,
+    backgroundColor: SimulatorColors.surface,
+    borderRadius: Radius.xl,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
-    padding: 12,
-    gap: 6,
+    borderColor: SimulatorColors.border,
+    padding: 16,
+    gap: 8,
+    borderCurve: 'continuous',
+    boxShadow: `0 18px 36px ${SimulatorColors.shadow}`,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
+  },
+  headerPressed: {
+    opacity: 0.95,
   },
   headerLeft: {
     flex: 1,
@@ -96,86 +106,90 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   name: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: '#111827',
+    fontSize: 16,
+    fontWeight: '800',
+    color: SimulatorColors.textPrimary,
   },
   classBadge: {
     backgroundColor: SimulatorColors.indigoBackground,
-    borderRadius: Radius.sm,
+    borderRadius: Radius.md,
     paddingHorizontal: 6,
     paddingVertical: 2,
     alignSelf: 'flex-start',
+    borderWidth: 1,
+    borderColor: `${SimulatorColors.indigoBorder}33`,
   },
   classText: {
     fontSize: 11,
-    color: '#4338CA',
-    fontWeight: '500',
+    color: SimulatorColors.indigoLabel,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: 0.4,
   },
   rxcui: {
     fontSize: 11,
-    color: '#9CA3AF',
+    color: SimulatorColors.textPlaceholder,
     fontFamily: 'monospace',
   },
   chevron: {
     fontSize: 10,
-    color: '#9CA3AF',
+    color: SimulatorColors.textPlaceholder,
   },
   purpose: {
-    fontSize: 13,
-    color: '#374151',
-    lineHeight: 19,
+    fontSize: 14,
+    color: SimulatorColors.textBody,
+    lineHeight: 21,
   },
   expandedContent: {
     gap: 8,
   },
   divider: {
     height: 1,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: SimulatorColors.borderDivider,
     marginVertical: 2,
   },
   sectionLabel: {
     fontSize: 11,
-    fontWeight: '700',
-    color: SimulatorColors.brandDeep,
+    fontWeight: '800',
+    color: SimulatorColors.brand,
     textTransform: 'uppercase',
-    letterSpacing: 0.4,
+    letterSpacing: 0.5,
     marginTop: 4,
   },
   bodyText: {
-    fontSize: 13,
-    color: '#374151',
-    lineHeight: 19,
+    fontSize: 14,
+    color: SimulatorColors.textBody,
+    lineHeight: 20,
   },
   highlightBox: {
     backgroundColor: SimulatorColors.brandTint,
-    borderRadius: Radius.sm,
-    padding: 10,
+    borderRadius: Radius.md,
+    padding: 12,
     borderLeftWidth: 3,
     borderLeftColor: SimulatorColors.brand,
   },
   highlightText: {
     fontSize: 13,
-    color: SimulatorColors.brandDeep,
+    color: SimulatorColors.brand,
     lineHeight: 19,
   },
   familyBox: {
     backgroundColor: SimulatorColors.greenBackground,
-    borderRadius: Radius.sm,
-    padding: 10,
+    borderRadius: Radius.md,
+    padding: 12,
     borderLeftWidth: 3,
     borderLeftColor: SimulatorColors.greenBorder,
   },
   familyText: {
     fontSize: 13,
-    color: '#14532D',
+    color: SimulatorColors.greenText,
     lineHeight: 19,
     fontStyle: 'italic',
   },
   roleNoteText: {
-    fontSize: 12,
-    color: '#6B7280',
-    lineHeight: 18,
+    fontSize: 13,
+    color: SimulatorColors.textSecondary,
+    lineHeight: 19,
   },
   routesRow: {
     flexDirection: 'row',
@@ -186,17 +200,19 @@ const styles = StyleSheet.create({
   },
   routesLabel: {
     fontSize: 11,
-    color: '#6B7280',
-    fontWeight: '600',
+    color: SimulatorColors.textSecondary,
+    fontWeight: '700',
   },
   routeBadge: {
-    backgroundColor: '#F3F4F6',
-    borderRadius: Radius.sm,
+    backgroundColor: SimulatorColors.surfaceRaised,
+    borderRadius: Radius.md,
     paddingHorizontal: 7,
     paddingVertical: 2,
+    borderWidth: 1,
+    borderColor: SimulatorColors.border,
   },
   routeText: {
     fontSize: 11,
-    color: '#374151',
+    color: SimulatorColors.textBody,
   },
 });

@@ -1,88 +1,68 @@
 import { router } from 'expo-router';
 import type { Href } from 'expo-router';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { PremiumPill, PremiumScreen } from '@/components/premium-ui';
 import { Radius, SimulatorColors } from '@/constants/theme';
-import { useSimulator } from '@/state/SimulatorContext';
 
-const DEMO_STEPS = [
-  { icon: '🎭', label: 'Play a hospice clinical liaison' },
-  { icon: '💬', label: 'Respond to a real family concern' },
-  { icon: '📊', label: 'Get instant coaching feedback' },
+const QUICK_START_STEPS = [
+  { icon: '🎭', label: 'Choose the role you want to practice' },
+  { icon: '💬', label: 'Review the scenario briefing' },
+  { icon: '📊', label: 'Start the live conversation flow' },
 ];
 
-export default function DemoScreen() {
-  const { setSelectedRoleId, setSelectedScenarioId } = useSimulator();
-
-  function handleStartDemo() {
-    setSelectedRoleId('clinical_liaison');
-    setSelectedScenarioId('hospice_means_giving_up');
-    router.replace('/scenario-briefing' as Href);
+export default function QuickStartScreen() {
+  function handleStartPractice() {
+    router.replace('/role' as Href);
   }
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <Pressable
-          style={styles.backLink}
-          accessibilityRole="button"
-          onPress={() => router.back()}>
-          <Text style={styles.backLinkText}>← Back</Text>
-        </Pressable>
+    <PremiumScreen
+      eyebrow="Quick start"
+      title="Launch your first case"
+      subtitle="Jump into the real practice flow, or browse the full scenario library first."
+      onBack={() => router.back()}
+      backLabel="Back"
+      headerRight={<PremiumPill label="Practice mode" tone="success" />}
+      scrollContentStyle={styles.content}>
+      <View style={styles.stepsCard}>
+        {QUICK_START_STEPS.map((step, i) => (
+          <View key={i} style={styles.stepRow}>
+            <Text style={styles.stepIcon}>{step.icon}</Text>
+            <Text style={styles.stepLabel}>{step.label}</Text>
+          </View>
+        ))}
+      </View>
 
-        <View style={styles.heroBadge}>
-          <Text style={styles.heroBadgeText}>FREE DEMO</Text>
-        </View>
-
-        <Text style={styles.title} accessibilityRole="header">
-          Try a simulation — no account needed
+      <View style={styles.scenarioPreview}>
+        <Text style={styles.scenarioLabel}>Starter case</Text>
+        <Text style={styles.scenarioTitle}>"Hospice Means Giving Up"</Text>
+        <Text style={styles.scenarioMeta}>
+          Clinical Liaison · Beginner · Hospital Setting
         </Text>
-        <Text style={styles.subtitle}>
-          Experience a real hospice communication training scenario in under 10 minutes.
+        <Text style={styles.scenarioDesc}>
+          A family member insists that choosing hospice means abandoning their mother. You need to reframe hospice as active comfort care without invalidating their grief.
         </Text>
+      </View>
 
-        <View style={styles.stepsCard}>
-          {DEMO_STEPS.map((step, i) => (
-            <View key={i} style={styles.stepRow}>
-              <Text style={styles.stepIcon}>{step.icon}</Text>
-              <Text style={styles.stepLabel}>{step.label}</Text>
-            </View>
-          ))}
-        </View>
+      <Pressable
+        style={styles.startButton}
+        accessibilityRole="button"
+        onPress={handleStartPractice}>
+        <Text style={styles.startButtonText}>Open Role Selection</Text>
+      </Pressable>
 
-        <View style={styles.scenarioPreview}>
-          <Text style={styles.scenarioLabel}>Demo Scenario</Text>
-          <Text style={styles.scenarioTitle}>
-            "Hospice Means Giving Up"
-          </Text>
-          <Text style={styles.scenarioMeta}>
-            Clinical Liaison · Beginner · Hospital Setting
-          </Text>
-          <Text style={styles.scenarioDesc}>
-            A family member insists that choosing hospice means abandoning their mother. You need to reframe hospice as active comfort care without invalidating their grief.
-          </Text>
-        </View>
+      <Text style={styles.disclaimer}>
+        This simulation uses fictional training scenarios only. No real patient data required.
+      </Text>
 
-        <Pressable
-          style={styles.startButton}
-          accessibilityRole="button"
-          onPress={handleStartDemo}>
-          <Text style={styles.startButtonText}>Start Demo Simulation</Text>
-        </Pressable>
-
-        <Text style={styles.disclaimer}>
-          This simulation uses fictional training scenarios only. No real patient data required.
-        </Text>
-
-        <Pressable
-          style={styles.fullAccessButton}
-          accessibilityRole="button"
-          onPress={() => router.push('/role' as Href)}>
-          <Text style={styles.fullAccessText}>Access Full Scenario Library</Text>
-        </Pressable>
-      </ScrollView>
-    </SafeAreaView>
+      <Pressable
+        style={styles.fullAccessButton}
+        accessibilityRole="button"
+        onPress={() => router.push('/scenario' as Href)}>
+        <Text style={styles.fullAccessText}>Browse Full Scenario Library</Text>
+      </Pressable>
+    </PremiumScreen>
   );
 }
 
@@ -103,22 +83,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: SimulatorColors.brand,
     fontWeight: '600',
-  },
-  heroBadge: {
-    alignSelf: 'flex-start',
-    backgroundColor: SimulatorColors.greenBackground,
-    borderWidth: 1,
-    borderColor: SimulatorColors.greenBorder,
-    borderRadius: Radius.sm,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    marginTop: 8,
-  },
-  heroBadgeText: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: SimulatorColors.greenText,
-    letterSpacing: 0.5,
   },
   title: {
     fontSize: 26,

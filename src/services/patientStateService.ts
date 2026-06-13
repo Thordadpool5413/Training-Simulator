@@ -191,8 +191,8 @@ export function updatePatientState(
   // Rule 6 — Hospice timeline education
   if (containsAny(lower, TIMELINE_TERMS) && (hasReframe || hasService)) {
     matchedDeltas.push({ trust: 10, fear: -8, resistance: -10, hospiceMisconception: -18, understanding: 15, readiness: 8, perceivedCompassion: 8, perceivedHonesty: 10 });
-    matchedBehaviors.push('timeline_addressed');
-    matchedSummaries.push('Explained hospice timing — support begins before the final days.');
+    matchedBehaviors.push('timeline_addressed', 'hospice_reframe', 'care_continuity_language');
+    matchedSummaries.push('Explained hospice timing and reframed it as earlier, ongoing support.');
   }
 
   // Rule 7 — Revocation education

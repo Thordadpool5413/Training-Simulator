@@ -24,9 +24,11 @@ export function EvidenceCard({ evidence }: Props) {
         <Text style={styles.contextText}>{evidence.clinicalContext}</Text>
       </View>
 
-      <Text style={styles.citation}>{evidence.citation}</Text>
+      <Text style={styles.citation} selectable>{evidence.citation}</Text>
       {evidence.pmid && (
-        <Text style={styles.pmid}>PubMed PMID: {evidence.pmid}</Text>
+        <Text style={styles.pmid} selectable>
+          PubMed PMID: {evidence.pmid}
+        </Text>
       )}
     </View>
   );
@@ -34,12 +36,14 @@ export function EvidenceCard({ evidence }: Props) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#F8FAF5',
-    borderRadius: Radius.md,
+    backgroundColor: SimulatorColors.surface,
+    borderRadius: Radius.xl,
     borderWidth: 1,
-    borderColor: SimulatorColors.greenBorder,
-    padding: 14,
-    gap: 8,
+    borderColor: `${SimulatorColors.greenBorder}2A`,
+    padding: 18,
+    gap: 10,
+    borderCurve: 'continuous',
+    boxShadow: `0 18px 36px ${SimulatorColors.shadow}`,
   },
   tagRow: {
     flexDirection: 'row',
@@ -49,11 +53,11 @@ const styles = StyleSheet.create({
   },
   tag: {
     backgroundColor: SimulatorColors.greenBackground,
-    borderRadius: Radius.sm,
+    borderRadius: Radius.md,
     paddingHorizontal: 7,
     paddingVertical: 3,
     borderWidth: 1,
-    borderColor: SimulatorColors.greenBorder,
+    borderColor: `${SimulatorColors.greenBorder}33`,
   },
   tagText: {
     fontSize: 11,
@@ -64,48 +68,48 @@ const styles = StyleSheet.create({
   },
   category: {
     fontSize: 12,
-    color: '#6B7280',
+    color: SimulatorColors.textSecondary,
     fontStyle: 'italic',
   },
   headline: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#14532D',
-    lineHeight: 20,
+    fontSize: 15,
+    fontWeight: '800',
+    color: SimulatorColors.textPrimary,
+    lineHeight: 21,
   },
   statement: {
-    fontSize: 13,
-    color: '#1F2937',
-    lineHeight: 20,
+    fontSize: 14,
+    color: SimulatorColors.textBody,
+    lineHeight: 21,
   },
   contextBox: {
-    backgroundColor: '#ECFDF5',
-    borderRadius: Radius.sm,
-    padding: 10,
+    backgroundColor: 'rgba(49, 208, 192, 0.08)',
+    borderRadius: Radius.md,
+    padding: 12,
     borderLeftWidth: 3,
     borderLeftColor: SimulatorColors.greenBorder,
   },
   contextLabel: {
     fontSize: 11,
-    fontWeight: '600',
+    fontWeight: '700',
     color: SimulatorColors.greenText,
     marginBottom: 3,
     textTransform: 'uppercase',
     letterSpacing: 0.3,
   },
   contextText: {
-    fontSize: 12,
-    color: '#374151',
-    lineHeight: 18,
+    fontSize: 13,
+    color: SimulatorColors.textBody,
+    lineHeight: 19,
   },
   citation: {
     fontSize: 11,
-    color: '#6B7280',
+    color: SimulatorColors.textSecondary,
     lineHeight: 16,
     marginTop: 2,
   },
   pmid: {
     fontSize: 11,
-    color: '#9CA3AF',
+    color: SimulatorColors.textPlaceholder,
   },
 });

@@ -1,0 +1,64 @@
+src/app/sign-up.tsx
+  s_4dd6ce9d67e608::t_f0b79584037352 1-252
+src/app/settings.tsx
+  s_4dd6ce9d67e608::t_a240c9bf6d89ad 416-492
+  s_4dd6ce9d67e608::t_12e6cefd5f8c5c 22-23,34,36
+  s_4dd6ce9d67e608::t_fc27d7871158fd 56-76
+  s_4dd6ce9d67e608::t_ffdf25c40b398a 10
+  s_4dd6ce9d67e608::t_1d4691027fd8ad 110-158
+src/types/auth.ts
+  s_4dd6ce9d67e608::t_4a08215fcecdf0 1-25
+src/constants/api.ts
+  s_4dd6ce9d67e608::t_0a7196d2ce334d 7-12
+src/app/_layout.tsx
+  s_4dd6ce9d67e608::t_11c973bb88a212 3,9-10
+  s_4dd6ce9d67e608::t_2831f9d4564eac 1,7,12-13,38-52,55-60,62-65
+  s_4dd6ce9d67e608::t_499166b6429dd1 22-37
+  s_4dd6ce9d67e608::t_06c00ac08c4975 61
+src/app/sign-in.tsx
+  s_4dd6ce9d67e608::t_ad05a71a02c97b 1-261
+src/app/scenario.tsx
+  s_4dd6ce9d67e608::t_8786d70b7f535a 189,197,200,203-205,207-212
+  s_4dd6ce9d67e608::t_606242af223f8f 369-381
+  s_4dd6ce9d67e608::t_b63b3d8d55fda6 12,16-17
+  s_4dd6ce9d67e608::t_6547da19e161c8 45
+  s_4dd6ce9d67e608::t_e9c7879b03273e 102-106
+src/state/AuthContext.tsx
+  s_4dd6ce9d67e608::t_f789a4d20a3297 1-126
+src/app/index.tsx
+  s_4dd6ce9d67e608::t_6898e70ec5708e 10-11,15
+  s_4dd6ce9d67e608::t_c5171d088772c1 230-271,274-284,286
+  s_4dd6ce9d67e608::t_9883f6e048797c 7
+  s_4dd6ce9d67e608::t_c02b2d1f1206f4 23-30,34-46,66-76,109-120
+docs/supabase-schema.sql
+  s_4dd6ce9d67e608::t_1eaf30f2ac0aa1 1-100
+src/services/cloudSyncService.ts
+  s_4dd6ce9d67e608::t_66df6000e4cf55 1-67
+src/app/welcome.tsx
+  s_4dd6ce9d67e608::t_1fdac0f4dfbac0 1-22,24-211
+  s_4dd6ce9d67e608::t_e3df281fabf2e1 23
+src/services/subscriptionService.ts
+  s_4dd6ce9d67e608::t_06d5bb5a9679fb 1-125
+src/services/authService.ts
+  s_4dd6ce9d67e608::t_972389381d499f 1-99
+src/app/paywall.tsx
+  s_4dd6ce9d67e608::t_a382d3d277915c 1-400
+src/app/team.tsx
+  s_4dd6ce9d67e608::t_2299c6438b0ef5 1-492
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "1c64ec244eebfcff9f704a81114044a3413930ba",
+  "prompts": {},
+  "sessions": {
+    "s_4dd6ce9d67e608": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55cc4203-2362-432c-9323-e9946683cd1f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+src/data/learningPaths.ts
+  s_4dd6ce9d67e608::t_1a336e4f49bd18 1-176
+src/app/index.tsx
+  s_4dd6ce9d67e608::t_af91b60085a5eb 257-260
+src/app/learning-path.tsx
+  s_4dd6ce9d67e608::t_cd624631c7d041 1-665
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "5d1fcade5826182ab854c38bb05c8a7da7cd3229",
+  "prompts": {},
+  "sessions": {
+    "s_4dd6ce9d67e608": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55cc4203-2362-432c-9323-e9946683cd1f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

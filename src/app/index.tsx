@@ -254,6 +254,13 @@ export default function IndexScreen() {
           <Pressable
             style={styles.quickNavCell}
             accessibilityRole="button"
+            onPress={() => router.push('/learning-path' as Href)}>
+            <Text style={styles.quickNavIcon}>🗺️</Text>
+            <Text style={styles.quickNavLabel}>Learning Path</Text>
+          </Pressable>
+          <Pressable
+            style={styles.quickNavCell}
+            accessibilityRole="button"
             onPress={() => router.push('/analytics' as Href)}>
             <Text style={styles.quickNavIcon}>📊</Text>
             <Text style={styles.quickNavLabel}>Analytics</Text>
@@ -264,13 +271,6 @@ export default function IndexScreen() {
             onPress={() => router.push('/reference' as Href)}>
             <Text style={styles.quickNavIcon}>📚</Text>
             <Text style={styles.quickNavLabel}>Reference</Text>
-          </Pressable>
-          <Pressable
-            style={styles.quickNavCell}
-            accessibilityRole="button"
-            onPress={() => router.push('/certificate' as Href)}>
-            <Text style={styles.quickNavIcon}>🎓</Text>
-            <Text style={styles.quickNavLabel}>Certificate</Text>
           </Pressable>
           <Pressable
             style={styles.quickNavCell}

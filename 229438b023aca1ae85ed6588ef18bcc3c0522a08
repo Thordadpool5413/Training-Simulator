@@ -1,0 +1,97 @@
+src/__tests__/scoring.test.ts
+  s_4dd6ce9d67e608::t_b8020d27d54c4f 206-271
+  s_4dd6ce9d67e608::t_a798d7504f2e04 315-350,352-354
+  s_4dd6ce9d67e608::t_01331ec5f9f8cd 78-107
+src/services/advanceDirectiveConflictFeedbackService.ts
+  s_4dd6ce9d67e608::t_a432db51f83658 1-125
+src/services/caregiverBurnoutResponseService.ts
+  s_4dd6ce9d67e608::t_210f79fb9e3a1a 1-118
+src/services/advanceDirectiveConflictPatientStateService.ts
+  s_4dd6ce9d67e608::t_ce6c0a7d7dba9b 1-165
+src/services/activeDyingScoringService.ts
+  s_4dd6ce9d67e608::t_9308452eb0d4c7 1-147
+src/services/bereavementFirstCallScoringService.ts
+  s_4dd6ce9d67e608::t_6a79a8114aae67 1-114
+src/services/terminalSecretionScoringService.ts
+  s_4dd6ce9d67e608::t_2301ad4a9914f8 1-148
+src/services/breakthroughPainPatientStateService.ts
+  s_4dd6ce9d67e608::t_39df00f4d45f27 1-164
+src/services/activeDyingResponseService.ts
+  s_4dd6ce9d67e608::t_2f4ee98feb3be6 1-127
+src/services/breakthroughPainResponseService.ts
+  s_4dd6ce9d67e608::t_0c274a03112659 1-122
+src/data/safeLanguage.ts
+  s_4dd6ce9d67e608::t_6056086075f10e 139-198
+src/services/terminalSecretionPatientStateService.ts
+  s_4dd6ce9d67e608::t_aa55be02cd7ef6 1-189
+src/services/advanceDirectiveConflictResponseService.ts
+  s_4dd6ce9d67e608::t_73197fd7e303af 1-121
+src/services/terminalSecretionResponseService.ts
+  s_4dd6ce9d67e608::t_518ad423e4ea47 1-119
+src/services/breakthroughPainScoringService.ts
+  s_4dd6ce9d67e608::t_1fde9ca777a2e0 1-148
+src/services/caregiverBurnoutFeedbackService.ts
+  s_4dd6ce9d67e608::t_c204d71e802b50 1-127
+src/services/dashboardService.ts
+  s_4dd6ce9d67e608::t_831f500e8010a4 39-42,48-50
+  s_4dd6ce9d67e608::t_f6fc93ca9b0cdd 149-217
+src/services/patientStateDispatcher.ts
+  s_4dd6ce9d67e608::t_94114f637b873d 2,4-7,14
+  s_4dd6ce9d67e608::t_296a93ce3cb8c2 40-57
+src/services/bereavementFirstCallPatientStateService.ts
+  s_4dd6ce9d67e608::t_f732226b1fb5c8 1-164
+src/services/terminalSecretionFeedbackService.ts
+  s_4dd6ce9d67e608::t_f66d247bd08ccf 1-134
+src/services/caregiverBurnoutScoringService.ts
+  s_4dd6ce9d67e608::t_e373510d67fa6c 1-115
+src/services/breakthroughPainFeedbackService.ts
+  s_4dd6ce9d67e608::t_fc0e7a779de47a 1-129
+src/services/scenarioResponseService.ts
+  s_4dd6ce9d67e608::t_7bf5b4f5a0ab3e 51-68
+  s_4dd6ce9d67e608::t_c2206c36be48c8 2,4-7,17
+src/services/scoringService.ts
+  s_4dd6ce9d67e608::t_eda5a151fad11a 1,3-6,12
+  s_4dd6ce9d67e608::t_492940d76e08e6 444-461
+src/services/caregiverBurnoutPatientStateService.ts
+  s_4dd6ce9d67e608::t_bada2280191a5b 1-161
+src/services/activeDyingPatientStateService.ts
+  s_4dd6ce9d67e608::t_244a85806d672f 1-193
+src/__tests__/scenarioResponse.test.ts
+  s_4dd6ce9d67e608::t_189e1f7aac4a2d 66-101
+src/services/bereavementFirstCallFeedbackService.ts
+  s_4dd6ce9d67e608::t_7dce2002c13dcb 1-127
+src/__tests__/feedback.test.ts
+  s_4dd6ce9d67e608::t_e646eb14996b8b 168-293
+src/data/patientStateDefaults.ts
+  s_4dd6ce9d67e608::t_07e6e4f7d1c659 164-259
+src/services/feedbackService.ts
+  s_4dd6ce9d67e608::t_d733adb685ed59 81-98
+  s_4dd6ce9d67e608::t_6dcd67b7630647 2,4-7,14
+src/services/advanceDirectiveConflictScoringService.ts
+  s_4dd6ce9d67e608::t_5c53c56f2c9736 1-114
+src/services/bereavementFirstCallResponseService.ts
+  s_4dd6ce9d67e608::t_9010fdef53236d 1-119
+src/data/scenarioTemplates.ts
+  s_4dd6ce9d67e608::t_9ac55fb10e824a 358-593
+src/__tests__/dashboard.test.ts
+  s_4dd6ce9d67e608::t_c3c771f40be3a5 315-539
+  s_4dd6ce9d67e608::t_9296dd97862022 14-16
+src/services/activeDyingFeedbackService.ts
+  s_4dd6ce9d67e608::t_50d68bdb42c4e8 1-140
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "229438b023aca1ae85ed6588ef18bcc3c0522a08",
+  "prompts": {},
+  "sessions": {
+    "s_4dd6ce9d67e608": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55cc4203-2362-432c-9323-e9946683cd1f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

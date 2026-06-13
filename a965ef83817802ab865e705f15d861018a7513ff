@@ -1,0 +1,34 @@
+src/__tests__/scenarioResponse.test.ts
+  s_0a4e9cd2da829d::t_b985675d11063e 1-30
+src/__tests__/feedback.test.ts
+  s_0a4e9cd2da829d::t_c912bd047c9d2c 1-50
+package.json
+  s_0a4e9cd2da829d::t_108d038bf1ad38 41-42
+  s_0a4e9cd2da829d::t_a3e721a5efd81a 29,31-32
+src/__tests__/scoring.test.ts
+  s_0a4e9cd2da829d::t_f0fb529d1b730d 1-78
+jest.config.js
+  s_0a4e9cd2da829d::t_054eae3194e873 1-18
+src/__tests__/medicationSafety.test.ts
+  s_0a4e9cd2da829d::t_c047a098763cec 1-48
+src/__tests__/patientState.test.ts
+  s_0a4e9cd2da829d::t_7ebf4dfcd0d1af 1-36
+src/__tests__/dashboard.test.ts
+  s_0a4e9cd2da829d::t_9affe705e6c4c1 1-74
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "a965ef83817802ab865e705f15d861018a7513ff",
+  "prompts": {},
+  "sessions": {
+    "s_0a4e9cd2da829d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8dd5e7a9-6c4d-495c-bd4c-4e97502bca9f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+src/services/feedbackService.ts
+  s_0a4e9cd2da829d::t_c8598274015ffb 10-32
+  s_0a4e9cd2da829d::t_1d075dac77f6d0 213-214
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "f406e30481a99b3ed1a47ede666a9e57448cbf88",
+  "prompts": {},
+  "sessions": {
+    "s_0a4e9cd2da829d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8dd5e7a9-6c4d-495c-bd4c-4e97502bca9f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

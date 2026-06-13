@@ -1,0 +1,22 @@
+src/app/simulation.tsx
+  s_4dd6ce9d67e608::t_35e50e3c9d17b4 226
+  s_4dd6ce9d67e608::t_542effd7a574b0 212
+  s_4dd6ce9d67e608::t_d149ee660ff6d9 352
+  s_4dd6ce9d67e608::t_f4699276d196ad 357
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "ca0b886126d8951d14fe97b4d0e06cdc0d25185e",
+  "prompts": {},
+  "sessions": {
+    "s_4dd6ce9d67e608": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55cc4203-2362-432c-9323-e9946683cd1f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

@@ -1,0 +1,62 @@
+src/app/simulation.tsx
+  s_4dd6ce9d67e608::t_56706258ccc951 19-20,74
+  s_4dd6ce9d67e608::t_14099e79eec5e4 58-59,62-73
+  s_4dd6ce9d67e608::t_77e85cf6499f47 258-278,281-289
+  s_4dd6ce9d67e608::t_44a28b992bf6ed 476-525
+src/state/SimulatorContext.tsx
+  s_4dd6ce9d67e608::t_a244c7ff2e00c6 1,11-18,44,52,61,65-98,137-140,142,145-156
+src/app/role-overview.tsx
+  s_4dd6ce9d67e608::t_db903316742007 1-216
+src/app/role.tsx
+  s_4dd6ce9d67e608::t_b88717c59d581c 21
+src/data/scenarioHints.ts
+  s_4dd6ce9d67e608::t_fd3eb56da75591 1-82
+package.json
+  s_4dd6ce9d67e608::t_27fc06f41ec46a 6
+src/services/persistenceService.ts
+  s_4dd6ce9d67e608::t_2f0a1150dcf980 1-56
+src/app/dashboard.tsx
+  s_4dd6ce9d67e608::t_51a24ec93b1b94 132-144,146,149-151
+  s_4dd6ce9d67e608::t_ed9d70723b9d61 253,257-266,270
+  s_4dd6ce9d67e608::t_784a748a977383 166-169,177-184
+  s_4dd6ce9d67e608::t_d1710285cce025 23,430
+  s_4dd6ce9d67e608::t_713cf08e6b6601 410-413,420-429
+src/app/feedback.tsx
+  s_4dd6ce9d67e608::t_93af8cd8ce8d7d 62-82
+  s_4dd6ce9d67e608::t_1d126651b5a3aa 353-365
+  s_4dd6ce9d67e608::t_2d9f96a66b36d0 213-217
+  s_4dd6ce9d67e608::t_a602da6dae9416 4
+src/app/reference.tsx
+  s_4dd6ce9d67e608::t_e0c6e2d61d0cf2 66
+  s_4dd6ce9d67e608::t_bd9998d6d3775e 14
+  s_4dd6ce9d67e608::t_80c3bb68665ded 17,23
+  s_4dd6ce9d67e608::t_e2b349ca61c295 184-286
+src/types/simulator.ts
+  s_4dd6ce9d67e608::t_f935652fcb2bf0 64
+  s_4dd6ce9d67e608::t_e38e963576873d 182
+  s_4dd6ce9d67e608::t_f1f24003ae435a 208
+  s_4dd6ce9d67e608::t_a7d70d66214815 211-212,217
+src/services/dashboardService.ts
+  s_4dd6ce9d67e608::t_5221022514be96 312
+  s_4dd6ce9d67e608::t_2fc3a2047a40f0 53
+  s_4dd6ce9d67e608::t_3bbe5574394a19 345
+  s_4dd6ce9d67e608::t_ff1163a7923bef 259-263
+src/app/scenario.tsx
+  s_4dd6ce9d67e608::t_f16f3fb5f51fec 3,12-27,30-31,49-52,54,90-109,113-115,122,127-143,161-168,198-216,218-227,230-231,246-256,261-288
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "9150b36999363a289113fffe9fd65286f69cbee2",
+  "prompts": {},
+  "sessions": {
+    "s_4dd6ce9d67e608": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55cc4203-2362-432c-9323-e9946683cd1f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

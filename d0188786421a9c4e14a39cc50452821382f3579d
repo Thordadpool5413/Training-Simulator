@@ -1,0 +1,29 @@
+docs/mvp_status.md
+  s_4dd6ce9d67e608::t_e2d5c3d9c37dc3 226-228
+  s_4dd6ce9d67e608::t_2f5234275061f8 80-91
+  s_4dd6ce9d67e608::t_7e3aac62b86b3f 154-155
+  s_4dd6ce9d67e608::t_caa92afd62b420 3,185
+  s_4dd6ce9d67e608::t_017c88074b7b6b 250
+  s_4dd6ce9d67e608::t_4e265b042b3874 268
+  s_4dd6ce9d67e608::t_d9a67337e60921 106,115
+  s_4dd6ce9d67e608::t_e692b4af494d5a 11-12,15
+  s_4dd6ce9d67e608::t_af76489f5f5e9f 171,173,177,179,181,184
+docs/manual_test_run_log.md
+  s_4dd6ce9d67e608::t_c0764e21dd2b6b 758-872
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "d0188786421a9c4e14a39cc50452821382f3579d",
+  "prompts": {},
+  "sessions": {
+    "s_4dd6ce9d67e608": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55cc4203-2362-432c-9323-e9946683cd1f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

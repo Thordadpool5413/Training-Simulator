@@ -1,0 +1,52 @@
+src/app/simulation.tsx
+  s_4dd6ce9d67e608::t_76b295175de1a8 543-555
+  s_4dd6ce9d67e608::t_56d394e810d359 5
+  s_4dd6ce9d67e608::t_db82c77b6792f5 280,283,291-297,304,306,308
+  s_4dd6ce9d67e608::t_01bd9f42474b7c 61-63,66,68-69,75-90,92
+  s_4dd6ce9d67e608::t_7c006690cd0016 23
+src/app/index.tsx
+  s_4dd6ce9d67e608::t_96ff2261b642b6 10
+  s_4dd6ce9d67e608::t_27d6527a4c4695 61-78
+  s_4dd6ce9d67e608::t_6d71db47670007 176-198
+src/services/persistenceService.ts
+  s_4dd6ce9d67e608::t_c3a86ff44883f0 2
+  s_4dd6ce9d67e608::t_97aa95b46d7be6 10
+  s_4dd6ce9d67e608::t_3afe90b550487c 74-98
+src/types/simulator.ts
+  s_4dd6ce9d67e608::t_f4a5e38c01e54b 213-218
+src/services/aiCoachService.ts
+  s_4dd6ce9d67e608::t_abe15c9b6e3f58 1-38
+src/state/SimulatorContext.tsx
+  s_4dd6ce9d67e608::t_3b6fec3533a5a0 27-32
+  s_4dd6ce9d67e608::t_1c0f2c557a0765 219-229
+  s_4dd6ce9d67e608::t_a3cc22f41b0399 167-172
+  s_4dd6ce9d67e608::t_d3ffe0c7752eff 3
+  s_4dd6ce9d67e608::t_eaf67272f9268f 118
+  s_4dd6ce9d67e608::t_0efaa07c237dd5 277
+  s_4dd6ce9d67e608::t_06da88042e9b69 14-15,20
+  s_4dd6ce9d67e608::t_324f8edaee8f54 83,88-89
+  s_4dd6ce9d67e608::t_62e7e70fc1f14c 126,131,137
+  s_4dd6ce9d67e608::t_12e9b226d93d62 282-283
+src/app/profile-setup.tsx
+  s_4dd6ce9d67e608::t_2d3a8983e987bc 1-389
+src/services/notificationService.ts
+  s_4dd6ce9d67e608::t_58bee5ec64a5f8 27,32,39-56,66-67
+src/app/settings.tsx
+  s_4dd6ce9d67e608::t_094afad7f9b2c5 1-341
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "067ee95440e1cb8a81c460f9058d3a415c0e4b42",
+  "prompts": {},
+  "sessions": {
+    "s_4dd6ce9d67e608": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55cc4203-2362-432c-9323-e9946683cd1f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

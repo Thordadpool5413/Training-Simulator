@@ -1,0 +1,35 @@
+src/services/patientStateService.ts
+  s_0a4e9cd2da829d::t_53f008f2aac246 227-246
+  s_0a4e9cd2da829d::t_3f107ee2bb7e9f 113-126
+  s_0a4e9cd2da829d::t_f8f7688c9e4143 260
+src/data/patientStateDefaults.ts
+  s_0a4e9cd2da829d::t_09b1f16f7a9483 52-67
+src/services/scenarioResponseService.ts
+  s_0a4e9cd2da829d::t_23c09250fed6d9 4,18-19
+src/data/safeLanguage.ts
+  s_0a4e9cd2da829d::t_73522cf3195fe7 35-48
+src/data/diagnoses.ts
+  s_0a4e9cd2da829d::t_ffd4da825ae4fe 65-92
+src/data/familySystems.ts
+  s_0a4e9cd2da829d::t_494889812a599f 41-59
+src/data/scenarioTemplates.ts
+  s_0a4e9cd2da829d::t_98248c9efefa90 122-161
+src/services/husbandResponseService.ts
+  s_0a4e9cd2da829d::t_a45b9de0794573 1-153
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "acd5ac6903cb77991608403cf9fa109ca2c79957",
+  "prompts": {},
+  "sessions": {
+    "s_0a4e9cd2da829d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8dd5e7a9-6c4d-495c-bd4c-4e97502bca9f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

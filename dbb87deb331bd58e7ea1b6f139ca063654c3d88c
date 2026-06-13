@@ -1,0 +1,22 @@
+src/app/index.tsx
+  s_4dd6ce9d67e608::t_606bcc8d42a345 622
+  s_4dd6ce9d67e608::t_2d44b3895fc209 278-281
+src/app/certificate.tsx
+  s_4dd6ce9d67e608::t_86913857b9a027 5-12,16,18-271,274,276-280,282,284-288,291-296,298-304,306,308-321,323-333,346,352,354-360,362,364-377,379-382,384-393,395-466,468-517,520-521,523-524,531,534-546,548-554,556-564,566-568,570-580,582-608
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "dbb87deb331bd58e7ea1b6f139ca063654c3d88c",
+  "prompts": {},
+  "sessions": {
+    "s_4dd6ce9d67e608": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55cc4203-2362-432c-9323-e9946683cd1f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+src/app/scenario.tsx
+  s_0a4e9cd2da829d::t_513666352aa440 11,17-19,26,28,32-34,41-44,49-50,52-74,93-99,104-105,109-128,131,134-137,139,155-159,161-162,164
+src/state/SimulatorContext.tsx
+  s_0a4e9cd2da829d::t_4e7d887acd8050 13,21
+  s_0a4e9cd2da829d::t_801d3e5f75aebf 39
+  s_0a4e9cd2da829d::t_7afe6f63c82bd5 71-74,80
+  s_0a4e9cd2da829d::t_36500e95ec373e 93
+  s_0a4e9cd2da829d::t_c84f000f3918a1 101
+src/app/scenario-briefing.tsx
+  s_0a4e9cd2da829d::t_69362c4e170bf2 1-193
+src/app/simulation.tsx
+  s_0a4e9cd2da829d::t_00de1c129aebc8 93-107,113,115-116
+  s_0a4e9cd2da829d::t_b8630c97d9acb1 36,46-47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "e4a5258b077ee8a88c4c60e1bcda9a959703b201",
+  "prompts": {},
+  "sessions": {
+    "s_0a4e9cd2da829d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8dd5e7a9-6c4d-495c-bd4c-4e97502bca9f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

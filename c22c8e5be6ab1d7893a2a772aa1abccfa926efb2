@@ -1,0 +1,19 @@
+src/app/scenario.tsx
+  s_4dd6ce9d67e608::t_6e56fdc7b3f01a 8,48-51,55-64,69-75,83-86,103-108,113-123,139-142
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "c22c8e5be6ab1d7893a2a772aa1abccfa926efb2",
+  "prompts": {},
+  "sessions": {
+    "s_4dd6ce9d67e608": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55cc4203-2362-432c-9323-e9946683cd1f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

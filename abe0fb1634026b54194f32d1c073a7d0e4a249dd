@@ -1,0 +1,258 @@
+src/app/role.tsx
+  s_0a4e9cd2da829d::t_0b74e7bf08f37a 95-100
+  s_1b9d182dfc0786::t_1dab09f60f07f7 5,14,23,50-53,55,61-62,64,67,69-70,105-106
+  s_0a4e9cd2da829d::t_69cf902789f459 26
+  s_0a4e9cd2da829d::t_8ad6682b145514 36-38
+  s_0a4e9cd2da829d::t_5a1a2ca56adc4d 9-13
+  s_1b9d182dfc0786::t_a14974e5c37542 1-4,6-8,16-17,19-22,24-25,27-35,39-49,54,56-60,63,65-66,68,71-94,101-104
+  s_1b9d182dfc0786::t_b74d5cef123294 15,18
+src/components/animated-icon.tsx
+  s_0a4e9cd2da829d::t_06e343017cd80a 39
+  s_0a4e9cd2da829d::t_a5002418f5ad28 4-5
+  s_0a4e9cd2da829d::t_722147f94bdd65 128
+  s_0a4e9cd2da829d::t_c41d52f75545d6 122
+src/data/scenarioTemplates.ts
+  s_0a4e9cd2da829d::t_7891fa06268429 24
+  s_1b9d182dfc0786::t_e1f3b70eca4fb9 1-23,25-41,81
+  s_0a4e9cd2da829d::t_91b304454d7056 42-80
+src/services/patientStateService.ts
+  s_0a4e9cd2da829d::t_4d9f2d1cdf448b 84
+  s_1b9d182dfc0786::t_1f1a1e63e3c157 1-83,85-202
+src/app/_layout.tsx
+  s_1b9d182dfc0786::t_4bc96ea02d0511 6,11-13,15-16
+  s_0a4e9cd2da829d::t_9fb5dbeb3ba949 1,8,14
+  s_0a4e9cd2da829d::t_4e6b503b29890b 2
+src/components/ui/collapsible.tsx
+  s_0a4e9cd2da829d::t_e62efe10a465c5 22
+package.json
+  s_0a4e9cd2da829d::t_9fcac080e1373e 6
+  s_0a4e9cd2da829d::t_36b6e31d72a32d 7-24,29-30
+  s_0a4e9cd2da829d::t_5348f7f10e1578 25-26
+src/components/app-tabs.tsx
+  s_0a4e9cd2da829d::t_f9650b13a10e44 16-22
+  s_0a4e9cd2da829d::t_9f8d2983bfa2c0 1
+  s_0a4e9cd2da829d::t_2706350cf26212 8
+docs/manual_test_run_log.md
+  s_0a4e9cd2da829d::t_dd144892d1d5a4 223-228,230-231
+  s_0a4e9cd2da829d::t_c364275961b321 53
+  s_0a4e9cd2da829d::t_97e0518050c187 240
+  s_0a4e9cd2da829d::t_432ac4b63aedd0 56
+  s_0a4e9cd2da829d::t_ae637b838924a7 244
+  s_0a4e9cd2da829d::t_5c9dacff121497 49
+  s_0a4e9cd2da829d::t_b1e969336b3971 57
+  s_0a4e9cd2da829d::t_2926253d698dc1 232
+  s_0a4e9cd2da829d::t_ef51fcc6ad4ee2 61
+  s_0a4e9cd2da829d::t_f28565da2f07ba 11-20
+  s_0a4e9cd2da829d::t_745e88f53130fa 52
+  s_0a4e9cd2da829d::t_5144d018be8e3b 185
+  s_0a4e9cd2da829d::t_648d291633ce05 212-222,229,233-239,255-374,378-393,399
+  s_0a4e9cd2da829d::t_4ac77180eb7121 242
+  s_0a4e9cd2da829d::t_29b06c5d1a552a 243
+  s_0a4e9cd2da829d::t_924cb1b0daf1c5 248
+  s_0a4e9cd2da829d::t_66b602c83c7ae6 252
+  s_0a4e9cd2da829d::t_44cad27c76c686 205,207-208,211
+  s_0a4e9cd2da829d::t_adb4d5d39f6d24 245
+  s_0a4e9cd2da829d::t_41d9e839153781 375
+  s_0a4e9cd2da829d::t_07b6c49dee40a6 376
+  s_0a4e9cd2da829d::t_d09f4222a6c0d5 184
+  s_0a4e9cd2da829d::t_4072210f86dba7 50
+  s_0a4e9cd2da829d::t_9afa851b95ccc0 54
+  s_0a4e9cd2da829d::t_d9e698d51b697f 47
+  s_0a4e9cd2da829d::t_08fe76647f79d0 246
+  s_0a4e9cd2da829d::t_9d0f21a2b877e6 247
+  s_0a4e9cd2da829d::t_bef033009279a2 30-31
+  s_0a4e9cd2da829d::t_e5c0b24e19b787 60
+  s_0a4e9cd2da829d::t_43d6e3ffe6070c 249
+  s_0a4e9cd2da829d::t_c0b9a9ec700afb 250
+  s_0a4e9cd2da829d::t_bc18688cf202d5 251
+  s_0a4e9cd2da829d::t_5521923eba5f0f 253
+  s_0a4e9cd2da829d::t_1a745486b041ea 206,209
+  s_0a4e9cd2da829d::t_e4df56abcfcbd8 254
+  s_0a4e9cd2da829d::t_098e2218ed2b9f 377
+  s_0a4e9cd2da829d::t_15e39402a410e8 394,398,400
+  s_0a4e9cd2da829d::t_086bda9756fb07 395-397
+  s_0a4e9cd2da829d::t_8806c88c94d8bd 48
+  s_0a4e9cd2da829d::t_7a7660f7decaed 45
+  s_0a4e9cd2da829d::t_094758dcbdcb0f 241
+  s_0a4e9cd2da829d::t_44d1ee46a8d0e8 59
+  s_0a4e9cd2da829d::t_b4faf8254f0364 1
+  s_1b9d182dfc0786::t_93d9ef1e8445d1 2-10,21-29,32-43,63-180,183,186-193,196-204,210
+  s_0a4e9cd2da829d::t_e8983dd7dc7857 62
+  s_0a4e9cd2da829d::t_1fad702f5686e9 194-195
+  s_0a4e9cd2da829d::t_dc9bd8e391da18 55
+  s_0a4e9cd2da829d::t_9b02cee925e5c2 46
+  s_0a4e9cd2da829d::t_86f2236ae6c8e1 58
+  s_0a4e9cd2da829d::t_7274c9d1bdf19c 181-182
+  s_0a4e9cd2da829d::t_7fa27f0a9f255b 51
+  s_0a4e9cd2da829d::t_e90002ee12d7dd 44
+src/components/app-tabs.web.tsx
+  s_0a4e9cd2da829d::t_c6a08c7b2f05a4 52
+  s_0a4e9cd2da829d::t_fee750c637cd81 68
+src/services/copdResponseService.ts
+  s_0a4e9cd2da829d::t_f9102b8dcb5b2e 1-145
+src/services/daughterResponseService.ts
+  s_1b9d182dfc0786::t_af9702393df866 51-63
+  s_1b9d182dfc0786::t_503e466c521d39 100-110
+  s_1b9d182dfc0786::t_b43f74d95a4421 1-50,64-99,111-137
+src/data/familySystems.ts
+  s_1b9d182dfc0786::t_9cf74ac16d069e 1-19,39
+  s_0a4e9cd2da829d::t_ea1c16f7ed81db 20-38
+src/services/dashboardService.ts
+  s_0a4e9cd2da829d::t_95aac0963a9dd5 37-62,64-72,75,77-108
+  s_1b9d182dfc0786::t_74721ec317b11e 1-36,63,73-74,76,109-158
+src/services/patientStateDispatcher.ts
+  s_0a4e9cd2da829d::t_0bc620b853eb9a 1-15
+src/services/feedbackService.ts
+  s_1b9d182dfc0786::t_2a79a238a96225 1,3-29,34-230
+  s_0a4e9cd2da829d::t_fbdb17acd0d858 2
+  s_0a4e9cd2da829d::t_ce7766efd8ef3c 30-33
+src/services/scenarioResponseService.ts
+  s_0a4e9cd2da829d::t_0c9c8b9b1c0d12 1-14
+docs/mvp_status.md
+  s_0a4e9cd2da829d::t_bd9477df843072 1-188
+src/app/index.tsx
+  s_1b9d182dfc0786::t_b11a21e123a37a 2
+  s_1b9d182dfc0786::t_7d147be08942e9 14
+  s_0a4e9cd2da829d::t_63d20a8614b616 8-10,27-35,38,41,48-49
+  s_1b9d182dfc0786::t_99bd49868a2b98 1,3-7,11-13,15-26,37,39,42-47,51-54
+docs/manual_test_script.md
+  s_0a4e9cd2da829d::t_bfe40af84bc9cd 11-12
+  s_0a4e9cd2da829d::t_507458b20632f5 26-27
+  s_0a4e9cd2da829d::t_ecfc4101bc59eb 1
+  s_1b9d182dfc0786::t_719e9ccab352f3 2-10,13-25,28-266,268-270
+  s_0a4e9cd2da829d::t_89e876901be5ac 271-483
+  s_0a4e9cd2da829d::t_48745f09f0ad20 267
+src/app/feedback.tsx
+  s_1b9d182dfc0786::t_0ba50295aaadc5 9,11
+  s_1b9d182dfc0786::t_aafb6d22ddaab2 246-258
+  s_0a4e9cd2da829d::t_4d8b4869fde6ee 314,316
+  s_1b9d182dfc0786::t_ad7617d94f6d39 1-6,8,10,12,14-30,41-108,129-135,141-150,152-154,185-245,259-264,269-275,277-287,289,292-294
+  s_1b9d182dfc0786::t_599363aadd96e4 136-140
+  s_1b9d182dfc0786::t_b334c6d63c2b8d 297-313,315,317-388
+  s_1b9d182dfc0786::t_caadc4727fdbf0 7,13,151,155-158,184,265-268,276,288,290-291,295-296
+  s_1b9d182dfc0786::t_14aa49b7d3950e 31-40
+  s_1b9d182dfc0786::t_eacfa329062815 159-183
+  s_1b9d182dfc0786::t_d6996d9d6f2182 109-128
+src/data/feedbackRubrics.ts
+  s_1b9d182dfc0786::t_00b69a787e736e 1-16,30
+  s_0a4e9cd2da829d::t_b99897741e2b9f 17-29
+src/app/simulation.tsx
+  s_1b9d182dfc0786::t_5e4b737ff05dab 19
+  s_0a4e9cd2da829d::t_0ff98b25e2add8 108-110,122,134,151,155,160,170
+  s_1b9d182dfc0786::t_4f7126938a14fb 15,33,257,271-275,284-287,319,322,400,403,442,468-469
+  s_1b9d182dfc0786::t_5312f752223643 30-32,34-36,38-40,43,58-68,74-75,115,126,129-133,135-139,142-143,172,178,217
+  s_0a4e9cd2da829d::t_d52b5c45ec12fd 335,341
+  s_1b9d182dfc0786::t_2f03d094ccf9c8 16,23-28,37,41-42,69-73,147-150,152-154,156-159,161-168
+  s_0a4e9cd2da829d::t_713e9223afd563 20-21
+  s_1b9d182dfc0786::t_a910f29623c420 408-431
+  s_1b9d182dfc0786::t_367b940604a40f 113,171,173-177
+  s_1b9d182dfc0786::t_86746992fa6188 1-14,17-18,22,29,44-57,76-107,111-112,114,116-120,179-216,218-246,256,258-270,276-283,288-318,320-321,323-334,336-340,342-343,345-347,349-352,354-359,361-399,401-402,404-407,432-441,443-450,452-467
+  s_1b9d182dfc0786::t_4061f78261d564 121,123-125,127-128,140-141,144-146,169
+  s_1b9d182dfc0786::t_147badfca6726b 247-255
+  s_0a4e9cd2da829d::t_5bc477958cce85 344,348,353,360
+  s_0a4e9cd2da829d::t_a4ab6a01a75c7d 451
+app.json
+  s_0a4e9cd2da829d::t_1cf8a5dd93fa4e 45
+CLAUDE.md
+  s_1b9d182dfc0786::t_2c6d0c17b06ee7 2-29
+src/data/patientStateDefaults.ts
+  s_1b9d182dfc0786::t_bad239db0b6afe 1-19,36
+  s_0a4e9cd2da829d::t_fb9d4b8e3f153d 20-35
+src/data/diagnoses.ts
+  s_1b9d182dfc0786::t_87af85a0a53b76 1-32,64
+  s_0a4e9cd2da829d::t_bc6a1b9c406bb7 33-63
+src/services/medicationSafetyService.ts
+  s_0a4e9cd2da829d::t_57c493c893d06d 39-108,127,129,133-152,154,165,175
+  s_1b9d182dfc0786::t_dfec22eff07741 1-38,109-126,128,130-132,153,155-164,166-174,176-188
+src/services/scoringService.ts
+  s_0a4e9cd2da829d::t_e1c679562eaf4c 415-418
+  s_1b9d182dfc0786::t_7551dcfd8295ae 2-10,12-23,77-81,83-135,137-189,191-253,255-309,311-359,361-414,419-433,435-460
+  s_1b9d182dfc0786::t_bfc0f942a3db91 82
+  s_1b9d182dfc0786::t_2159eaf1557f9a 11
+  s_1b9d182dfc0786::t_2ac842fe31b090 254
+  s_1b9d182dfc0786::t_4af169be6b194f 360
+  s_0a4e9cd2da829d::t_35b27491b0fb79 1
+  s_1b9d182dfc0786::t_c4bb68ec2293e5 310
+  s_1b9d182dfc0786::t_9826087e27cf3e 24-76
+  s_1b9d182dfc0786::t_e9ec36e5a2161b 190
+  s_1b9d182dfc0786::t_7ab4de183f562f 136
+  s_1b9d182dfc0786::t_53fe59f1c0ba35 434
+src/app/scenario.tsx
+  s_1b9d182dfc0786::t_cbcfde130cfe3e 5,11,94,98-102,107,137-141,144-145,179-180
+  s_0a4e9cd2da829d::t_522baa68fc22a8 168-174
+  s_0a4e9cd2da829d::t_3e4f47140614b1 69-70
+  s_0a4e9cd2da829d::t_74a308aea9c38a 87,92,95-96
+  s_1b9d182dfc0786::t_7551dc6c8b17ca 1-4,6-10,12-68,71-86,88-91,93,97,103-106,108-136,142-143,146-167,175-178
+src/data/safeLanguage.ts
+  s_1b9d182dfc0786::t_6616cb221bc6d6 1-18,34
+  s_0a4e9cd2da829d::t_6c2e07b5de4abd 19-33
+src/hooks/use-theme.ts
+  s_0a4e9cd2da829d::t_c4c3ff8307e07d 12
+src/services/rnFeedbackService.ts
+  s_0a4e9cd2da829d::t_133a28328cb114 1-228
+src/app/profile.tsx
+  s_1b9d182dfc0786::t_f21ae24f02d200 6,39,55,189-192,194,200-201,203,206,208-209,276-277
+  s_1b9d182dfc0786::t_cf78fe678255a5 1-5,7-38,40-54,56-188,193,195-199,202,204-205,207,210-217,219-275
+  s_0a4e9cd2da829d::t_9c5ec2677cf454 218
+src/services/copdPatientStateService.ts
+  s_0a4e9cd2da829d::t_38139c3eb65081 65
+  s_0a4e9cd2da829d::t_76630486202d8b 1-64,66-231
+src/services/rnScoringService.ts
+  s_0a4e9cd2da829d::t_78e5cc787485ba 1-534
+src/state/SimulatorContext.tsx
+  s_1b9d182dfc0786::t_4ac6ab4865b3dd 1,9-12,18-19,30-36,80-81,99-108
+  s_1b9d182dfc0786::t_844189a7d55d2a 2-8,16-17,20-24,27-28,40-47,52-53,62-69,76-77,88-89,95-96
+  s_1b9d182dfc0786::t_032fe25d2bab3c 13-15,25-26,29,37-39,48-51,54-61,70-75,78-79,82-87,90-94,97-98
+src/data/environments.ts
+  s_1b9d182dfc0786::t_17cf4618183561 1-20,38
+  s_0a4e9cd2da829d::t_e8df91130921e5 21-37
+src/types/simulator.ts
+  s_1b9d182dfc0786::t_c16a2165a24920 103-111
+  s_1b9d182dfc0786::t_82b949a50fa26b 155-171
+  s_1b9d182dfc0786::t_712ac61b7a9f75 1-82,97-102,199-218
+  s_1b9d182dfc0786::t_b86d18277d254b 185-190
+  s_1b9d182dfc0786::t_e3ba8b738171f7 140-154
+  s_1b9d182dfc0786::t_363deab2a98934 112-122
+  s_1b9d182dfc0786::t_d18d2a8ff76034 123-139
+  s_1b9d182dfc0786::t_ab2de091520c01 191-198
+  s_1b9d182dfc0786::t_d2205a3a91ebaa 172-184
+  s_1b9d182dfc0786::t_e34a31b7ddf811 83-96
+src/data/safetyRules.ts
+  s_1b9d182dfc0786::t_d19f1c1a7270e2 1-25,56
+  s_0a4e9cd2da829d::t_5cc7178cd2e02a 26-55
+src/app/dashboard.tsx
+  s_1b9d182dfc0786::t_d09632a7800293 1-6,8-11,13-64,67-69,80-82,84-108,119-141,143,145-157,170-185,190-207,210,212-215,217-225,230-231,233-234,238-243
+  s_1b9d182dfc0786::t_5ee3066561f1cd 7,12,110,114-118,186-189,208-209,211,216,232,248-249
+  s_0a4e9cd2da829d::t_123ea57885b744 65-66,70-79,83,109,111-113,142,144,158-169,226-229,235-237,244-247
+src/data/index.ts
+  s_1b9d182dfc0786::t_8d0a913aebc8ca 1-9
+src/app/explore.tsx
+  s_0a4e9cd2da829d::t_10a858fa3b1b62 53
+src/data/roles.ts
+  s_1b9d182dfc0786::t_6e951665b4ff89 1-36,74
+  s_0a4e9cd2da829d::t_a9615a15394f5e 37-73
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.3",
+  "base_commit_sha": "abe0fb1634026b54194f32d1c073a7d0e4a249dd",
+  "prompts": {},
+  "sessions": {
+    "s_0a4e9cd2da829d": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "8dd5e7a9-6c4d-495c-bd4c-4e97502bca9f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    },
+    "s_1b9d182dfc0786": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "916c6310-883d-4904-b043-f3bb46641321",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

@@ -1,0 +1,37 @@
+src/app/simulation.tsx
+  s_4dd6ce9d67e608::t_a70ce67877c4cc 350-363
+  s_4dd6ce9d67e608::t_7e06b394d31529 367-379
+  s_4dd6ce9d67e608::t_ea73a6b22b10fe 658-666,687-695,708
+  s_4dd6ce9d67e608::t_992bab72ce7caf 481
+  s_4dd6ce9d67e608::t_beb99e6c777d80 82-86
+src/app/scenario.tsx
+  s_4dd6ce9d67e608::t_a89d6a9ddf06e5 129-139,154-161
+  s_4dd6ce9d67e608::t_8ce0d6c109c54a 62,65-78
+  s_4dd6ce9d67e608::t_feacff5e72b115 281-291,295,298-304
+  s_4dd6ce9d67e608::t_9fa3f6b5faaa30 4,11,13
+  s_4dd6ce9d67e608::t_5c951de9743cfa 16,25-30
+  s_4dd6ce9d67e608::t_20ed9bf6385222 42-43
+  s_4dd6ce9d67e608::t_f9839f11ccf448 170
+src/data/scenarioTopics.ts
+  s_4dd6ce9d67e608::t_3cc59f98fc7baf 1-58
+src/types/simulator.ts
+  s_4dd6ce9d67e608::t_c03f45ac25870c 213
+src/services/voiceService.ts
+  s_4dd6ce9d67e608::t_737fa1bdba2d78 69-75
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "d3932af33f2ce50f2448533714fbb299f7d67d5e",
+  "prompts": {},
+  "sessions": {
+    "s_4dd6ce9d67e608": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55cc4203-2362-432c-9323-e9946683cd1f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

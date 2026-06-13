@@ -1,0 +1,48 @@
+src/data/knowledgeQuizBank.ts
+  s_4dd6ce9d67e608::t_c2ffd63b69e8a8 1-804
+src/types/clinicalKnowledge.ts
+  s_4dd6ce9d67e608::t_a281436a6a1562 1-11,13-55
+  s_4dd6ce9d67e608::t_be6ce8301bb724 12
+src/data/hospiceMedications.ts
+  s_4dd6ce9d67e608::t_3b5fe8e22b3199 1-199
+src/types/quiz.ts
+  s_4dd6ce9d67e608::t_372988625a6cd8 1-26
+src/app/clinical-debrief.tsx
+  s_4dd6ce9d67e608::t_a7edb551ef2c3d 1-273
+src/__tests__/knowledgeQuiz.test.ts
+  s_4dd6ce9d67e608::t_0bd44af25d8be3 1-176
+src/app/feedback.tsx
+  s_4dd6ce9d67e608::t_87709d497b7c07 146-151
+src/services/knowledgeQuizService.ts
+  s_4dd6ce9d67e608::t_d9c196e3dfebec 1-28
+src/data/lcdCriteria.ts
+  s_4dd6ce9d67e608::t_fff7c514fbea58 1-153
+src/components/LCDCriteriaCard.tsx
+  s_4dd6ce9d67e608::t_b6a954991ae622 1-99
+src/components/EvidenceCard.tsx
+  s_4dd6ce9d67e608::t_987361b38eb711 1-111
+src/components/KnowledgeQuizCard.tsx
+  s_4dd6ce9d67e608::t_2a621708ec82c8 1-248
+src/data/evidenceStatements.ts
+  s_4dd6ce9d67e608::t_ab9889a6f98d3b 1-209
+src/data/clinicalDiagnoses.ts
+  s_4dd6ce9d67e608::t_03d6cff47ea5ba 1-243
+src/components/DiagnosisChip.tsx
+  s_4dd6ce9d67e608::t_9b1afbab7e2c41 1-62
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "3909a9c1de6cdaabd7b479a591d8bb8123eec9f3",
+  "prompts": {},
+  "sessions": {
+    "s_4dd6ce9d67e608": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55cc4203-2362-432c-9323-e9946683cd1f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

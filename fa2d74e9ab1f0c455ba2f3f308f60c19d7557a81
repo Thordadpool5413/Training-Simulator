@@ -1,0 +1,50 @@
+src/data/scenarioTemplates.ts
+  s_4dd6ce9d67e608::t_d7ce16902221f8 122-160
+src/__tests__/scoring.test.ts
+  s_4dd6ce9d67e608::t_0f50f3fe6522d8 60-70
+src/services/scenarioResponseService.ts
+  s_4dd6ce9d67e608::t_1868ea807622b7 6,16-18
+src/services/scoringService.ts
+  s_4dd6ce9d67e608::t_cd26df53f954d5 415
+src/data/familySystems.ts
+  s_4dd6ce9d67e608::t_6708a1ce28927e 60-77
+src/services/feedbackService.ts
+  s_4dd6ce9d67e608::t_2173f433b8756d 52-54
+  s_4dd6ce9d67e608::t_04044d6af43f52 3
+src/__tests__/scenarioResponse.test.ts
+  s_4dd6ce9d67e608::t_da83b75841a3b6 30-35
+src/services/patientStateDispatcher.ts
+  s_4dd6ce9d67e608::t_f7877eef0aa945 11
+src/services/dashboardService.ts
+  s_4dd6ce9d67e608::t_10b62735a00bf7 36-39,41
+  s_4dd6ce9d67e608::t_d03c3728238ec7 65-67
+  s_4dd6ce9d67e608::t_62f3d3bee36031 83
+src/__tests__/dashboard.test.ts
+  s_4dd6ce9d67e608::t_e562ef4731433f 74-84
+src/__tests__/feedback.test.ts
+  s_4dd6ce9d67e608::t_773373eb6e6ce2 50-86
+src/data/patientStateDefaults.ts
+  s_4dd6ce9d67e608::t_5a532b2c27f624 68-83
+src/data/safeLanguage.ts
+  s_4dd6ce9d67e608::t_0cabeb6a56263a 64-73
+src/services/terminalDyspneaResponseService.ts
+  s_4dd6ce9d67e608::t_a7efdc1f1bb473 1-197
+src/services/terminalDyspneaFeedbackService.ts
+  s_4dd6ce9d67e608::t_324aac1b64a84e 1-236
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.6",
+  "base_commit_sha": "fa2d74e9ab1f0c455ba2f3f308f60c19d7557a81",
+  "prompts": {},
+  "sessions": {
+    "s_4dd6ce9d67e608": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "55cc4203-2362-432c-9323-e9946683cd1f",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "Thordadpool5413 <nick.lynch.coaching@outlook.com>"
+    }
+  }
+}

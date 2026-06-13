@@ -49,6 +49,8 @@ export default function PaywallScreen() {
   useEffect(() => {
     void getOfferings().then((pkgs) => {
       setPackages(pkgs);
+      // Default to last package (annual) but clamp if fewer packages returned
+      if (pkgs.length > 0) setSelectedIndex(pkgs.length - 1);
       setLoading(false);
     });
   }, []);

@@ -269,6 +269,17 @@ export default function FeedbackScreen() {
           </SectionCard>
         )}
 
+        {aiEval?.modelResponse != null && aiEval.modelResponse.trim().length > 0 && (
+          <SectionCard title="Model Response">
+            <Text style={modelStyles.intro}>
+              What an expert response to this opening might sound like:
+            </Text>
+            <View style={modelStyles.responseBox}>
+              <Text style={modelStyles.responseText}>{aiEval.modelResponse}</Text>
+            </View>
+          </SectionCard>
+        )}
+
         <SectionCard title="Next Practice Focus">
           <View style={styles.focusCallout}>
             <Text style={styles.focusText}>{report.nextPracticeFocus}</Text>
@@ -595,6 +606,30 @@ const aiStyles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: SimulatorColors.textPrimary,
+  },
+});
+
+const modelStyles = StyleSheet.create({
+  intro: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: SimulatorColors.textSecondary,
+    textTransform: 'uppercase',
+    letterSpacing: 0.4,
+    marginBottom: 10,
+  },
+  responseBox: {
+    backgroundColor: SimulatorColors.indigoBackground,
+    borderLeftWidth: 3,
+    borderLeftColor: SimulatorColors.indigoBorder,
+    borderRadius: Radius.sm,
+    padding: 16,
+  },
+  responseText: {
+    fontSize: 15,
+    color: SimulatorColors.indigoText,
+    lineHeight: 23,
+    fontStyle: 'italic',
   },
 });
 

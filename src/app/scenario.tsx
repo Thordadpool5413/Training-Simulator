@@ -73,6 +73,11 @@ export default function ScenarioScreen() {
   }
 
   const selectedRole = roles.find((r) => r.id === selectedRoleId);
+  const completedForRole = completedSessions.filter((s) => s.roleId === selectedRoleId).length;
+  const uniqueCompletedIds = new Set(
+    completedSessions.filter((s) => s.roleId === selectedRoleId).map((s) => s.scenarioId)
+  );
+  const uniqueCompleted = uniqueCompletedIds.size;
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -86,7 +91,14 @@ export default function ScenarioScreen() {
             <Text style={styles.changeRoleText}>Change Role</Text>
           </Pressable>
         </View>
-        <Text style={styles.roleLabel}>Role: {selectedRole?.name ?? selectedRoleId}</Text>
+        <View style={styles.roleMeta}>
+          <Text style={styles.roleLabel}>Role: {selectedRole?.name ?? selectedRoleId}</Text>
+          {completedForRole > 0 && (
+            <View style={styles.progressPill}>
+              <Text style={styles.progressPillText}>{uniqueCompleted} / {roleScenarios.length} completed</Text>
+            </View>
+          )}
+        </View>
 
         <View style={styles.filterRow}>
           {DIFFICULTY_FILTERS.map((f) => (
@@ -191,11 +203,29 @@ const styles = StyleSheet.create({
     color: SimulatorColors.brand,
     fontWeight: '600',
   },
+  roleMeta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
   roleLabel: {
     fontSize: 14,
     color: SimulatorColors.textSecondary,
     lineHeight: 20,
-    marginBottom: 12,
+  },
+  progressPill: {
+    backgroundColor: SimulatorColors.greenBackground,
+    borderWidth: 1,
+    borderColor: SimulatorColors.greenBorder,
+    borderRadius: Radius.lg,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+  },
+  progressPillText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: SimulatorColors.scoreGreen,
   },
   filterRow: {
     flexDirection: 'row',

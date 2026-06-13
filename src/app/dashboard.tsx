@@ -6,6 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SectionCard } from '@/components/SectionCard';
 import { Radius, SimulatorColors } from '@/constants/theme';
+import { roles } from '@/data/roles';
 import { scenarioTemplates } from '@/data/scenarioTemplates';
 import { generateDashboardSummary } from '@/services/dashboardService';
 import { useSimulator } from '@/state/SimulatorContext';
@@ -38,11 +39,13 @@ export default function DashboardScreen() {
     );
   }, [activeScenarioId, selectedRoleId, conversationMessages, safetyEvents, patientStateSnapshots]);
 
-  if (!hasSession || !summary) {
+  const hasPriorProgress = completedSessions.length > 0;
+
+  if (!hasSession && !hasPriorProgress) {
     return (
       <SafeAreaView style={styles.safe}>
         <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>No completed simulation yet.</Text>
+          <Text style={styles.emptyText}>No completed simulations yet. Complete a scenario to see your progress here.</Text>
           <Pressable style={styles.button} accessibilityRole="button" onPress={() => router.push('/role' as Href)}>
             <Text style={styles.buttonText}>Start Practice</Text>
           </Pressable>
@@ -56,101 +59,120 @@ export default function DashboardScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.screenTitle} accessibilityRole="header">Dashboard</Text>
 
-        {streakData.currentStreak > 0 && (
-          <View style={styles.streakRow}>
-            <View style={styles.streakPill}>
-              <Text style={styles.streakPillValue}>{streakData.currentStreak}</Text>
-              <Text style={styles.streakPillLabel}>day streak 🔥</Text>
-            </View>
-            <View style={styles.streakPill}>
-              <Text style={styles.streakPillValue}>
-                {`${streakData.weeklySessionCount}/${streakData.weeklyGoal}`}
-              </Text>
-              <Text style={styles.streakPillLabel}>this week</Text>
-            </View>
-          </View>
-        )}
-
-        <View style={styles.summaryCard}>
-          <Text style={styles.summaryText}>{summary.summaryMessage}</Text>
-        </View>
-
-        <SectionCard title="Session">
-          <StatRow label="Scenario" value={summary.scenarioTitle} />
-          <StatRow label="Role" value={summary.learnerRole} />
-          <StatRow label="Scenarios Completed" value={String(summary.completedScenarios)} />
-        </SectionCard>
-
-        <SectionCard title="Skill Summary">
-          <StatRow label="Average Score" value={`${summary.averageScore.toFixed(1)} / 4`} />
-          <StatRow label="Strongest Skill" value={summary.strongestSkill} stacked />
-          <StatRow label="Growth Area" value={summary.mainGrowthArea} stacked />
-        </SectionCard>
-
-        <SectionCard title="Safety">
-          <View style={statStyles.row}>
-            <Text style={statStyles.label}>Safety Corrections</Text>
-            {summary.safetyFlagsResolved > 0 ? (
-              <View style={styles.amberBadge}>
-                <Text style={styles.amberBadgeText}>{String(summary.safetyFlagsResolved)}</Text>
+        {hasSession && summary && (
+          <>
+            {streakData.currentStreak > 0 && (
+              <View style={styles.streakRow}>
+                <View style={styles.streakPill}>
+                  <Text style={styles.streakPillValue}>{streakData.currentStreak}</Text>
+                  <Text style={styles.streakPillLabel}>day streak 🔥</Text>
+                </View>
+                <View style={styles.streakPill}>
+                  <Text style={styles.streakPillValue}>
+                    {`${streakData.weeklySessionCount}/${streakData.weeklyGoal}`}
+                  </Text>
+                  <Text style={styles.streakPillLabel}>this week</Text>
+                </View>
               </View>
-            ) : (
-              <Text style={statStyles.value}>{String(summary.safetyFlagsResolved)}</Text>
             )}
-          </View>
-        </SectionCard>
 
-        <SectionCard title="Next Steps">
-          <StatRow label="Next Recommended Scenario" value={summary.nextRecommendedScenario} stacked />
-          <View style={styles.practiceBlock}>
-            <Text style={styles.practiceLabel}>Next Practice Focus</Text>
-            <Text style={styles.practiceText}>{summary.nextPracticeFocus}</Text>
-          </View>
-        </SectionCard>
-
-        {quizResult != null && (
-          <SectionCard title="Knowledge Check Score">
-            <View style={quizStyles.scoreRow}>
-              <Text style={quizStyles.scoreValue}>
-                {quizResult.score} / {quizResult.totalQuestions}
-              </Text>
-              <View style={[quizStyles.scoreBadge, quizResult.score === quizResult.totalQuestions ? quizStyles.badgePerfect : quizResult.score >= 2 ? quizStyles.badgeGood : quizStyles.badgeLow]}>
-                <Text style={quizStyles.badgeText}>
-                  {quizResult.score === quizResult.totalQuestions
-                    ? 'Excellent'
-                    : quizResult.score >= 2
-                    ? 'Good'
-                    : 'Needs Review'}
-                </Text>
-              </View>
+            <View style={styles.summaryCard}>
+              <Text style={styles.summaryText}>{summary.summaryMessage}</Text>
             </View>
-            <Text style={quizStyles.scenarioLabel}>
-              {scenarioTemplates.find((s) => s.id === quizResult.scenarioId)?.title ?? quizResult.scenarioId}
-            </Text>
-          </SectionCard>
+
+            <SectionCard title="Session">
+              <StatRow label="Scenario" value={summary.scenarioTitle} />
+              <StatRow label="Role" value={summary.learnerRole} />
+              <StatRow label="Scenarios Completed" value={String(summary.completedScenarios)} />
+            </SectionCard>
+
+            <SectionCard title="Skill Summary">
+              <StatRow label="Average Score" value={`${summary.averageScore.toFixed(1)} / 4`} />
+              <StatRow label="Strongest Skill" value={summary.strongestSkill} stacked />
+              <StatRow label="Growth Area" value={summary.mainGrowthArea} stacked />
+            </SectionCard>
+
+            <SectionCard title="Safety">
+              <View style={statStyles.row}>
+                <Text style={statStyles.label}>Safety Corrections</Text>
+                {summary.safetyFlagsResolved > 0 ? (
+                  <View style={styles.amberBadge}>
+                    <Text style={styles.amberBadgeText}>{String(summary.safetyFlagsResolved)}</Text>
+                  </View>
+                ) : (
+                  <Text style={statStyles.value}>{String(summary.safetyFlagsResolved)}</Text>
+                )}
+              </View>
+            </SectionCard>
+
+            <SectionCard title="Next Steps">
+              <StatRow label="Next Recommended Scenario" value={summary.nextRecommendedScenario} stacked />
+              <View style={styles.practiceBlock}>
+                <Text style={styles.practiceLabel}>Next Practice Focus</Text>
+                <Text style={styles.practiceText}>{summary.nextPracticeFocus}</Text>
+              </View>
+            </SectionCard>
+
+            {quizResult != null && (
+              <SectionCard title="Knowledge Check Score">
+                <View style={quizStyles.scoreRow}>
+                  <Text style={quizStyles.scoreValue}>
+                    {quizResult.score} / {quizResult.totalQuestions}
+                  </Text>
+                  <View style={[quizStyles.scoreBadge, quizResult.score === quizResult.totalQuestions ? quizStyles.badgePerfect : quizResult.score >= 2 ? quizStyles.badgeGood : quizStyles.badgeLow]}>
+                    <Text style={quizStyles.badgeText}>
+                      {quizResult.score === quizResult.totalQuestions
+                        ? 'Excellent'
+                        : quizResult.score >= 2
+                        ? 'Good'
+                        : 'Needs Review'}
+                    </Text>
+                  </View>
+                </View>
+                <Text style={quizStyles.scenarioLabel}>
+                  {scenarioTemplates.find((s) => s.id === quizResult.scenarioId)?.title ?? quizResult.scenarioId}
+                </Text>
+              </SectionCard>
+            )}
+          </>
         )}
 
-        {completedSessions.length > 0 && (
-          <SectionCard title="Scenario Mastery Map">
-            {scenarioTemplates.map((scenario) => {
-              const session = completedSessions.find((s) => s.scenarioId === scenario.id);
+        {hasPriorProgress && (
+          <SectionCard title="Scenario Mastery">
+            {roles.map((role) => {
+              const roleScenarios = scenarioTemplates.filter((s) => s.allowedRoleId === role.id);
+              const uniqueDone = new Set(
+                completedSessions
+                  .filter((cs) => roleScenarios.some((s) => s.id === cs.scenarioId))
+                  .map((cs) => cs.scenarioId)
+              ).size;
               return (
-                <MasteryRow
-                  key={scenario.id}
-                  title={scenario.title}
-                  session={session}
-                />
+                <View key={role.id} style={masteryStyles.roleGroup}>
+                  <Text style={masteryStyles.roleHeader}>
+                    {role.name} — {uniqueDone} / {roleScenarios.length}
+                  </Text>
+                  {roleScenarios.map((scenario) => {
+                    const session = completedSessions.find((s) => s.scenarioId === scenario.id);
+                    return (
+                      <MasteryRow
+                        key={scenario.id}
+                        title={scenario.title}
+                        session={session}
+                      />
+                    );
+                  })}
+                </View>
               );
             })}
           </SectionCard>
         )}
 
-        {summary.nextRecommendedScenarioId != null && (
+        {hasSession && summary && summary.nextRecommendedScenarioId != null && (
           <Pressable
             style={styles.practiceAgainButton}
             accessibilityRole="button"
             onPress={() => {
-              setSelectedScenarioId(summary.nextRecommendedScenarioId!);
+              setSelectedScenarioId(summary!.nextRecommendedScenarioId!);
               router.push('/scenario-briefing' as Href);
             }}>
             <Text style={styles.practiceAgainButtonText}>
@@ -159,14 +181,14 @@ export default function DashboardScreen() {
           </Pressable>
         )}
         <Pressable
-          style={[styles.practiceAgainButton, summary.nextRecommendedScenarioId != null && styles.secondaryButton]}
+          style={[styles.practiceAgainButton, (hasSession && summary?.nextRecommendedScenarioId != null) && styles.secondaryButton]}
           accessibilityRole="button"
           onPress={() => router.push('/scenario' as Href)}>
-          <Text style={[styles.practiceAgainButtonText, summary.nextRecommendedScenarioId != null && styles.secondaryButtonText]}>
+          <Text style={[styles.practiceAgainButtonText, (hasSession && summary?.nextRecommendedScenarioId != null) && styles.secondaryButtonText]}>
             Browse All Scenarios
           </Text>
         </Pressable>
-        {completedSessions.length > 0 && (
+        {hasPriorProgress && (
           <Pressable
             style={styles.analyticsButton}
             accessibilityRole="button"
@@ -174,7 +196,7 @@ export default function DashboardScreen() {
             <Text style={styles.analyticsButtonText}>View Progress Analytics</Text>
           </Pressable>
         )}
-        {completedSessions.length > 0 && (
+        {hasPriorProgress && (
           <Pressable
             style={styles.certificateButton}
             accessibilityRole="button"
@@ -458,6 +480,20 @@ const quizStyles = StyleSheet.create({
 });
 
 const masteryStyles = StyleSheet.create({
+  roleGroup: {
+    marginBottom: 12,
+  },
+  roleHeader: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: SimulatorColors.brand,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    paddingVertical: 6,
+    borderBottomWidth: 1,
+    borderBottomColor: SimulatorColors.brand,
+    marginBottom: 2,
+  },
   row: {
     flexDirection: 'row',
     alignItems: 'center',

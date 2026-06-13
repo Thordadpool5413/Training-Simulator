@@ -234,6 +234,7 @@ export interface AIEvaluation {
   topGrowthArea: string;
   coachingNotes: string[];
   criteriaResults?: { criterion: string; met: boolean }[];
+  modelResponse?: string;
 }
 
 export interface ScenarioTemplate {

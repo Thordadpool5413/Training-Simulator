@@ -17,49 +17,52 @@ import { LEARNING_PATHS, type LearningStage } from '@/data/learningPaths';
 import { useSimulator } from '@/state/SimulatorContext';
 import type { CompletedSession } from '@/types/simulator';
 
-// ── cert tier config ───────────────────────────────────────────────────────────
+// ── tier config ────────────────────────────────────────────────────────────────
 
 interface CertTier {
   stageNumber: 1 | 2 | 3;
-  designation: string;    // shown large on the card
-  credential: string;     // formal credential line on PDF
-  description: string;    // what the earner demonstrated
+  credential: string;
+  designation: string;
+  programLine: string;
+  bodyText: string;
   color: string;
   tint: string;
   border: string;
-  accentColor: string;    // PDF accent (gold for expert)
 }
 
 const CERT_TIERS: CertTier[] = [
   {
     stageNumber: 1,
-    designation: 'Communication Foundations',
     credential: 'Foundation Certificate',
-    description: 'has demonstrated foundational proficiency in hospice communication, including explaining hospice support, addressing family concerns, and navigating common barriers to care.',
-    color: '#16A34A',
+    designation: 'Communication Foundations',
+    programLine: 'Hospice & Palliative Care Communication',
+    bodyText:
+      'has demonstrated foundational proficiency in hospice communication — explaining hospice support, addressing family concerns, and navigating common barriers to care.',
+    color: '#15803D',
     tint: '#F0FDF4',
     border: '#86EFAC',
-    accentColor: '#16A34A',
   },
   {
     stageNumber: 2,
-    designation: 'Advanced Clinical Practice',
     credential: 'Core Practice Certificate',
-    description: 'has demonstrated advanced proficiency in complex hospice communication, including difficult care transitions, family resistance, and challenging clinical conversations.',
-    color: '#2563EB',
+    designation: 'Advanced Clinical Practice',
+    programLine: 'Hospice & Palliative Care Communication',
+    bodyText:
+      'has demonstrated advanced proficiency in complex hospice communication, including difficult care transitions, family resistance, and high-stakes clinical conversations.',
+    color: '#1D4ED8',
     tint: '#EFF6FF',
     border: '#BFDBFE',
-    accentColor: '#2563EB',
   },
   {
     stageNumber: 3,
+    credential: 'Clinical Expert',
     designation: 'Clinical Expert',
-    credential: 'Clinical Expert Certificate',
-    description: 'has achieved clinical expert status in hospice and palliative care communication, demonstrating mastery across all scenario types including prognostic uncertainty, grief, family conflict, and end-of-life conversations.',
-    color: '#7C3AED',
+    programLine: 'Hospice & Palliative Care Communication',
+    bodyText:
+      'has achieved the highest designation in this training program, demonstrating mastery across all clinical conversation types — including prognostic uncertainty, grief, family conflict, medication management, and end-of-life communication.',
+    color: '#6D28D9',
     tint: '#F5F3FF',
     border: '#DDD6FE',
-    accentColor: '#F59E0B',  // gold accents on the expert cert
   },
 ];
 
@@ -70,202 +73,426 @@ function stageStats(
   roleId: string,
   sessions: CompletedSession[],
 ): { completedCount: number; avgScore: number; earnedDate: string | null } {
-  const bestByScenario = new Map<string, number>();
+  const best = new Map<string, number>();
   let latestDate: string | null = null;
-
   sessions
     .filter((s) => s.roleId === roleId && stage.scenarioIds.includes(s.scenarioId))
     .forEach((s) => {
-      const best = bestByScenario.get(s.scenarioId) ?? 0;
-      if (s.overallScore > best) bestByScenario.set(s.scenarioId, s.overallScore);
+      if ((best.get(s.scenarioId) ?? 0) < s.overallScore) best.set(s.scenarioId, s.overallScore);
       if (!latestDate || s.completedAt > latestDate) latestDate = s.completedAt;
     });
-
-  const completedCount = bestByScenario.size;
-  const scores = [...bestByScenario.values()];
-  const avgScore = scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
-
-  return { completedCount, avgScore, earnedDate: latestDate };
+  const vals = [...best.values()];
+  return {
+    completedCount: best.size,
+    avgScore: vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : 0,
+    earnedDate: latestDate,
+  };
 }
 
-function formatDate(iso: string | null): string {
-  if (!iso) return new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-  return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+function fmtDate(iso: string | null): string {
+  const d = iso ? new Date(iso) : new Date();
+  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 }
 
-function scoreGrade(avg: number): string {
+function grade(avg: number): string {
   if (avg >= 3.7) return 'With Distinction';
   if (avg >= 3.0) return 'With Merit';
   return 'Passing';
 }
 
-function escapeHtml(text: string): string {
-  return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+function certId(roleId: string, stage: number, date: string | null): string {
+  const d = date ? new Date(date) : new Date();
+  return `HCS-${roleId.slice(0, 2).toUpperCase()}${stage}-${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}`;
+}
+
+function esc(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 // ── PDF builders ───────────────────────────────────────────────────────────────
 
-function buildFoundationPDF(params: {
-  roleName: string; designation: string; description: string;
-  scenarioCount: number; avgScore: number; dateLabel: string; grade: string;
+const FONT_STACK_SERIF = `'Garamond','EB Garamond','Palatino Linotype','Palatino','Book Antiqua','Georgia','Times New Roman',serif`;
+const FONT_STACK_SANS = `'Optima','Candara','Gill Sans','Trebuchet MS','Arial',sans-serif`;
+
+function buildFoundationPDF(p: {
+  roleName: string; designation: string; programLine: string; bodyText: string;
+  count: number; avg: number; gradeLabel: string; dateLabel: string; id: string;
 }): string {
-  const { roleName, designation, description, scenarioCount, avgScore, dateLabel, grade } = params;
   return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:Georgia,'Times New Roman',serif;background:#fff;padding:0}
-  .page{width:100%;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px}
-  .frame{border:5px double #16A34A;padding:48px 56px;max-width:720px;width:100%;text-align:center;position:relative}
-  .corner{position:absolute;width:24px;height:24px;background:#16A34A}
-  .tl{top:-2px;left:-2px}.tr{top:-2px;right:-2px}.bl{bottom:-2px;left:-2px}.br{bottom:-2px;right:-2px}
-  .org{font-size:11px;font-family:Arial,sans-serif;letter-spacing:2.5px;text-transform:uppercase;color:#6B7280;margin-bottom:8px}
-  .tier-label{font-size:11px;font-family:Arial,sans-serif;letter-spacing:3px;text-transform:uppercase;color:#16A34A;font-weight:700;margin-bottom:18px}
-  .cert-title{font-size:36px;color:#166534;margin-bottom:6px}
-  .divider{width:80px;height:2px;background:#16A34A;margin:16px auto}
-  .this{font-size:14px;color:#6B7280;font-style:italic;margin-bottom:6px;font-family:Arial,sans-serif}
-  .role{font-size:28px;color:#111827;font-weight:bold;margin-bottom:6px}
-  .desig{font-size:20px;color:#166534;font-weight:600;margin-bottom:16px;font-family:Arial,sans-serif}
-  .body{font-size:14px;color:#374151;line-height:1.7;font-family:Arial,sans-serif;margin-bottom:20px;max-width:540px;margin-left:auto;margin-right:auto}
-  .stats{display:flex;justify-content:center;gap:48px;margin:12px 0;font-family:Arial,sans-serif}
-  .stat-val{font-size:32px;font-weight:bold;color:#16A34A}
-  .stat-lbl{font-size:11px;color:#6B7280;text-transform:uppercase;letter-spacing:1px;margin-top:3px}
-  .grade{display:inline-block;background:#F0FDF4;border:1px solid #86EFAC;border-radius:4px;padding:4px 14px;font-size:13px;font-weight:700;color:#166534;font-family:Arial,sans-serif;margin:8px 0}
-  .date{font-size:13px;color:#9CA3AF;margin-top:16px;font-family:Arial,sans-serif}
-  .disclaimer{font-size:10px;color:#D1D5DB;margin-top:14px;font-family:Arial,sans-serif}
-</style></head><body><div class="page"><div class="frame">
-  <div class="corner tl"></div><div class="corner tr"></div>
-  <div class="corner bl"></div><div class="corner br"></div>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#FAFDF6; font-family:${FONT_STACK_SERIF}; }
+  .page { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:36px; }
+  .frame {
+    max-width:720px; width:100%; background:#fff;
+    border:1px solid #86EFAC;
+    box-shadow:0 0 0 6px #F0FDF4, 0 0 0 8px #86EFAC, 0 0 0 14px #F0FDF4, 0 0 0 16px #15803D;
+    padding:52px 64px 48px;
+    text-align:center; position:relative;
+  }
+  .corner { position:absolute; font-size:22px; color:#15803D; line-height:1; }
+  .tl { top:20px; left:24px; } .tr { top:20px; right:24px; }
+  .bl { bottom:20px; left:24px; } .br { bottom:20px; right:24px; }
+  .org {
+    font-family:${FONT_STACK_SANS}; font-size:9.5px; letter-spacing:3.5px;
+    text-transform:uppercase; color:#6B7280; margin-bottom:6px;
+  }
+  .prog {
+    font-family:${FONT_STACK_SANS}; font-size:10px; letter-spacing:2px;
+    text-transform:uppercase; color:#15803D; font-weight:600; margin-bottom:20px;
+  }
+  .orn-line { display:flex; align-items:center; gap:10px; justify-content:center; margin:16px 0; }
+  .orn-rule { flex:1; max-width:120px; height:1px; background:#86EFAC; }
+  .orn-sym { font-size:14px; color:#15803D; }
+  .cert-name { font-size:36px; color:#14532D; font-weight:700; line-height:1.2; margin-bottom:4px; }
+  .cert-sub { font-family:${FONT_STACK_SANS}; font-size:11px; letter-spacing:2.5px; text-transform:uppercase; color:#15803D; font-weight:700; }
+  .awarded { font-size:14px; color:#9CA3AF; font-style:italic; margin-bottom:6px; margin-top:4px; }
+  .role { font-size:32px; font-weight:700; color:#111827; margin-bottom:4px; }
+  .desig { font-size:17px; color:#15803D; font-weight:600; font-family:${FONT_STACK_SANS}; margin-bottom:16px; }
+  .body { font-size:14px; color:#374151; line-height:1.8; max-width:520px; margin:0 auto 20px; }
+  .stats { display:flex; justify-content:center; gap:40px; margin:12px 0; }
+  .stat-val { font-size:30px; font-weight:700; color:#15803D; }
+  .stat-small { font-size:16px; color:#9CA3AF; }
+  .stat-lbl { font-family:${FONT_STACK_SANS}; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:#9CA3AF; margin-top:3px; }
+  .grade-badge {
+    display:inline-block; border:1.5px solid #86EFAC; background:#F0FDF4;
+    border-radius:3px; padding:5px 18px; margin:10px 0;
+    font-family:${FONT_STACK_SANS}; font-size:12px; font-weight:700;
+    color:#14532D; letter-spacing:1.5px; text-transform:uppercase;
+  }
+  .date { font-family:${FONT_STACK_SANS}; font-size:12px; color:#9CA3AF; margin-top:14px; }
+  .cert-id { font-family:${FONT_STACK_SANS}; font-size:9px; color:#D1D5DB; margin-top:8px; letter-spacing:1px; }
+  .disclaimer { font-family:${FONT_STACK_SANS}; font-size:9px; color:#E5E7EB; margin-top:8px; }
+</style></head>
+<body><div class="page"><div class="frame">
+  <div class="corner tl">❧</div><div class="corner tr">❧</div>
+  <div class="corner bl">❧</div><div class="corner br">❧</div>
   <div class="org">Hospice Communication Training Simulator</div>
-  <div class="tier-label">Foundation Certificate</div>
-  <div class="cert-title">Certificate of Achievement</div>
-  <div class="divider"></div>
-  <div class="this">This certifies that</div>
-  <div class="role">${escapeHtml(roleName)}</div>
-  <div class="desig">${escapeHtml(designation)}</div>
-  <div class="body">${escapeHtml(description)}</div>
-  <div class="divider"></div>
+  <div class="prog">${esc(p.programLine)}</div>
+  <div class="cert-name">Certificate of Achievement</div>
+  <div class="cert-sub">Foundation Level</div>
+  <div class="orn-line"><div class="orn-rule"></div><div class="orn-sym">✦</div><div class="orn-rule"></div></div>
+  <div class="awarded">This certificate is proudly awarded to</div>
+  <div class="role">${esc(p.roleName)}</div>
+  <div class="desig">${esc(p.designation)}</div>
+  <div class="orn-line"><div class="orn-rule"></div><div class="orn-sym">✦</div><div class="orn-rule"></div></div>
+  <div class="body">${esc(p.bodyText)}</div>
   <div class="stats">
-    <div><div class="stat-val">${scenarioCount}</div><div class="stat-lbl">Scenarios</div></div>
-    <div><div class="stat-val">${avgScore.toFixed(1)}<span style="font-size:18px;color:#6B7280"> /4</span></div><div class="stat-lbl">Avg Score</div></div>
+    <div><div class="stat-val">${p.count}</div><div class="stat-lbl">Scenarios Completed</div></div>
+    <div><div class="stat-val">${p.avg.toFixed(1)}<span class="stat-small"> / 4</span></div><div class="stat-lbl">Average Score</div></div>
   </div>
-  <div class="grade">${escapeHtml(grade)}</div>
-  <div class="divider"></div>
-  <div class="date">${escapeHtml(dateLabel)}</div>
-  <div class="disclaimer">For personal training records only. Does not constitute a professional credential.</div>
+  <div class="grade-badge">✦ ${esc(p.gradeLabel)} ✦</div>
+  <div class="orn-line"><div class="orn-rule"></div><div class="orn-sym">✦</div><div class="orn-rule"></div></div>
+  <div class="date">${esc(p.dateLabel)}</div>
+  <div class="cert-id">Certificate ID: ${esc(p.id)}</div>
+  <div class="disclaimer">For personal training records only · Not a professional credential or CE credit</div>
 </div></div></body></html>`;
 }
 
-function buildCorePDF(params: {
-  roleName: string; designation: string; description: string;
-  scenarioCount: number; avgScore: number; dateLabel: string; grade: string;
+function buildCorePDF(p: {
+  roleName: string; designation: string; programLine: string; bodyText: string;
+  count: number; avg: number; gradeLabel: string; dateLabel: string; id: string;
 }): string {
-  const { roleName, designation, description, scenarioCount, avgScore, dateLabel, grade } = params;
   return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
 <style>
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:Georgia,'Times New Roman',serif;background:#fff;padding:0}
-  .page{width:100%;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px}
-  .outer{border:3px solid #2563EB;padding:6px;max-width:720px;width:100%}
-  .inner{border:1px solid #BFDBFE;padding:48px 56px;text-align:center;position:relative}
-  .header-bar{background:linear-gradient(135deg,#1E40AF,#2563EB);padding:16px 24px;margin:-48px -56px 32px;text-align:center}
-  .header-org{font-size:10px;font-family:Arial,sans-serif;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.75)}
-  .header-title{font-size:13px;font-family:Arial,sans-serif;letter-spacing:2px;text-transform:uppercase;color:#fff;font-weight:700;margin-top:4px}
-  .cert-title{font-size:34px;color:#1E3A8A;margin-bottom:4px}
-  .tier-label{font-size:11px;font-family:Arial,sans-serif;letter-spacing:3px;text-transform:uppercase;color:#2563EB;font-weight:700;margin-bottom:20px}
-  .divider{width:80px;height:2px;background:#2563EB;margin:16px auto}
-  .this{font-size:14px;color:#6B7280;font-style:italic;margin-bottom:6px;font-family:Arial,sans-serif}
-  .role{font-size:28px;color:#111827;font-weight:bold;margin-bottom:6px}
-  .desig{font-size:20px;color:#1D4ED8;font-weight:600;margin-bottom:16px;font-family:Arial,sans-serif}
-  .body{font-size:14px;color:#374151;line-height:1.7;font-family:Arial,sans-serif;margin-bottom:20px;max-width:540px;margin-left:auto;margin-right:auto}
-  .stats{display:flex;justify-content:center;gap:48px;margin:12px 0;font-family:Arial,sans-serif}
-  .stat-val{font-size:32px;font-weight:bold;color:#2563EB}
-  .stat-lbl{font-size:11px;color:#6B7280;text-transform:uppercase;letter-spacing:1px;margin-top:3px}
-  .grade{display:inline-block;background:#EFF6FF;border:1px solid #BFDBFE;border-radius:4px;padding:4px 14px;font-size:13px;font-weight:700;color:#1D4ED8;font-family:Arial,sans-serif;margin:8px 0}
-  .date{font-size:13px;color:#9CA3AF;margin-top:16px;font-family:Arial,sans-serif}
-  .disclaimer{font-size:10px;color:#D1D5DB;margin-top:14px;font-family:Arial,sans-serif}
-</style></head><body><div class="page"><div class="outer"><div class="inner">
-  <div class="header-bar">
-    <div class="header-org">Hospice Communication Training Simulator</div>
-    <div class="header-title">Core Practice Certificate</div>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#F8FAFF; font-family:${FONT_STACK_SERIF}; }
+  .page { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:36px; }
+  .frame {
+    max-width:740px; width:100%; background:#fff; overflow:hidden;
+    box-shadow:0 0 0 4px #1D4ED8, 0 0 0 10px #EFF6FF, 0 0 0 12px #1D4ED8;
+  }
+  .top-bar {
+    background:linear-gradient(135deg,#1E3A8A 0%,#1D4ED8 50%,#2563EB 100%);
+    padding:28px 60px 24px; text-align:center;
+  }
+  .top-bar-org { font-family:${FONT_STACK_SANS}; font-size:9px; letter-spacing:4px; text-transform:uppercase; color:rgba(255,255,255,0.55); }
+  .top-bar-title { font-family:${FONT_STACK_SANS}; font-size:13px; letter-spacing:3px; text-transform:uppercase; color:#fff; font-weight:700; margin-top:8px; }
+  .top-bar-rule { height:1px; background:rgba(255,255,255,0.25); margin:14px 0 0; }
+  .body-section { padding:44px 64px 40px; text-align:center; }
+  .cert-name { font-size:38px; color:#1E3A8A; font-weight:700; line-height:1.2; }
+  .cert-sub { font-family:${FONT_STACK_SANS}; font-size:11px; letter-spacing:2.5px; text-transform:uppercase; color:#1D4ED8; font-weight:700; margin-top:6px; }
+  .orn-line { display:flex; align-items:center; gap:10px; justify-content:center; margin:18px 0; }
+  .orn-rule { flex:1; max-width:130px; height:1px; background:#BFDBFE; }
+  .orn-sym { font-size:14px; color:#1D4ED8; }
+  .awarded { font-size:14px; color:#9CA3AF; font-style:italic; margin-bottom:6px; }
+  .role { font-size:34px; font-weight:700; color:#111827; margin-bottom:4px; }
+  .desig { font-size:17px; color:#1D4ED8; font-weight:600; font-family:${FONT_STACK_SANS}; margin-bottom:18px; }
+  .body { font-size:14px; color:#374151; line-height:1.8; max-width:530px; margin:0 auto 22px; }
+  .stats { display:flex; justify-content:center; gap:48px; margin:12px 0; }
+  .stat-val { font-size:32px; font-weight:700; color:#1D4ED8; }
+  .stat-small { font-size:17px; color:#9CA3AF; }
+  .stat-lbl { font-family:${FONT_STACK_SANS}; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:#9CA3AF; margin-top:3px; }
+  .grade-badge {
+    display:inline-block; border:1.5px solid #BFDBFE; background:#EFF6FF;
+    border-radius:3px; padding:5px 18px; margin:10px 0;
+    font-family:${FONT_STACK_SANS}; font-size:12px; font-weight:700;
+    color:#1E3A8A; letter-spacing:1.5px; text-transform:uppercase;
+  }
+  .date { font-family:${FONT_STACK_SANS}; font-size:12px; color:#9CA3AF; margin-top:14px; }
+  .bottom-bar { background:#1E3A8A; height:10px; }
+  .cert-id { font-family:${FONT_STACK_SANS}; font-size:9px; color:#D1D5DB; margin-top:8px; letter-spacing:1px; }
+  .disclaimer { font-family:${FONT_STACK_SANS}; font-size:9px; color:#E5E7EB; margin-top:4px; margin-bottom:32px; }
+</style></head>
+<body><div class="page"><div class="frame">
+  <div class="top-bar">
+    <div class="top-bar-org">Hospice Communication Training Simulator</div>
+    <div class="top-bar-title">${esc(p.programLine)}</div>
+    <div class="top-bar-rule"></div>
   </div>
-  <div class="cert-title">Certificate of Advanced Practice</div>
-  <div class="tier-label">Core Clinical Conversations</div>
-  <div class="divider"></div>
-  <div class="this">This certifies that</div>
-  <div class="role">${escapeHtml(roleName)}</div>
-  <div class="desig">${escapeHtml(designation)}</div>
-  <div class="body">${escapeHtml(description)}</div>
-  <div class="divider"></div>
-  <div class="stats">
-    <div><div class="stat-val">${scenarioCount}</div><div class="stat-lbl">Scenarios</div></div>
-    <div><div class="stat-val">${avgScore.toFixed(1)}<span style="font-size:18px;color:#6B7280"> /4</span></div><div class="stat-lbl">Avg Score</div></div>
-  </div>
-  <div class="grade">${escapeHtml(grade)}</div>
-  <div class="divider"></div>
-  <div class="date">${escapeHtml(dateLabel)}</div>
-  <div class="disclaimer">For personal training records only. Does not constitute a professional credential.</div>
-</div></div></div></body></html>`;
-}
-
-function buildExpertPDF(params: {
-  roleName: string; designation: string; description: string;
-  totalScenarios: number; avgScore: number; dateLabel: string; grade: string;
-}): string {
-  const { roleName, designation, description, totalScenarios, avgScore, dateLabel, grade } = params;
-  return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
-<style>
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:Georgia,'Times New Roman',serif;background:#fff;padding:0}
-  .page{width:100%;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px;background:#FAF5FF}
-  .frame{border:4px solid #7C3AED;padding:0;max-width:740px;width:100%;background:#fff;position:relative;overflow:hidden}
-  .gold-rule{height:6px;background:linear-gradient(90deg,#F59E0B,#FCD34D,#F59E0B)}
-  .header-bar{background:linear-gradient(135deg,#4C1D95,#6D28D9,#7C3AED);padding:28px 56px 24px;text-align:center}
-  .header-org{font-size:10px;font-family:Arial,sans-serif;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.65)}
-  .header-expert{font-size:22px;font-family:Arial,sans-serif;letter-spacing:4px;text-transform:uppercase;color:#FCD34D;font-weight:700;margin-top:8px}
-  .seal{font-size:48px;margin:20px 0 12px}
-  .body-section{padding:32px 56px 40px;text-align:center}
-  .cert-title{font-size:32px;color:#4C1D95;margin-bottom:4px}
-  .tier-sub{font-size:12px;font-family:Arial,sans-serif;letter-spacing:2.5px;text-transform:uppercase;color:#7C3AED;font-weight:700;margin-bottom:24px}
-  .gold-divider{width:100px;height:3px;background:linear-gradient(90deg,#F59E0B,#FCD34D,#F59E0B);margin:16px auto;border-radius:2px}
-  .this{font-size:14px;color:#6B7280;font-style:italic;margin-bottom:6px;font-family:Arial,sans-serif}
-  .role{font-size:30px;color:#111827;font-weight:bold;margin-bottom:6px}
-  .desig{font-size:20px;color:#4C1D95;font-weight:700;margin-bottom:20px;font-family:Arial,sans-serif}
-  .body{font-size:14px;color:#374151;line-height:1.75;font-family:Arial,sans-serif;margin-bottom:24px;max-width:560px;margin-left:auto;margin-right:auto}
-  .stats{display:flex;justify-content:center;gap:56px;margin:16px 0;font-family:Arial,sans-serif}
-  .stat-val{font-size:34px;font-weight:bold;color:#7C3AED}
-  .stat-lbl{font-size:11px;color:#6B7280;text-transform:uppercase;letter-spacing:1px;margin-top:3px}
-  .grade{display:inline-block;background:linear-gradient(135deg,#FEF3C7,#FDE68A);border:1px solid #F59E0B;border-radius:4px;padding:5px 18px;font-size:13px;font-weight:800;color:#92400E;font-family:Arial,sans-serif;margin:8px 0;letter-spacing:0.5px}
-  .date{font-size:13px;color:#9CA3AF;margin-top:18px;font-family:Arial,sans-serif}
-  .disclaimer{font-size:10px;color:#D1D5DB;margin-top:12px;font-family:Arial,sans-serif}
-</style></head><body><div class="page"><div class="frame">
-  <div class="gold-rule"></div>
-  <div class="header-bar">
-    <div class="header-org">Hospice Communication Training Simulator</div>
-    <div class="header-expert">★ Clinical Expert ★</div>
-  </div>
-  <div class="gold-rule"></div>
   <div class="body-section">
-    <div class="seal">🏅</div>
-    <div class="cert-title">Clinical Expert Certificate</div>
-    <div class="tier-sub">Hospice &amp; Palliative Care Communication</div>
-    <div class="gold-divider"></div>
-    <div class="this">This certifies that</div>
-    <div class="role">${escapeHtml(roleName)}</div>
-    <div class="desig">${escapeHtml(designation)}</div>
-    <div class="body">${escapeHtml(description)}</div>
-    <div class="gold-divider"></div>
+    <div class="cert-name">Certificate of Advanced Practice</div>
+    <div class="cert-sub">Core Clinical Conversations</div>
+    <div class="orn-line"><div class="orn-rule"></div><div class="orn-sym">✦</div><div class="orn-rule"></div></div>
+    <div class="awarded">This certificate is proudly awarded to</div>
+    <div class="role">${esc(p.roleName)}</div>
+    <div class="desig">${esc(p.designation)}</div>
+    <div class="orn-line"><div class="orn-rule"></div><div class="orn-sym">✦</div><div class="orn-rule"></div></div>
+    <div class="body">${esc(p.bodyText)}</div>
     <div class="stats">
-      <div><div class="stat-val">${totalScenarios}</div><div class="stat-lbl">Scenarios</div></div>
-      <div><div class="stat-val">${avgScore.toFixed(1)}<span style="font-size:18px;color:#6B7280"> /4</span></div><div class="stat-lbl">Avg Score</div></div>
-      <div><div class="stat-val">3</div><div class="stat-lbl">Stages</div></div>
+      <div><div class="stat-val">${p.count}</div><div class="stat-lbl">Scenarios Completed</div></div>
+      <div><div class="stat-val">${p.avg.toFixed(1)}<span class="stat-small"> / 4</span></div><div class="stat-lbl">Average Score</div></div>
     </div>
-    <div class="grade">✦ ${escapeHtml(grade)} ✦</div>
-    <div class="gold-divider"></div>
-    <div class="date">${escapeHtml(dateLabel)}</div>
-    <div class="disclaimer">For personal training records only. Does not constitute a professional credential.</div>
+    <div class="grade-badge">✦ ${esc(p.gradeLabel)} ✦</div>
+    <div class="orn-line"><div class="orn-rule"></div><div class="orn-sym">✦</div><div class="orn-rule"></div></div>
+    <div class="date">${esc(p.dateLabel)}</div>
+    <div class="cert-id">Certificate ID: ${esc(p.id)}</div>
+    <div class="disclaimer">For personal training records only · Not a professional credential or CE credit</div>
   </div>
-  <div class="gold-rule"></div>
+  <div class="bottom-bar"></div>
 </div></div></body></html>`;
+}
+
+function buildExpertPDF(p: {
+  roleName: string; designation: string; programLine: string; bodyText: string;
+  totalScenarios: number; avg: number; gradeLabel: string; dateLabel: string; id: string;
+}): string {
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#1E0040; font-family:${FONT_STACK_SERIF}; }
+  .page { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:32px; }
+  .outer-frame {
+    max-width:760px; width:100%; overflow:hidden;
+    border:3px solid #6D28D9;
+    box-shadow:0 0 0 1px #F59E0B, 0 0 0 3px #6D28D9, 0 0 0 6px #F59E0B;
+  }
+  /* Top gold bar */
+  .gold-bar { height:8px; background:linear-gradient(90deg,#92400E,#F59E0B,#FDE68A,#F59E0B,#92400E); }
+  /* Deep purple header */
+  .header {
+    background:linear-gradient(160deg,#1E0040 0%,#2D0060 40%,#3B0080 70%,#4C1D95 100%);
+    padding:36px 60px 28px; text-align:center; position:relative;
+  }
+  .header::before,.header::after {
+    content:''; position:absolute; top:0; bottom:0; width:6px;
+    background:linear-gradient(180deg,transparent,rgba(245,158,11,0.3),transparent);
+  }
+  .header::before { left:0; } .header::after { right:0; }
+  .header-star { font-size:11px; letter-spacing:5px; color:#F59E0B; font-family:${FONT_STACK_SANS}; }
+  .header-expert {
+    font-family:'Cinzel',${FONT_STACK_SANS}; font-size:28px; font-weight:700;
+    color:#FDE68A; letter-spacing:5px; text-transform:uppercase;
+    text-shadow:0 0 20px rgba(245,158,11,0.5); margin:10px 0;
+  }
+  .header-prog { font-family:${FONT_STACK_SANS}; font-size:10px; letter-spacing:3px; text-transform:uppercase; color:rgba(253,230,138,0.6); }
+  .header-gold-line { height:1px; background:linear-gradient(90deg,transparent,#F59E0B,transparent); margin:16px 0 0; }
+  /* White body */
+  .body-section { background:#fff; padding:40px 64px 36px; text-align:center; }
+  .medal { font-size:56px; margin-bottom:10px; line-height:1; }
+  .cert-name { font-size:36px; color:#3B0080; font-weight:700; line-height:1.2; }
+  .cert-sub {
+    font-family:'Cinzel',${FONT_STACK_SANS}; font-size:10px; letter-spacing:3px;
+    text-transform:uppercase; color:#6D28D9; font-weight:600; margin-top:6px;
+  }
+  .orn-gold { display:flex; align-items:center; gap:10px; justify-content:center; margin:18px 0; }
+  .orn-gold-rule { flex:1; max-width:130px; height:2px; background:linear-gradient(90deg,transparent,#F59E0B,transparent); }
+  .orn-gold-sym { font-size:14px; color:#D97706; }
+  .awarded { font-size:14px; color:#9CA3AF; font-style:italic; margin-bottom:6px; }
+  .role { font-size:34px; font-weight:700; color:#111827; margin-bottom:4px; }
+  .desig {
+    font-family:'Cinzel',${FONT_STACK_SANS}; font-size:13px; letter-spacing:1.5px;
+    text-transform:uppercase; color:#6D28D9; font-weight:700; margin-bottom:18px;
+  }
+  .body { font-size:14px; color:#374151; line-height:1.8; max-width:540px; margin:0 auto 22px; }
+  .stats { display:flex; justify-content:center; gap:48px; margin:12px 0; }
+  .stat-val { font-size:32px; font-weight:700; color:#6D28D9; }
+  .stat-small { font-size:17px; color:#9CA3AF; }
+  .stat-lbl { font-family:${FONT_STACK_SANS}; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; color:#9CA3AF; margin-top:3px; }
+  .grade-badge {
+    display:inline-block; margin:10px 0; padding:7px 22px;
+    background:linear-gradient(135deg,#FEF3C7,#FDE68A);
+    border:1.5px solid #F59E0B; border-radius:3px;
+    font-family:${FONT_STACK_SANS}; font-size:12px; font-weight:800;
+    color:#78350F; letter-spacing:2px; text-transform:uppercase;
+  }
+  .date { font-family:${FONT_STACK_SANS}; font-size:12px; color:#9CA3AF; margin-top:14px; }
+  .highest { font-family:${FONT_STACK_SANS}; font-size:10px; letter-spacing:1.5px; text-transform:uppercase; color:#D1D5DB; margin-top:6px; }
+  .cert-id { font-family:${FONT_STACK_SANS}; font-size:9px; color:#D1D5DB; margin-top:8px; letter-spacing:1px; }
+</style></head>
+<body><div class="page"><div class="outer-frame">
+  <div class="gold-bar"></div>
+  <div class="header">
+    <div class="header-star">★ ★ ★</div>
+    <div class="header-expert">Clinical Expert</div>
+    <div class="header-prog">${esc(p.programLine)}</div>
+    <div class="header-gold-line"></div>
+  </div>
+  <div class="gold-bar"></div>
+  <div class="body-section">
+    <div class="medal">🏅</div>
+    <div class="cert-name">Clinical Expert Certificate</div>
+    <div class="cert-sub">The Highest Designation in This Program</div>
+    <div class="orn-gold"><div class="orn-gold-rule"></div><div class="orn-gold-sym">✦</div><div class="orn-gold-rule"></div></div>
+    <div class="awarded">This certificate is proudly awarded to</div>
+    <div class="role">${esc(p.roleName)}</div>
+    <div class="desig">${esc(p.designation)}</div>
+    <div class="orn-gold"><div class="orn-gold-rule"></div><div class="orn-gold-sym">✦</div><div class="orn-gold-rule"></div></div>
+    <div class="body">${esc(p.bodyText)}</div>
+    <div class="stats">
+      <div><div class="stat-val">${p.totalScenarios}</div><div class="stat-lbl">Scenarios Mastered</div></div>
+      <div><div class="stat-val">${p.avg.toFixed(1)}<span class="stat-small"> / 4</span></div><div class="stat-lbl">Average Score</div></div>
+      <div><div class="stat-val">3</div><div class="stat-lbl">Stages Completed</div></div>
+    </div>
+    <div class="grade-badge">✦ ${esc(p.gradeLabel)} ✦</div>
+    <div class="orn-gold"><div class="orn-gold-rule"></div><div class="orn-gold-sym">✦</div><div class="orn-gold-rule"></div></div>
+    <div class="date">${esc(p.dateLabel)}</div>
+    <div class="highest">Highest Designation · Hospice Communication Training Simulator</div>
+    <div class="cert-id">Certificate ID: ${esc(p.id)}</div>
+  </div>
+  <div class="gold-bar"></div>
+</div></div></body></html>`;
+}
+
+// ── in-app certificate document component ─────────────────────────────────────
+
+function OrnamentalDivider({ color }: { color: string }) {
+  return (
+    <View style={ornStyles.row}>
+      <View style={[ornStyles.rule, { backgroundColor: color + '55' }]} />
+      <Text style={[ornStyles.sym, { color }]}>✦</Text>
+      <View style={[ornStyles.rule, { backgroundColor: color + '55' }]} />
+    </View>
+  );
+}
+
+function CertificateDocument({
+  tier, roleName, scenarioCount, avgScore, gradeLabel, earnedDate, isExpert,
+}: {
+  tier: CertTier;
+  roleName: string;
+  scenarioCount: number;
+  avgScore: number;
+  gradeLabel: string;
+  earnedDate: string | null;
+  isExpert: boolean;
+}) {
+  return (
+    <View style={[docStyles.frame, { borderColor: tier.color },
+      isExpert && docStyles.frameExpert]}>
+      {/* Expert: purple header band */}
+      {isExpert && (
+        <>
+          <View style={docStyles.expertGoldBar} />
+          <View style={docStyles.expertHeader}>
+            <Text style={docStyles.expertHeaderStars}>★  ★  ★</Text>
+            <Text style={docStyles.expertHeaderTitle}>CLINICAL EXPERT</Text>
+            <Text style={docStyles.expertHeaderSub}>The Highest Designation</Text>
+          </View>
+          <View style={docStyles.expertGoldBar} />
+        </>
+      )}
+
+      <View style={docStyles.inner}>
+        {/* Organisation */}
+        <Text style={[docStyles.orgName, { color: tier.color }]}>
+          HOSPICE COMMUNICATION TRAINING
+        </Text>
+        <Text style={[docStyles.programLine, { color: tier.color + 'AA' }]}>
+          {tier.programLine.toUpperCase()}
+        </Text>
+
+        <OrnamentalDivider color={tier.color} />
+
+        {/* Cert title */}
+        {isExpert ? (
+          <>
+            <Text style={docStyles.medalEmoji}>🏅</Text>
+            <Text style={[docStyles.certTitle, { color: tier.color }]}>
+              Clinical Expert Certificate
+            </Text>
+          </>
+        ) : tier.stageNumber === 1 ? (
+          <Text style={[docStyles.certTitle, { color: tier.color }]}>
+            Certificate of Achievement
+          </Text>
+        ) : (
+          <Text style={[docStyles.certTitle, { color: tier.color }]}>
+            Certificate of Advanced Practice
+          </Text>
+        )}
+        <Text style={[docStyles.certSub, { color: tier.color }]}>
+          {tier.credential.toUpperCase()}
+        </Text>
+
+        <OrnamentalDivider color={tier.color} />
+
+        {/* Awarded to */}
+        <Text style={docStyles.awardedTo}>awarded to</Text>
+        <Text style={docStyles.roleName}>{roleName}</Text>
+        <Text style={[docStyles.designation, { color: tier.color }]}>
+          {tier.designation}
+        </Text>
+
+        <OrnamentalDivider color={tier.color} />
+
+        {/* Stats */}
+        <View style={docStyles.statsRow}>
+          <View style={docStyles.statCell}>
+            <Text style={[docStyles.statVal, { color: tier.color }]}>{scenarioCount}</Text>
+            <Text style={docStyles.statLbl}>
+              {isExpert ? 'Scenarios\nMastered' : 'Scenarios\nCompleted'}
+            </Text>
+          </View>
+          <View style={[docStyles.statDivider, { backgroundColor: tier.color + '30' }]} />
+          <View style={docStyles.statCell}>
+            <Text style={[docStyles.statVal, { color: tier.color }]}>
+              {avgScore.toFixed(1)}
+              <Text style={docStyles.statValSmall}>/4</Text>
+            </Text>
+            <Text style={docStyles.statLbl}>Average{'\n'}Score</Text>
+          </View>
+          {isExpert && (
+            <>
+              <View style={[docStyles.statDivider, { backgroundColor: tier.color + '30' }]} />
+              <View style={docStyles.statCell}>
+                <Text style={[docStyles.statVal, { color: tier.color }]}>3</Text>
+                <Text style={docStyles.statLbl}>Stages{'\n'}Completed</Text>
+              </View>
+            </>
+          )}
+        </View>
+
+        {/* Grade badge */}
+        <View style={[docStyles.gradeBadge,
+          isExpert ? docStyles.gradeBadgeExpert : { borderColor: tier.border, backgroundColor: tier.tint }]}>
+          <Text style={[docStyles.gradeBadgeText,
+            isExpert ? docStyles.gradeBadgeTextExpert : { color: tier.color }]}>
+            ✦  {gradeLabel.toUpperCase()}  ✦
+          </Text>
+        </View>
+
+        {/* Date */}
+        <Text style={docStyles.dateText}>
+          {fmtDate(earnedDate)}
+        </Text>
+      </View>
+    </View>
+  );
 }
 
 // ── screen ─────────────────────────────────────────────────────────────────────
@@ -290,46 +517,46 @@ export default function CertificateScreen() {
 
   const allEarned = tierData.every((t) => t.isEarned);
   const expertAvg = allEarned
-    ? tierData.reduce((sum, t) => sum + t.avgScore, 0) / tierData.length
-    : 0;
+    ? tierData.reduce((s, t) => s + t.avgScore, 0) / tierData.length : 0;
   const expertDate = allEarned
-    ? tierData.reduce((latest, t) => (!t.earnedDate || (latest && latest > t.earnedDate) ? latest : t.earnedDate), null as string | null)
+    ? tierData.reduce(
+        (latest, t) => (!t.earnedDate || (latest && latest > t.earnedDate) ? latest : t.earnedDate),
+        null as string | null,
+      )
     : null;
   const totalScenarios = path.stages.reduce((n, s) => n + s.scenarioIds.length, 0);
 
   async function handleDownload(stageNumber: 1 | 2 | 3) {
     const idx = stageNumber - 1;
     const td = tierData[idx];
-    if (!td?.isEarned && stageNumber !== 3) return;
-    if (stageNumber === 3 && !allEarned) return;
+    const isExpert = stageNumber === 3;
+    if (!isExpert && !td?.isEarned) return;
+    if (isExpert && !allEarned) return;
 
     setGenerating(stageNumber);
     try {
-      const dateLabel = stageNumber === 3
-        ? formatDate(expertDate)
-        : formatDate(td?.earnedDate ?? null);
-      const avg = stageNumber === 3 ? expertAvg : (td?.avgScore ?? 0);
-      const count = stageNumber === 3 ? totalScenarios : (td?.stage.scenarioIds.length ?? 0);
-      const grade = scoreGrade(avg);
       const tier = CERT_TIERS[idx]!;
+      const avg = isExpert ? expertAvg : (td?.avgScore ?? 0);
+      const dateLabel = fmtDate(isExpert ? expertDate : (td?.earnedDate ?? null));
+      const gradeLabel = grade(avg);
+      const id = certId(activeRoleId, stageNumber, isExpert ? expertDate : (td?.earnedDate ?? null));
+      const count = isExpert ? totalScenarios : (td?.stage.scenarioIds.length ?? 0);
 
-      let html = '';
       const baseParams = {
         roleName: path.roleName,
         designation: tier.designation,
-        description: tier.description,
-        avgScore: avg,
+        programLine: tier.programLine,
+        bodyText: tier.bodyText,
+        avg,
+        gradeLabel,
         dateLabel,
-        grade,
+        id,
       };
 
-      if (stageNumber === 1) {
-        html = buildFoundationPDF({ ...baseParams, scenarioCount: count });
-      } else if (stageNumber === 2) {
-        html = buildCorePDF({ ...baseParams, scenarioCount: count });
-      } else {
-        html = buildExpertPDF({ ...baseParams, totalScenarios: count });
-      }
+      let html = '';
+      if (stageNumber === 1) html = buildFoundationPDF({ ...baseParams, count });
+      else if (stageNumber === 2) html = buildCorePDF({ ...baseParams, count });
+      else html = buildExpertPDF({ ...baseParams, totalScenarios: count });
 
       const { uri } = await Print.printToFileAsync({ html, base64: false });
       const canShare = await Sharing.isAvailableAsync();
@@ -357,7 +584,7 @@ export default function CertificateScreen() {
           </Pressable>
           <Text style={styles.title} accessibilityRole="header">Certificates</Text>
           <Text style={styles.subtitle}>
-            Earn certificates by completing each stage of your learning path.
+            Earn expert credentials by completing each stage of your learning path.
           </Text>
         </View>
 
@@ -376,146 +603,89 @@ export default function CertificateScreen() {
           ))}
         </View>
 
-        {/* Stage certificates */}
+        {/* Certificate cards */}
         {tierData.map(({ tier, stage, completedCount, avgScore, earnedDate, isEarned }, idx) => {
           const isExpert = tier.stageNumber === 3;
+          const effectiveEarned = isExpert ? allEarned : isEarned;
+          const effectiveAvg = isExpert ? expertAvg : avgScore;
+          const effectiveDate = isExpert ? expertDate : earnedDate;
+          const effectiveCount = isExpert ? totalScenarios : stage.scenarioIds.length;
           const isDownloading = generating === tier.stageNumber;
 
           return (
-            <View
-              key={tier.stageNumber}
-              style={[
-                styles.certCard,
-                isEarned
-                  ? [styles.certCardEarned, { borderColor: tier.border }]
-                  : styles.certCardLocked,
-                isExpert && isEarned && styles.certCardExpert,
-              ]}>
-
-              {/* Card header strip */}
-              <View style={[
-                styles.certStrip,
-                { backgroundColor: isEarned ? tier.color : SimulatorColors.border },
-              ]}>
-                {isExpert && isEarned && (
-                  <View style={styles.expertGoldBar} />
-                )}
-                <View style={styles.certStripInner}>
-                  <View style={[styles.stageBadge, { backgroundColor: isEarned ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.08)' }]}>
-                    <Text style={[styles.stageBadgeText, { color: isEarned ? '#fff' : SimulatorColors.textSecondary }]}>
-                      {tier.stageNumber}
-                    </Text>
+            <View key={tier.stageNumber} style={[
+              styles.card,
+              effectiveEarned ? [styles.cardEarned, { borderColor: tier.border }] : styles.cardLocked,
+              isExpert && effectiveEarned && styles.cardExpert,
+            ]}>
+              {effectiveEarned ? (
+                <>
+                  <CertificateDocument
+                    tier={tier}
+                    roleName={path.roleName}
+                    scenarioCount={effectiveCount}
+                    avgScore={effectiveAvg}
+                    gradeLabel={grade(effectiveAvg)}
+                    earnedDate={effectiveDate}
+                    isExpert={isExpert}
+                  />
+                  <Pressable
+                    style={[styles.downloadButton,
+                      isExpert ? styles.downloadButtonExpert : { backgroundColor: tier.color },
+                      isDownloading && styles.downloadButtonDisabled]}
+                    accessibilityRole="button"
+                    disabled={isDownloading}
+                    onPress={() => { void handleDownload(tier.stageNumber); }}>
+                    {isDownloading ? (
+                      <View style={styles.downloadRow}>
+                        <ActivityIndicator size="small" color="#fff" />
+                        <Text style={styles.downloadButtonText}>Generating PDF…</Text>
+                      </View>
+                    ) : (
+                      <Text style={styles.downloadButtonText}>
+                        {isExpert ? '🏅  Download Expert PDF' : '📄  Download PDF Certificate'}
+                      </Text>
+                    )}
+                  </Pressable>
+                </>
+              ) : (
+                <View style={styles.lockedBody}>
+                  <View style={styles.lockedHeader}>
+                    <Text style={styles.lockIcon}>🔒</Text>
+                    <View style={styles.lockedHeaderText}>
+                      <Text style={[styles.lockedStage, { color: tier.color }]}>
+                        Stage {tier.stageNumber} · {tier.credential}
+                      </Text>
+                      <Text style={styles.lockedDesig}>{tier.designation}</Text>
+                    </View>
                   </View>
-                  <View style={styles.certStripText}>
-                    <Text style={[styles.certStripLabel, { color: isEarned ? 'rgba(255,255,255,0.75)' : SimulatorColors.textSecondary }]}>
-                      {isEarned ? 'Stage ' + tier.stageNumber + ' · Earned' : 'Stage ' + tier.stageNumber + ' · Locked'}
-                    </Text>
-                    <Text style={[styles.certStripTitle, { color: isEarned ? '#fff' : SimulatorColors.textSecondary }]}>
-                      {tier.credential}
-                    </Text>
+                  <Text style={styles.lockedDesc}>
+                    Complete all {stage.scenarioIds.length} scenarios in Stage {tier.stageNumber} to earn this certificate.
+                  </Text>
+                  <View style={styles.progressSection}>
+                    <View style={styles.progressMeta}>
+                      <Text style={styles.progressLabel}>Progress</Text>
+                      <Text style={[styles.progressFraction, { color: tier.color }]}>
+                        {completedCount} / {stage.scenarioIds.length}
+                      </Text>
+                    </View>
+                    <View style={styles.progressTrack}>
+                      <View style={[styles.progressFill, {
+                        backgroundColor: tier.color,
+                        width: stage.scenarioIds.length > 0
+                          ? `${(completedCount / stage.scenarioIds.length) * 100}%` as `${number}%`
+                          : '0%',
+                      }]} />
+                    </View>
                   </View>
-                  {isEarned ? (
-                    <Text style={styles.earnedStamp}>✓</Text>
-                  ) : (
-                    <Text style={styles.lockStamp}>🔒</Text>
-                  )}
+                  <Pressable style={styles.pathButton} accessibilityRole="button"
+                    onPress={() => router.push('/learning-path')}>
+                    <Text style={[styles.pathButtonText, { color: tier.color }]}>
+                      Continue in Learning Path →
+                    </Text>
+                  </Pressable>
                 </View>
-                {isExpert && isEarned && (
-                  <View style={styles.expertGoldBar} />
-                )}
-              </View>
-
-              {/* Card body */}
-              <View style={styles.certBody}>
-                {isEarned ? (
-                  <>
-                    {/* Preview */}
-                    <View style={[styles.certPreview, { backgroundColor: tier.tint, borderColor: tier.border }]}>
-                      {isExpert && (
-                        <Text style={styles.expertSeal}>🏅</Text>
-                      )}
-                      <Text style={[styles.certPreviewDesig, { color: tier.color }]}>
-                        {tier.designation}
-                      </Text>
-                      <Text style={styles.certPreviewRole}>{path.roleName}</Text>
-                      <View style={styles.certPreviewStats}>
-                        <View style={styles.certPreviewStat}>
-                          <Text style={[styles.certPreviewStatVal, { color: tier.color }]}>
-                            {isExpert ? totalScenarios : stage.scenarioIds.length}
-                          </Text>
-                          <Text style={styles.certPreviewStatLabel}>Scenarios</Text>
-                        </View>
-                        <View style={styles.certPreviewStatDivider} />
-                        <View style={styles.certPreviewStat}>
-                          <Text style={[styles.certPreviewStatVal, { color: tier.color }]}>
-                            {(isExpert ? expertAvg : avgScore).toFixed(1)}
-                          </Text>
-                          <Text style={styles.certPreviewStatLabel}>Avg Score</Text>
-                        </View>
-                        <View style={styles.certPreviewStatDivider} />
-                        <View style={styles.certPreviewStat}>
-                          <Text style={[styles.certPreviewStatVal, { color: tier.color }]}>
-                            {scoreGrade(isExpert ? expertAvg : avgScore)}
-                          </Text>
-                          <Text style={styles.certPreviewStatLabel}>Grade</Text>
-                        </View>
-                      </View>
-                      <Text style={styles.certPreviewDate}>
-                        Earned {formatDate(isExpert ? expertDate : earnedDate)}
-                      </Text>
-                    </View>
-
-                    {/* Download button */}
-                    <Pressable
-                      style={[styles.downloadButton, { backgroundColor: tier.color }, isDownloading && styles.downloadButtonDisabled]}
-                      accessibilityRole="button"
-                      disabled={isDownloading}
-                      onPress={() => { void handleDownload(tier.stageNumber); }}>
-                      {isDownloading ? (
-                        <View style={styles.downloadRow}>
-                          <ActivityIndicator size="small" color="#fff" />
-                          <Text style={styles.downloadButtonText}>Generating PDF…</Text>
-                        </View>
-                      ) : (
-                        <Text style={styles.downloadButtonText}>📄  Download PDF Certificate</Text>
-                      )}
-                    </Pressable>
-                  </>
-                ) : (
-                  <>
-                    {/* Locked state */}
-                    <Text style={styles.lockedDesig}>{tier.designation}</Text>
-                    <Text style={styles.lockedDesc}>
-                      Complete all {stage.scenarioIds.length} scenarios in Stage {tier.stageNumber} to earn this certificate.
-                    </Text>
-                    <View style={styles.progressSection}>
-                      <View style={styles.progressMeta}>
-                        <Text style={styles.progressLabel}>Your progress</Text>
-                        <Text style={styles.progressFraction}>{completedCount} / {stage.scenarioIds.length}</Text>
-                      </View>
-                      <View style={styles.progressTrack}>
-                        <View
-                          style={[
-                            styles.progressFill,
-                            {
-                              backgroundColor: tier.color,
-                              width: stage.scenarioIds.length > 0
-                                ? `${(completedCount / stage.scenarioIds.length) * 100}%` as `${number}%`
-                                : '0%',
-                            },
-                          ]}
-                        />
-                      </View>
-                    </View>
-                    <Pressable
-                      style={styles.pathButton}
-                      accessibilityRole="button"
-                      onPress={() => router.push('/learning-path')}>
-                      <Text style={styles.pathButtonText}>Go to Learning Path →</Text>
-                    </Pressable>
-                  </>
-                )}
-              </View>
+              )}
             </View>
           );
         })}
@@ -529,6 +699,151 @@ export default function CertificateScreen() {
 }
 
 // ── styles ─────────────────────────────────────────────────────────────────────
+
+const ornStyles = StyleSheet.create({
+  row: { flexDirection: 'row', alignItems: 'center', gap: 8, marginVertical: 10 },
+  rule: { flex: 1, height: 1 },
+  sym: { fontSize: 12 },
+});
+
+const docStyles = StyleSheet.create({
+  frame: {
+    borderWidth: 1,
+    borderRadius: Radius.md,
+    overflow: 'hidden',
+    backgroundColor: '#fff',
+    // second inner border effect via shadow
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  frameExpert: {
+    borderWidth: 2,
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  expertGoldBar: { height: 5, backgroundColor: '#F59E0B' },
+  expertHeader: {
+    backgroundColor: '#3B0080',
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    gap: 4,
+  },
+  expertHeaderStars: {
+    fontSize: 10,
+    color: '#F59E0B',
+    letterSpacing: 6,
+    fontWeight: '700',
+  },
+  expertHeaderTitle: {
+    fontSize: 18,
+    fontWeight: '800',
+    color: '#FDE68A',
+    letterSpacing: 4,
+  },
+  expertHeaderSub: {
+    fontSize: 10,
+    color: 'rgba(253,230,138,0.6)',
+    letterSpacing: 2,
+    textTransform: 'uppercase',
+  },
+  inner: {
+    padding: 24,
+    alignItems: 'center',
+  },
+  orgName: {
+    fontSize: 9,
+    fontWeight: '700',
+    letterSpacing: 2,
+    textAlign: 'center',
+  },
+  programLine: {
+    fontSize: 8,
+    letterSpacing: 1.5,
+    textAlign: 'center',
+    marginTop: 2,
+  },
+  medalEmoji: { fontSize: 40, marginBottom: 4, lineHeight: 48 },
+  certTitle: {
+    fontSize: 22,
+    fontWeight: '800',
+    textAlign: 'center',
+    letterSpacing: -0.3,
+    lineHeight: 28,
+  },
+  certSub: {
+    fontSize: 8,
+    fontWeight: '700',
+    letterSpacing: 2.5,
+    textAlign: 'center',
+    marginTop: 2,
+  },
+  awardedTo: {
+    fontSize: 12,
+    color: SimulatorColors.textSecondary,
+    fontStyle: 'italic',
+    marginBottom: 2,
+  },
+  roleName: {
+    fontSize: 22,
+    fontWeight: '800',
+    color: SimulatorColors.textPrimary,
+    textAlign: 'center',
+  },
+  designation: {
+    fontSize: 13,
+    fontWeight: '700',
+    textAlign: 'center',
+    marginTop: 2,
+    letterSpacing: 0.5,
+  },
+  statsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 0,
+    marginVertical: 4,
+  },
+  statCell: { flex: 1, alignItems: 'center', gap: 3 },
+  statVal: { fontSize: 24, fontWeight: '800', lineHeight: 28 },
+  statValSmall: { fontSize: 13, fontWeight: '400', color: SimulatorColors.textSecondary },
+  statDivider: { width: 1, height: 36 },
+  statLbl: {
+    fontSize: 9,
+    fontWeight: '600',
+    color: SimulatorColors.textSecondary,
+    textTransform: 'uppercase',
+    letterSpacing: 0.3,
+    textAlign: 'center',
+    lineHeight: 13,
+  },
+  gradeBadge: {
+    borderWidth: 1.5,
+    borderRadius: 3,
+    paddingHorizontal: 14,
+    paddingVertical: 5,
+    marginTop: 6,
+  },
+  gradeBadgeExpert: {
+    backgroundColor: '#FEF3C7',
+    borderColor: '#F59E0B',
+  },
+  gradeBadgeText: {
+    fontSize: 10,
+    fontWeight: '800',
+    letterSpacing: 1.5,
+  },
+  gradeBadgeTextExpert: { color: '#78350F' },
+  dateText: {
+    fontSize: 11,
+    color: SimulatorColors.textSecondary,
+    marginTop: 8,
+    fontStyle: 'italic',
+  },
+});
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: SimulatorColors.screenBackground },
@@ -549,61 +864,41 @@ const styles = StyleSheet.create({
   roleTabText: { fontSize: 13, fontWeight: '600', color: SimulatorColors.textSecondary },
   roleTabTextActive: { color: SimulatorColors.brandDeep, fontWeight: '700' },
 
-  certCard: {
-    borderRadius: Radius.lg, borderWidth: 1.5,
-    overflow: 'hidden', backgroundColor: SimulatorColors.surface,
+  card: {
+    borderRadius: Radius.lg, overflow: 'hidden',
+    backgroundColor: SimulatorColors.surface,
+    borderWidth: 1.5,
   },
-  certCardEarned: { borderWidth: 1.5 },
-  certCardLocked: { borderColor: SimulatorColors.border, opacity: 0.8 },
-  certCardExpert: { borderWidth: 2.5 },
+  cardEarned: {},
+  cardLocked: { borderColor: SimulatorColors.border },
+  cardExpert: { borderWidth: 2.5, borderColor: '#6D28D9' },
 
-  certStrip: { overflow: 'hidden' },
-  expertGoldBar: { height: 5, backgroundColor: '#F59E0B' },
-  certStripInner: {
-    flexDirection: 'row', alignItems: 'center', gap: 12,
-    padding: 16, paddingVertical: 14,
+  downloadButton: {
+    margin: 16, marginTop: 12, borderRadius: Radius.md,
+    paddingVertical: 14, alignItems: 'center',
   },
-  stageBadge: {
-    width: 36, height: 36, borderRadius: 18,
-    alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+  downloadButtonExpert: {
+    backgroundColor: '#6D28D9',
   },
-  stageBadgeText: { fontSize: 16, fontWeight: '800' },
-  certStripText: { flex: 1, gap: 1 },
-  certStripLabel: { fontSize: 10, fontWeight: '700', letterSpacing: 0.8, textTransform: 'uppercase' },
-  certStripTitle: { fontSize: 17, fontWeight: '700', lineHeight: 22 },
-  earnedStamp: { fontSize: 22, flexShrink: 0 },
-  lockStamp: { fontSize: 18, flexShrink: 0 },
-
-  certBody: { padding: 16, gap: 12 },
-  certPreview: {
-    borderRadius: Radius.md, borderWidth: 1,
-    padding: 20, alignItems: 'center', gap: 6,
-  },
-  expertSeal: { fontSize: 36, marginBottom: 4 },
-  certPreviewDesig: { fontSize: 18, fontWeight: '800', textAlign: 'center', letterSpacing: -0.2 },
-  certPreviewRole: { fontSize: 15, fontWeight: '600', color: SimulatorColors.textSecondary, textAlign: 'center' },
-  certPreviewStats: { flexDirection: 'row', alignItems: 'center', gap: 0, marginTop: 8 },
-  certPreviewStat: { flex: 1, alignItems: 'center', gap: 2 },
-  certPreviewStatVal: { fontSize: 20, fontWeight: '800' },
-  certPreviewStatLabel: { fontSize: 10, fontWeight: '600', color: SimulatorColors.textSecondary, textTransform: 'uppercase', letterSpacing: 0.3 },
-  certPreviewStatDivider: { width: 1, height: 28, backgroundColor: SimulatorColors.borderDivider },
-  certPreviewDate: { fontSize: 12, color: SimulatorColors.textSecondary, marginTop: 6 },
-
-  downloadButton: { borderRadius: Radius.md, paddingVertical: 13, alignItems: 'center' },
   downloadButtonDisabled: { opacity: 0.6 },
   downloadRow: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   downloadButtonText: { color: '#fff', fontSize: 15, fontWeight: '700' },
 
-  lockedDesig: { fontSize: 17, fontWeight: '700', color: SimulatorColors.textSecondary },
-  lockedDesc: { fontSize: 14, color: SimulatorColors.textSecondary, lineHeight: 21 },
+  lockedBody: { padding: 20, gap: 12 },
+  lockedHeader: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  lockIcon: { fontSize: 24 },
+  lockedHeaderText: { flex: 1, gap: 2 },
+  lockedStage: { fontSize: 11, fontWeight: '700', letterSpacing: 0.5, textTransform: 'uppercase' },
+  lockedDesig: { fontSize: 16, fontWeight: '700', color: SimulatorColors.textSecondary },
+  lockedDesc: { fontSize: 13, color: SimulatorColors.textSecondary, lineHeight: 20 },
   progressSection: { gap: 8 },
   progressMeta: { flexDirection: 'row', justifyContent: 'space-between' },
   progressLabel: { fontSize: 13, color: SimulatorColors.textSecondary, fontWeight: '600' },
-  progressFraction: { fontSize: 13, fontWeight: '700', color: SimulatorColors.brand },
-  progressTrack: { height: 8, backgroundColor: SimulatorColors.border, borderRadius: 4, overflow: 'hidden' },
-  progressFill: { height: 8, borderRadius: 4 },
-  pathButton: { paddingVertical: 10, alignItems: 'center' },
-  pathButtonText: { fontSize: 14, color: SimulatorColors.brand, fontWeight: '600' },
+  progressFraction: { fontSize: 13, fontWeight: '700' },
+  progressTrack: { height: 7, backgroundColor: SimulatorColors.border, borderRadius: 4, overflow: 'hidden' },
+  progressFill: { height: 7, borderRadius: 4 },
+  pathButton: { paddingVertical: 8, alignItems: 'center' },
+  pathButtonText: { fontSize: 14, fontWeight: '600' },
 
   disclaimer: { fontSize: 11, color: SimulatorColors.textSecondary, textAlign: 'center', lineHeight: 17 },
 });

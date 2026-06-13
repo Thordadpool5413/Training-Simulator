@@ -66,7 +66,13 @@ export async function speakText(text: string): Promise<void> {
       audioMimeType?: string;
     };
 
-    const audioUri = data.audioUrl;
+    // Prefer base64 data URI (no second network hop); fall back to served URL
+    let audioUri: string | undefined;
+    if (typeof data.audioBase64 === 'string' && data.audioBase64) {
+      audioUri = `data:audio/mpeg;base64,${data.audioBase64}`;
+    } else if (typeof data.audioUrl === 'string' && data.audioUrl) {
+      audioUri = data.audioUrl;
+    }
     if (!audioUri) return;
 
     await Audio.setAudioModeAsync({

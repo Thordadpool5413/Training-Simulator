@@ -210,6 +210,7 @@ export interface CompletedSession {
 }
 
 export type ScenarioDifficulty = 'beginner' | 'intermediate' | 'advanced';
+export type ScenarioTopic = 'goals_of_care' | 'symptom_management' | 'medication' | 'grief' | 'family_conflict' | 'caregiver_support';
 
 export interface AppSettings {
   notificationHour: number;

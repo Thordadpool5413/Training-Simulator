@@ -1,23 +1,33 @@
 import { router } from 'expo-router';
 import type { Href } from 'expo-router';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Radius, SimulatorColors } from '@/constants/theme';
 import { diagnoses } from '@/data/diagnoses';
 import { roles } from '@/data/roles';
 import { scenarioTemplates } from '@/data/scenarioTemplates';
+import { SCENARIO_TOPICS, TOPIC_LABELS } from '@/data/scenarioTopics';
 import { useSimulator } from '@/state/SimulatorContext';
-import type { ScenarioDifficulty } from '@/types/simulator';
+import type { ScenarioDifficulty, ScenarioTopic } from '@/types/simulator';
 
 type DifficultyFilter = ScenarioDifficulty | 'all';
+type TopicFilter = ScenarioTopic | 'all';
 
 const DIFFICULTY_FILTERS: { value: DifficultyFilter; label: string }[] = [
   { value: 'all', label: 'All' },
   { value: 'beginner', label: 'Beginner' },
   { value: 'intermediate', label: 'Intermediate' },
   { value: 'advanced', label: 'Advanced' },
+];
+
+const TOPIC_FILTERS: { value: TopicFilter; label: string }[] = [
+  { value: 'all', label: 'All Topics' },
+  ...Object.entries(TOPIC_LABELS).map(([value, label]) => ({
+    value: value as ScenarioTopic,
+    label,
+  })),
 ];
 
 const DIFFICULTY_COLORS: Record<ScenarioDifficulty, string> = {
@@ -29,6 +39,8 @@ const DIFFICULTY_COLORS: Record<ScenarioDifficulty, string> = {
 export default function ScenarioScreen() {
   const { selectedRoleId, setSelectedScenarioId, completedSessions } = useSimulator();
   const [difficultyFilter, setDifficultyFilter] = useState<DifficultyFilter>('all');
+  const [topicFilter, setTopicFilter] = useState<TopicFilter>('all');
+  const [searchText, setSearchText] = useState('');
 
   if (!selectedRoleId) {
     return (
@@ -47,9 +59,23 @@ export default function ScenarioScreen() {
   }
 
   const roleScenarios = scenarioTemplates.filter((s) => s.allowedRoleId === selectedRoleId);
-  const availableScenarios = difficultyFilter === 'all'
+  let availableScenarios = difficultyFilter === 'all'
     ? roleScenarios
     : roleScenarios.filter((s) => s.difficulty === difficultyFilter);
+  if (topicFilter !== 'all') {
+    availableScenarios = availableScenarios.filter(
+      (s) => SCENARIO_TOPICS[s.id] === topicFilter
+    );
+  }
+  if (searchText.trim()) {
+    const q = searchText.trim().toLowerCase();
+    availableScenarios = availableScenarios.filter(
+      (s) =>
+        s.title.toLowerCase().includes(q) ||
+        s.patient.name.toLowerCase().includes(q) ||
+        s.learnerObjective.toLowerCase().includes(q)
+    );
+  }
 
   if (roleScenarios.length === 0) {
     return (
@@ -100,6 +126,17 @@ export default function ScenarioScreen() {
           )}
         </View>
 
+        <TextInput
+          style={styles.searchInput}
+          value={searchText}
+          onChangeText={setSearchText}
+          placeholder="Search by title, patient, or objective..."
+          placeholderTextColor={SimulatorColors.textPlaceholder}
+          accessibilityLabel="Search scenarios"
+          clearButtonMode="while-editing"
+          returnKeyType="search"
+        />
+
         <View style={styles.filterRow}>
           {DIFFICULTY_FILTERS.map((f) => (
             <Pressable
@@ -114,9 +151,23 @@ export default function ScenarioScreen() {
           ))}
         </View>
 
+        <View style={styles.filterRow}>
+          {TOPIC_FILTERS.map((f) => (
+            <Pressable
+              key={f.value}
+              style={[styles.filterChip, topicFilter === f.value && styles.topicChipActive]}
+              accessibilityRole="button"
+              onPress={() => setTopicFilter(f.value)}>
+              <Text style={[styles.filterText, topicFilter === f.value && styles.topicTextActive]}>
+                {f.label}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+
         {availableScenarios.length === 0 && (
           <Text style={styles.emptyFilter}>
-            No {difficultyFilter} scenarios for this role. Try a different filter.
+            No scenarios match these filters. Try adjusting the difficulty, topic, or search.
           </Text>
         )}
 
@@ -227,11 +278,30 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: SimulatorColors.scoreGreen,
   },
+  searchInput: {
+    backgroundColor: SimulatorColors.surface,
+    borderWidth: 1,
+    borderColor: SimulatorColors.borderInput,
+    borderRadius: Radius.md,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    fontSize: 15,
+    color: SimulatorColors.textPrimary,
+    marginBottom: 12,
+  },
   filterRow: {
     flexDirection: 'row',
     gap: 8,
-    marginBottom: 20,
+    marginBottom: 12,
     flexWrap: 'wrap',
+  },
+  topicChipActive: {
+    backgroundColor: SimulatorColors.indigoBackground,
+    borderColor: SimulatorColors.indigoBorder,
+  },
+  topicTextActive: {
+    color: SimulatorColors.indigoLabel,
+    fontWeight: '700',
   },
   filterChip: {
     paddingHorizontal: 14,

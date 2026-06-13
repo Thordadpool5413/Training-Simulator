@@ -79,6 +79,11 @@ export default function SimulationScreen() {
   // Patient state panel
   const [patientPanelOpen, setPatientPanelOpen] = useState(false);
 
+  // Role reminder collapse
+  const [reminderOpen, setReminderOpen] = useState(true);
+
+  const learnerTurnCount = conversationMessages.filter((m) => m.sender === 'learner').length;
+
   // Static fallback phrases
   const hintIds = scenario ? (scenarioHints[scenario.id] ?? []) : [];
   const staticFallback = hintIds.length > 0
@@ -342,20 +347,36 @@ export default function SimulationScreen() {
               {scenario.patient.name}, age {scenario.patient.age}
             </Text>
           </View>
-          <Pressable
-            style={styles.finishButton}
-            accessibilityRole="button"
-            accessibilityLabel="Finish simulation and view feedback"
-            onPress={() => router.push('/feedback' as Href)}>
-            <Text style={styles.finishButtonText}>Finish</Text>
-          </Pressable>
+          <View style={styles.finishArea}>
+            {learnerTurnCount > 0 && (
+              <Text style={styles.turnCount}>
+                {learnerTurnCount} {learnerTurnCount === 1 ? 'turn' : 'turns'}
+              </Text>
+            )}
+            <Pressable
+              style={styles.finishButton}
+              accessibilityRole="button"
+              accessibilityLabel="Finish simulation and view feedback"
+              onPress={() => router.push('/feedback' as Href)}>
+              <Text style={styles.finishButtonText}>Finish</Text>
+            </Pressable>
+          </View>
         </View>
 
         {/* Role reminder */}
-        <View style={styles.reminder}>
-          <Text style={styles.reminderLabel}>Role reminder</Text>
-          <Text style={styles.reminderText} numberOfLines={4}>{scenario.roleReminder}</Text>
-        </View>
+        <Pressable
+          style={styles.reminder}
+          accessibilityRole="button"
+          accessibilityLabel={reminderOpen ? 'Collapse role reminder' : 'Expand role reminder'}
+          onPress={() => setReminderOpen((v) => !v)}>
+          <View style={styles.reminderHeader}>
+            <Text style={styles.reminderLabel}>Role reminder</Text>
+            <Text style={styles.reminderToggle}>{reminderOpen ? '▲' : '▼'}</Text>
+          </View>
+          {reminderOpen && (
+            <Text style={styles.reminderText} numberOfLines={4}>{scenario.roleReminder}</Text>
+          )}
+        </Pressable>
 
         {/* Patient state panel */}
         {currentPatientState != null && (
@@ -457,7 +478,7 @@ export default function SimulationScreen() {
               setVoiceEnabled((v) => !v);
             }}>
             <Text style={[styles.voiceToggleText, voiceEnabled && styles.voiceToggleTextActive]}>
-              {voiceEnabled ? '🎤' : '🎤'}
+              {voiceEnabled ? '🎤' : 'Aa'}
             </Text>
           </Pressable>
 
@@ -634,6 +655,15 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: SimulatorColors.textSecondary,
   },
+  finishArea: {
+    alignItems: 'flex-end',
+    gap: 2,
+  },
+  turnCount: {
+    fontSize: 10,
+    color: SimulatorColors.textSecondary,
+    fontWeight: '500',
+  },
   finishButton: {
     paddingVertical: 6,
     paddingHorizontal: 14,
@@ -654,6 +684,15 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: SimulatorColors.indigoBorder,
   },
+  reminderHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  reminderToggle: {
+    fontSize: 9,
+    color: SimulatorColors.indigoLabel,
+  },
   reminderLabel: {
     fontSize: 11,
     fontWeight: '600',
@@ -666,6 +705,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: SimulatorColors.indigoText,
     lineHeight: 19,
+    marginTop: 2,
   },
   chatScroll: {
     flex: 1,
